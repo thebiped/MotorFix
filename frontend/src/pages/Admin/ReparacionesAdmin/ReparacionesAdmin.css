@@ -1,0 +1,315 @@
+/* --- Contenedor Principal --- */
+.reparaciones-admin-container {
+  background-color: #f5f5f5;
+  padding: 24px;
+  font-family: 'Roboto', sans-serif;
+  color: #202124;
+}
+
+/* --- Encabezado --- */
+.reparaciones-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.reparaciones-header h1 {
+  font-size: 24px;
+  font-weight: 400;
+  margin: 0;
+}
+
+/* --- Tarjetas de Estadísticas --- */
+.reparaciones-stats-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.reparacion-card {
+  background-color: #ffffff;
+  padding: 16px;
+  border: 1px solid #dadce0;
+  border-radius: 8px;
+}
+
+.reparacion-card p {
+  margin: 0 0 8px 0;
+  color: #5f6368;
+  font-size: 14px;
+}
+
+.reparacion-card h2 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 400;
+  color: #d93025; /* Rojo Google */
+}
+
+/* --- Contenedor de Lista y Filtros --- */
+.reparaciones-list-container {
+  background-color: #ffffff;
+  border: 1px solid #dadce0;
+  border-radius: 8px;
+}
+
+/* --- Panel de Filtros --- */
+.reparaciones-filters-panel {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  border-bottom: 1px solid #dadce0;
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.filter-group label {
+  font-size: 14px;
+  color: #5f6368;
+}
+
+.reparaciones-filters-panel input[type="text"],
+.reparaciones-filters-panel select {
+  border: 1px solid #dadce0;
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-size: 14px;
+  background-color: #f5f5f5;
+}
+
+.reparaciones-filters-panel input[type="text"] {
+  width: 250px;
+}
+
+.filter-actions {
+  margin-left: auto;
+  display: flex;
+  gap: 8px;
+}
+
+/* --- Pestañas de Estado --- */
+.reparaciones-status-tabs {
+  display: flex;
+  padding: 0 16px;
+  border-bottom: 1px solid #dadce0;
+}
+
+.status-tab {
+  background: none;
+  border: none;
+  padding: 12px 16px;
+  cursor: pointer;
+  color: #5f6368;
+  font-weight: 500;
+  border-bottom: 2px solid transparent;
+}
+
+.status-tab.active {
+  color: #d93025;
+  border-bottom-color: #d93025;
+}
+
+/* --- Lista de Reparaciones --- */
+.reparaciones-list {
+  padding: 16px;
+}
+
+.showing-results {
+  color: #5f6368;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.no-results {
+  text-align: center;
+  padding: 32px;
+  color: #5f6368;
+}
+
+/* --- Botones --- */
+.add-order-btn, .apply-filter-btn {
+  background-color: #d93025;
+  color: #ffffff;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.clear-filter-btn {
+  background-color: transparent;
+  color: #d93025;
+  border: 1px solid #dadce0;
+  padding: 10px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+/* --- Estilos para ReparacionRow --- */
+.reparacion-row-container {
+  border: 1px solid #dadce0;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+
+.reparacion-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  cursor: pointer;
+  background-color: #ffffff;
+}
+
+.reparacion-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.reparacion-id {
+  color: #d93025;
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.reparacion-info h4 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+}
+.reparacion-info p {
+  margin: 0;
+  color: #5f6368;
+  font-size: 14px;
+}
+
+.status-badge {
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #ffffff;
+}
+
+.status-completed { background-color: #1e8e3e; } /* Verde */
+.status-in-progress { background-color: #1a73e8; } /* Azul */
+.status-pending { background-color: #d93025; } /* Rojo */
+
+.chevron-icon {
+  color: #5f6368;
+  transition: transform 0.2s;
+}
+.chevron-icon.expanded {
+  transform: rotate(180deg);
+}
+
+/* --- Detalles Expandibles --- */
+.reparacion-details-slider {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+  background-color: #f5f5f5;
+}
+
+.reparacion-details-slider.expanded {
+  max-height: 500px; /* Ajustar según sea necesario */
+  opacity: 1;
+}
+
+.reparacion-details-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px;
+  border-top: 1px solid #dadce0;
+}
+
+.reparacion-details-header h4 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+  color: #202124;
+}
+
+.details-actions {
+  display: flex;
+  gap: 1rem; /* 16px */
+}
+
+.reparacion-details-content {
+  display: flex;
+  justify-content: space-between;
+  padding: 24px;
+  border-top: 1px solid #dadce0;
+}
+
+.reparacion-details-info p {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+}
+
+.reparacion-details-info strong {
+  color: #5f6368;
+  margin-right: 8px;
+}
+
+/* --- Barra de Progreso Vertical --- */
+.progress-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-left: 24px;
+}
+
+.progress-vertical {
+  width: 12px;
+  height: 100px;
+  background-color: #e0e0e0;
+  border-radius: 6px;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.progress-fill {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background-color: #1a73e8; /* Azul Google */
+  border-radius: 6px;
+  transition: height 0.3s ease;
+}
+
+.progress-label {
+  font-weight: 500;
+  color: #5f6368;
+  font-size: 14px;
+}
+
+.edit-btn, .delete-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid #dadce0;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  background: none;
+  font-weight: 500;
+}
+
+.edit-btn { color: #1a73e8; }
+.delete-btn { color: #d93025; }

@@ -1,0 +1,115 @@
+:root {
+  /* Palette */
+  --mec-bg-main: oklch(0.2 0.15 25);
+  --mec-card-bg: oklch(0.25 0.12 25);
+  --mec-primary: oklch(0.65 0.22 25);
+  --mec-secondary: oklch(0.15 0 0);
+  --mec-text: oklch(0.98 0 0);
+  --mec-border: oklch(0.2 0.12 25);
+}
+
+/* Sidebar container */
+.mec-sidebar {
+  position: relative;
+  z-index: 50;
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+  background-color: var(--mec-secondary);
+  color: var(--mec-text);
+}
+
+/* Logo */
+.mec-sidebar .mec-logo {
+  font-weight: 700;
+  color: var(--mec-text);
+  letter-spacing: 0.4px;
+}
+
+/* Links and buttons inside sidebar */
+.mec-sidebar a,
+.mec-sidebar button {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 0.75rem;
+  border-radius: 0.5rem;
+  color: var(--mec-text);
+  text-decoration: none;
+  background: transparent;
+  transition: background 0.15s ease, color 0.15s ease, transform 0.08s ease;
+  font-size: 0.98rem;
+}
+
+.mec-sidebar a:hover,
+.mec-sidebar button:hover {
+  background: var(--mec-card-bg);
+}
+
+/* Active link (NavLink sets aria-current="page") */
+.mec-sidebar a[aria-current="page"] {
+  background: var(--mec-primary);
+  color: var(--mec-text);
+  font-weight: 600;
+  box-shadow: inset 4px 0 0 rgba(0, 0, 0, 0.06);
+}
+
+/* Footer area */
+.mec-sidebar .mec-footer {
+  border-top: 1px solid var(--mec-border);
+  padding-top: 0.75rem;
+}
+
+/* Overlay (mobile) */
+.mec-overlay {
+  display: none;
+}
+
+/* Mobile behaviour: off-canvas sidebar */
+@media (max-width: 1023px) {
+  .mec-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 16rem; /* 64 */
+    transform: translateX(-100%);
+    box-shadow: 2px 0 18px rgba(0, 0, 0, 0.45);
+  }
+
+  .mec-sidebar.mec-open {
+    transform: translateX(0);
+  }
+
+  .mec-sidebar.mec-closed {
+    transform: translateX(-100%);
+  }
+
+  .mec-overlay.visible {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 40;
+  }
+}
+
+/* Focus styles for accessibility */
+.mec-sidebar a:focus,
+.mec-sidebar button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.18);
+  border-radius: 8px;
+}
+
+/* Small helpers for main content when sidebar present */
+@media (min-width: 1024px) {
+  /* Ensure main content has comfortable padding on large screens */
+  main {
+    padding-left: 1rem;
+  }
+}
+
+/* Utility: card look for sidebar sections if needed */
+.mec-sidebar .mec-section {
+  background: transparent;
+  padding: 0.5rem 0;
+}

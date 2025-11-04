@@ -1,0 +1,46 @@
+/* Dashboard styles for Mecánico module */
+:root {
+  --mec-card-bg: oklch(0.25 0.12 25);
+  --mec-primary: oklch(0.65 0.22 25);
+  --mec-text: oklch(0.98 0 0);
+}
+
+.mec-dashboard .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.mec-dashboard .stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+@media (max-width: 1024px) {
+  .mec-dashboard .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .mec-dashboard .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.mec-dashboard .card {
+  background: var(--mec-card-bg);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  color: var(--mec-text);
+}
+
+.mec-dashboard .primary-btn {
+  background: var(--mec-primary);
+  color: var(--mec-text);
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  border: none;
+}
