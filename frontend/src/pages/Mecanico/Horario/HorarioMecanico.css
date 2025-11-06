@@ -1,26 +1,3 @@
-/* Horario styles */
-:root {
-  --mec-card-bg: oklch(0.25 0.12 25);
-  --mec-primary: oklch(0.65 0.22 25);
-  --mec-text: oklch(0.98 0 0);
-}
-
-.mec-horario .calendar {
-  background: var(--mec-card-bg);
-  padding: 1rem;
-  border-radius: 0.5rem;
-}
-
-.mec-horario .event-card {
-  background: rgba(255, 255, 255, 0.03);
-  padding: 0.75rem;
-  border-radius: 0.5rem;
-  color: var(--mec-text);
-}
-
-.mec-horario .today {
-  background: var(--mec-primary);
-  color: var(--mec-text);
-  border-radius: 0.5rem;
-  padding: 0.25rem 0.5rem;
+.mec-horario {
+  width: 100%;
 }
