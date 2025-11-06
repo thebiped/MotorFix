@@ -1,3 +1,208 @@
-.mec-reparaciones {
-  width: 100%;
+.reparaciones-container {
+  min-height: 100vh;
+  padding: 2rem;
+  color: #fff;
+  background-color: #1a1a1a;
+}
+
+.reparaciones-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.header-title h1 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #ffffff;
+}
+
+.header-title p {
+  color: #8a8a8a;
+  font-size: 0.9rem;
+}
+
+.header-buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+.btn-exportar,
+.btn-nueva-reparacion {
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  border: none;
+}
+
+.btn-exportar {
+  background-color: transparent;
+  border: 1px solid #ffffff;
+  color: #ffffff;
+}
+
+.btn-nueva-reparacion {
+  background-color: #ff0000;
+  color: white;
+}
+
+.status-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.status-card {
+  background-color: #2d2d2d;
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+.status-card h3 {
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+  color: #8a8a8a;
+}
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.card-content .number {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 0.25rem;
+}
+
+.card-content p {
+  font-size: 0.9rem;
+  color: #8a8a8a;
+}
+
+.filters {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.filter-btn {
+  background-color: transparent;
+  border: none;
+  color: #8a8a8a;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.filter-btn.active {
+  background-color: #ff0000;
+  color: white;
+}
+
+.reparaciones-table {
+  background-color: #2d2d2d;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+}
+
+.table-header {
+  border-bottom: 1px solid #3d3d3d;
+}
+
+.table-row {
+  display: grid;
+  grid-template-columns: 40px 100px 180px 150px 1fr 120px 120px 120px 100px;
+  padding: 1rem;
+  align-items: center;
+}
+
+.header-cell {
+  color: #8a8a8a;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.checkbox-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cell {
+  color: #ffffff;
+  font-size: 0.9rem;
+}
+
+.status {
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  display: inline-block;
+}
+
+.status.en-progreso {
+  background-color: #ff0000;
+  color: white;
+}
+
+.status.pendiente {
+  background-color: #666666;
+  color: white;
+}
+
+.status.completado {
+  background-color: #28a745;
+  color: white;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.pagination-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #2d2d2d;
+  border: none;
+  color: #8a8a8a;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.pagination-btn.active {
+  background-color: #ff0000;
+  color: white;
+}
+
+/* Estilos para el checkbox personalizado */
+input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #8a8a8a;
+  border-radius: 3px;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+input[type="checkbox"]:checked {
+  background-color: #ff0000;
+  border-color: #ff0000;
 }

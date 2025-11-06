@@ -9,10 +9,10 @@ import Login from "./components/Authentication/Login/Login";
 import Register from "./components/Authentication/Register/Register";
 import MecanicoLayout from "./pages/Mecanico/MecanicoLayout";
 import DashboardMecanico from "./pages/Mecanico/Dashboard/DashboardMecanico";
-import ReparacionesMecanico from "./pages/Mecanico/Reparaciones/ReparacionesMecanico";
 import HorarioMecanico from "./pages/Mecanico/Horario/HorarioMecanico";
 import HistorialMecanico from "./pages/Mecanico/Historial/HistorialMecanico";
 import PerfilMecanico from "./pages/Mecanico/Perfil/PerfilMecanico";
+import ReparacionesMecanico from "./pages/Mecanico/Reparaciones/ReparacionesMecanico";
 // import SetupCar from "./components/modelo_3d/SetupCar";
 
 // Importaciones de Mecanico (componentes organizados en subcarpetas)

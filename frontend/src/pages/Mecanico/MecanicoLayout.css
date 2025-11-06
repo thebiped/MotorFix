@@ -6,6 +6,12 @@
   --mec-secondary: oklch(0.15 0 0);
   --mec-text: oklch(0.98 0 0);
   --mec-border: oklch(0.2 0.12 25);
+    --mec-gradient-start: #260000;
+  --mec-gradient-end: #580000;
+  --card-bg: rgba(255, 255, 255, 0.98);
+  --card-border: rgba(225, 40, 40, 0.08);
+  --accent: #d61b1b;
+  --muted: #6b6b6b;
 }
 
 /* Sidebar container */
@@ -24,7 +30,7 @@
   letter-spacing: 0.4px;
 }
 
-.admin-layout {
+.mecacnico-layout {
   width: 100vw;
   height: 100vh;
   display: flex;
@@ -33,36 +39,36 @@
 }
 
 /* --- SIDEBAR --- */
-.admin-sidebar {
+.mecacnico-sidebar {
   width: 80px;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 16px 0;
   gap: 20px;
-  background: #191919;
+  background: #000;
   transition: width 0.3s ease;
   overflow: hidden;
 }
 
-.admin-sidebar.expanded {
+.mecacnico-sidebar.expanded {
   width: 220px;
 }
 
-.admin-logo img {
+.mecacnico-logo img {
   width: 50px;
   height: 50px;
   margin-bottom: 20px;
 }
 
-.admin-nav {
+.mecacnico-nav {
   width: 100%;
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
-.admin-link {
+.mecacnico-link {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -73,8 +79,8 @@
   opacity: 0.7;
 }
 
-.admin-link.active,
-.admin-link:hover {
+.mecacnico-link.active,
+.mecacnico-link:hover {
   opacity: 1;
   background: rgba(255, 75, 75, 0.1);
   transform: scale(1.05);
@@ -88,14 +94,14 @@
 }
 
 /* --- MAIN --- */
-.admin-main {
+.mecacnico-main {
   flex: 1;
   display: flex;
   flex-direction: column;
 }
 
 /* HEADER */
-.admin-header {
+.mecacnico-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -104,7 +110,7 @@
   color: white;
 }
 
-.admin-search {
+.mecacnico-search {
   width: 300px;
   padding: 8px 14px;
   border: none;
@@ -114,7 +120,7 @@
   color: white;
 }
 
-.admin-header-actions {
+.mecacnico-header-actions {
   display: flex;
   align-items: center;
   gap: 15px;
@@ -136,23 +142,11 @@
 }
 
 /* CONTENT */
-.admin-content {
+.mecacnico-content {
   padding: 0;
   overflow-y: auto;
 }
 
-/* Responsive behavior */
-@media (max-width: 1024px) {
-  .admin-search {
-    width: 200px;
-  }
-
-  .admin-sidebar.expanded {
-    position: fixed;
-    height: 100vh;
-    z-index: 50;
-  }
-}
 
 .mec-sidebar a:hover,
 .mec-sidebar button:hover {
@@ -179,33 +173,6 @@
 }
 
 /* Mobile behaviour: off-canvas sidebar */
-@media (max-width: 1023px) {
-  .mec-sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    width: 16rem; /* 64 */
-    transform: translateX(-100%);
-    box-shadow: 2px 0 18px rgba(0, 0, 0, 0.45);
-  }
-
-  .mec-sidebar.mec-open {
-    transform: translateX(0);
-  }
-
-  .mec-sidebar.mec-closed {
-    transform: translateX(-100%);
-  }
-
-  .mec-overlay.visible {
-    display: block;
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.45);
-    z-index: 40;
-  }
-}
 
 /* Focus styles for accessibility */
 .mec-sidebar a:focus,
@@ -215,13 +182,7 @@
   border-radius: 8px;
 }
 
-/* Small helpers for main content when sidebar present */
-@media (min-width: 1024px) {
-  /* Ensure main content has comfortable padding on large screens */
-  main {
-    padding-left: 1rem;
-  }
-}
+
 
 /* Utility: card look for sidebar sections if needed */
 .mec-sidebar .mec-section {
@@ -229,7 +190,7 @@
   padding: 0.5rem 0;
 }
 
-/* Admin-like sidebar sizing & link styles for mecanico */
+/* mecacnico-like sidebar sizing & link styles for mecanico */
 .mec-sidebar {
   width: 80px;
   display: flex;
@@ -291,16 +252,7 @@
   justify-content: center;
 }
 
-/*Layout & Dashboard styles*/
 
-:root {
-  --mec-gradient-start: #260000;
-  --mec-gradient-end: #580000;
-  --card-bg: rgba(255, 255, 255, 0.98);
-  --card-border: rgba(225, 40, 40, 0.08);
-  --accent: #d61b1b;
-  --muted: #6b6b6b;
-}
 
 /* App background (requested gradient) */
 .mec-layout {
@@ -620,5 +572,48 @@
   }
   .mec-search input {
     width: 100%;
+  }
+}
+@media (min-width: 1024px) {
+  main {
+    padding-left: 1rem;
+  }
+}
+@media (max-width: 1023px) {
+  .mec-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 16rem; /* 64 */
+    transform: translateX(-100%);
+    box-shadow: 2px 0 18px rgba(0, 0, 0, 0.45);
+  }
+
+  .mec-sidebar.mec-open {
+    transform: translateX(0);
+  }
+
+  .mec-sidebar.mec-closed {
+    transform: translateX(-100%);
+  }
+
+  .mec-overlay.visible {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 40;
+  }
+}
+@media (max-width: 1024px) {
+  .mecacnico-search {
+    width: 200px;
+  }
+
+  .mecacnico-sidebar.expanded {
+    position: fixed;
+    height: 100vh;
+    z-index: 50;
   }
 }

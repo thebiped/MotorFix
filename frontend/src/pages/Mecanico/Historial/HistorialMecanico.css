@@ -1,3 +1,229 @@
-.mec-historial {
+.historial-container {
+  min-height: 100vh;
+  padding: 2rem;
+  color: #fff;
+  background-color: #1a1a1a;
+}
+
+.historial-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.header-title h1 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #ffffff;
+}
+
+.header-title p {
+  color: #8a8a8a;
+  font-size: 0.9rem;
+}
+
+.btn-descargar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  color: #fff;
+  background-color: #ff0000;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.status-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.status-card {
+  padding: 1.5rem;
+  background-color: #2d2d2d;
+  border-radius: 8px;
+}
+
+.status-card h3 {
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+  color: #8a8a8a;
+}
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.card-content .number {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 0.25rem;
+}
+
+.card-content p {
+  font-size: 0.9rem;
+  color: #8a8a8a;
+}
+
+.historial-table {
+  padding: 0.2rem;
+  background-color: #2d2d2d;
+  border-radius: 8px;
+}
+
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.search-bar {
+  position: relative;
+  flex: 1;
+  max-width: 400px;
+}
+
+.search-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #8a8a8a;
+}
+
+.search-input {
   width: 100%;
+  padding: 0.75rem 1rem 0.75rem 2.5rem;
+  border-radius: 4px;
+  border: none;
+  background-color: #1a1a1a;
+  color: white;
+  font-size: 0.9rem;
+}
+
+.search-input::placeholder {
+  color: #8a8a8a;
+}
+
+.table-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.btn-borrar,
+.btn-editar {
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  border: none;
+  color: #ff0000;
+  background-color: transparent;
+}
+
+.datos-vehiculos {
+  margin-top: 1.5rem;
+}
+
+.datos-vehiculos h2 {
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+  color: #ffffff;
+}
+
+.table-content {
+  width: 100%;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  text-align: left;
+  padding: 1rem;
+  color: #8a8a8a;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border-bottom: 1px solid #3d3d3d;
+}
+
+td {
+  padding: 1rem;
+  color: #ffffff;
+  font-size: 0.9rem;
+  border-bottom: 1px solid #3d3d3d;
+}
+
+tr:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  align-items: center;
+  margin-top: 1.5rem;
+}
+
+.pagination-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #1a1a1a;
+  border: none;
+  color: #8a8a8a;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.pagination-btn.active {
+  background-color: #ff0000;
+  color: white;
+}
+
+/* Custom checkbox styling */
+input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #8a8a8a;
+  border-radius: 3px;
+  background-color: transparent;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+input[type="checkbox"]:checked {
+  background-color: #ff0000;
+  border-color: #ff0000;
+  position: relative;
+}
+
+input[type="checkbox"]:checked::after {
+  content: '✓';
+  position: absolute;
+  color: white;
+  font-size: 12px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }

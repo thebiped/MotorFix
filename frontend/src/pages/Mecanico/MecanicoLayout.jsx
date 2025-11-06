@@ -59,17 +59,17 @@ const MecanicoLayout = () => {
     <div className="admin-layout">
       {/* SIDEBAR */}
       <aside
-        className={`admin-sidebar ${sidebarExpanded ? "expanded" : ""}`}
+        className={`mecacnico-sidebar ${sidebarExpanded ? "expanded" : ""}`}
         onMouseEnter={() => setSidebarExpanded(true)}
         onMouseLeave={() => setSidebarExpanded(false)}
       >
-        <div className="admin-logo">
+        <div className="mecacnico-logo">
           <img src={Logo} alt="logo" />
         </div>
 
-        <nav className="admin-nav">
+        <nav className="mecacnico-nav">
           {menuItems.map((item, index) => (
-            <NavLink key={index} to={item.path} className="admin-link">
+            <NavLink key={index} to={item.path} className="mecacnico-link">
               {item.icon}
               {sidebarExpanded && (
                 <span className="link-label">{item.label}</span>
@@ -80,11 +80,11 @@ const MecanicoLayout = () => {
       </aside>
 
       {/* MAIN CONTENT */}
-      <div className="admin-main">
+      <div className="mecacnico-main">
         {/* HEADER */}
-        <header className="admin-header">
-          <input type="text" placeholder="Buscar..." className="admin-search" />
-          <div className="admin-header-actions">
+        <header className="mecacnico-header">
+          <input type="text" placeholder="Buscar..." className="mecacnico-search" />
+          <div className="mecacnico-header-actions">
             <Bell className="icon-btn" />
             <User
               className="icon-btn"
@@ -95,7 +95,7 @@ const MecanicoLayout = () => {
         </header>
 
         {/* DYNAMIC CONTENT */}
-        <main className="admin-content">
+        <main className="mecacnico-content">
           <Outlet />
         </main>
       </div>
