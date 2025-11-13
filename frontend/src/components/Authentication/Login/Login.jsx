@@ -51,7 +51,7 @@ const Login = () => {
           const rol = res.data.user.rol;
           if (rol === "admin") navigate("/admin/dashboard");
           else if (rol === "mecanico") navigate("/mecanico/dashboard");
-          else navigate("/home");
+          else navigate("/cliente/dashboard");
         }, 1500);
       } else {
         showToast(res.data.message || "Error al iniciar sesión");

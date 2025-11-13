@@ -1,0 +1,97 @@
+.brand-selector {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.brand-selector h1 {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  font-weight: bold;
+  align-self: flex-start;
+}
+
+.search-container {
+  margin-bottom: 30px;
+  width: 300px;
+}
+
+.search-container input {
+  width: 100%;
+  padding: 10px;
+  background-color: #330000;
+  border: 1px solid #550000;
+  color: white;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.search-container input::placeholder {
+  color: #ccc;
+}
+
+.brand-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 20px;
+  width: 100%;
+  max-height: 60vh;
+  overflow-y: auto;
+  padding-right: 15px; /* Espacio para la barra de scroll */
+}
+
+/* Estilos para la barra de scroll */
+.brand-grid::-webkit-scrollbar {
+  width: 8px;
+}
+
+.brand-grid::-webkit-scrollbar-track {
+  background: #330000;
+  border-radius: 10px;
+}
+
+.brand-grid::-webkit-scrollbar-thumb {
+  background: #ff0000;
+  border-radius: 10px;
+}
+
+.brand-grid::-webkit-scrollbar-thumb:hover {
+  background: #cc0000;
+}
+
+.brand-card {
+  background-color: #b30000;
+  border-radius: 10px;
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.brand-card:hover {
+  transform: scale(1.05);
+}
+
+.brand-logo-container {
+  background-color: black;
+  border-radius: 5px;
+  padding: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+  margin-bottom: 10px;
+}
+
+.brand-logo-container img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.brand-card p {
+  margin: 0;
+  font-weight: bold;
+}

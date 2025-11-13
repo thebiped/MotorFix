@@ -1,0 +1,28 @@
+.consumo-mantenimiento-container .info-grid {
+    display: flex;
+    gap: 2rem;
+}
+
+.consumo-mantenimiento-container .info-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    color: #fff;
+}
+
+.consumo-mantenimiento-container .info-icon {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: #ff0000;
+}
+
+.consumo-mantenimiento-container .info-value {
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.consumo-mantenimiento-container .info-label {
+    font-size: 0.7rem;
+    opacity: 0.8;
+}

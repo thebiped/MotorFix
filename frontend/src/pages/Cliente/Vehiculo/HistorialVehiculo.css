@@ -1,0 +1,45 @@
+.historial-content {
+  width: 90%;
+  max-width: 1200px;
+  padding: 2rem;
+  color: #212529;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+}
+
+.back-button {
+  background: none;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.historial-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.historial-table th,
+.historial-table td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.status {
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  color: #fff;
+}
+
+.status.finalizado {
+  background-color: #28a745;
+}
+.status.en-progreso {
+  background-color: #007bff;
+}

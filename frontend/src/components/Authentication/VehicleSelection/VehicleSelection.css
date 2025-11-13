@@ -1,0 +1,362 @@
+/* --- CONTENEDOR PRINCIPAL Y TRANSICIÓN DE PANTALLA --- */
+.vehicle-selection-container {
+  height: 100vh;
+  width: 100vw;
+  background-color: #0c0a0a;
+  overflow: hidden;
+  color: #fff;
+  font-family: Arial, sans-serif;
+}
+
+.screen-container {
+  position: relative;
+  width: 200%; /* 100% para cada pantalla (Brand y Model) */
+  height: 100%;
+  display: flex;
+  transition: transform 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+/* Cuando se selecciona una marca, se desplaza el contenedor a la izquierda */
+.screen-container.screen-active {
+  transform: translateX(-50%);
+}
+
+.screen {
+  width: 50%; /* Cada pantalla ocupa la mitad (100% de la vista) */
+  height: 100%;
+  flex-shrink: 0;
+}
+
+/* --- 1. PANTALLA DE SELECCIÓN DE MARCA --- */
+.brand-selector {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 2rem 0;
+  background: #110000; /* Fondo rojo muy oscuro */
+}
+
+.brand-header {
+  padding: 0 4rem;
+}
+
+.brand-header h1 {
+  font-size: 1.5rem;
+  font-weight: 300;
+  margin-bottom: 1rem;
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+  background: #2b2b2b;
+  border-radius: 4px;
+  padding: 0.5rem 0.75rem;
+  width: 300px;
+  border-bottom: 2px solid #ff0000;
+}
+
+.search-container input {
+  background: none;
+  border: none;
+  outline: none;
+  color: #fff;
+  font-size: 1rem;
+  margin-left: 0.5rem;
+  width: 100%;
+}
+
+.brand-slider-container {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  position: relative;
+  margin-top: 2rem;
+}
+
+.brand-slider {
+  display: flex;
+  gap: 1.5rem;
+  padding: 2rem 4rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  /* Ocultar la barra de scroll */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.brand-slider::-webkit-scrollbar {
+  display: none;
+}
+
+.slider-nav-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.3);
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  z-index: 10;
+  padding: 1rem 0.5rem;
+  border-radius: 8px;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+.slider-nav-arrow:hover {
+  opacity: 1;
+}
+.slider-nav-arrow.prev { left: 1rem; }
+.slider-nav-arrow.next { right: 1rem; }
+
+.brand-card {
+  width: 300px;
+  flex-shrink: 0;
+  background: #c00; /* Rojo base */
+  border-radius: 12px;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.brand-card.active {
+  background: #fff; /* Blanco cuando está activo */
+  color: #000;
+  transform: scale(1.05);
+}
+
+.brand-card-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.brand-logo {
+  height: 50px;
+  width: auto;
+  object-fit: contain;
+  margin-bottom: 0.5rem;
+}
+.brand-card.active .brand-logo {
+  filter: brightness(0); /* Logo negro sobre fondo blanco */
+}
+
+.brand-name {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.brand-car-image {
+  width: 120%; /* Que se salga un poco */
+  margin-left: -10%;
+  margin-top: 1rem;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+.brand-card:hover .brand-car-image {
+  transform: scale(1.03);
+}
+
+
+/* --- 2. PANTALLA DE SELECCIÓN DE MODELO --- */
+.model-selector {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: radial-gradient(circle, #300 0%, #0a0000 70%);
+  padding: 2rem 4rem;
+  box-sizing: border-box;
+}
+
+.model-header {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.header-title-button {
+  background: rgba(0,0,0,0.3);
+  border: 1px solid rgba(255,0,0,0.5);
+  color: #fff;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  border-bottom: 3px solid #ff0000;
+}
+
+.slider-container {
+  flex-grow: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden; /* Clave para las animaciones */
+}
+
+.slider-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #fff;
+  opacity: 0.7;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.2s;
+}
+.slider-arrow:hover {
+  opacity: 1;
+  transform: translateY(-50%) scale(1.1);
+}
+.slider-arrow.left { left: 0; }
+.slider-arrow.right { right: 0; }
+
+.slide-content {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.turntable-ring {
+  position: absolute;
+  bottom: -15%;
+  width: 500px;
+  height: 500px;
+  border: 4px dotted rgba(255, 0, 0, 0.4);
+  border-radius: 50%;
+  z-index: 1;
+}
+
+.model-info {
+  position: absolute;
+  top: -2rem;
+  left: 0;
+  z-index: 3;
+  transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+}
+.model-info h1 {
+  font-size: 4rem;
+  font-weight: 700;
+  margin: 0;
+  color: #fff;
+}
+.model-info p {
+  font-size: 6rem;
+  font-weight: 700;
+  margin: -1.5rem 0 0 0;
+  /* Texto con bordeado */
+  -webkit-text-stroke: 1px #fff;
+  color: transparent;
+  font-family: 'Arial Black', Gadget, sans-serif;
+}
+
+.model-image {
+  position: relative;
+  z-index: 2;
+  width: 80%;
+  max-width: 800px;
+  object-fit: contain;
+  transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+}
+
+/* --- ANIMACIÓN NFS:U2 --- */
+/* Estado de salida */
+.model-info.exiting {
+  transform: translateX(-100%);
+  opacity: 0;
+}
+.model-image.exiting {
+  transform: translateX(-100%);
+  opacity: 0;
+}
+
+/* Estado de entrada (implícito) */
+.model-info:not(.exiting) {
+  transform: translateX(0);
+  opacity: 1;
+}
+.model-image:not(.exiting) {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+
+.form-and-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+  padding-top: 1rem;
+}
+
+.form-inputs {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-group label {
+  font-size: 0.8rem;
+  color: #aaa;
+  margin-bottom: 0.25rem;
+}
+
+.input-group input,
+.input-group select {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  color: #fff;
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+  font-size: 1rem;
+  width: 200px;
+}
+.input-group input:focus,
+.input-group select:focus {
+  outline: none;
+  border-color: #ff0000;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+.modern-button {
+  background: none;
+  border: 1px solid #555;
+  color: #ccc;
+  font-size: 0.9rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s;
+}
+.modern-button:hover {
+  border-color: #fff;
+  color: #fff;
+}
+
+.modern-button.confirm-button {
+  border-color: #ff0000;
+  color: #ff0000;
+}
+.modern-button.confirm-button:hover {
+  background: #ff0000;
+  color: #fff;
+}

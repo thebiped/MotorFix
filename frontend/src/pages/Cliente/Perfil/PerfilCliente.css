@@ -1,0 +1,214 @@
+.perfil-cliente-container {
+  color: #fff;
+  background: linear-gradient(to bottom, #5d0000 0%, #1e0000 100%);
+}
+
+.profile-header {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.profile-banner {
+  height: 200px;
+  background-image: url("../../../assets/img/banner.png");
+  background-size: cover;
+  background-position: center;
+  border-bottom: 2px solid #ff0000;
+}
+
+.profile-picture-container {
+  position: absolute;
+  top: 100px;
+  left: 40px;
+  background-color: #2a2a2a;
+  border-radius: 50%;
+  padding: 5px;
+}
+
+.profile-picture {
+  background-color: white;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+}
+
+.profile-header-info {
+  position: absolute;
+  top: 200px;
+  left: 220px;
+  padding: 24px;
+}
+
+.profile-header-info p {
+  width: calc(100% - 240px);
+  margin-top: 20px;
+}
+
+.header-info {
+  display: flex;
+  justify-content: space-between;
+}
+
+.info span,
+.info h2 {
+  margin: 0;
+}
+
+.edit-profile-btn {
+  height: 35px;
+  padding: 8px 10px;
+  color: #000;
+  background-color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.profile-stats {
+  display: flex;
+  justify-content: center;
+  gap: 50px;
+  margin-top: 170px;
+  margin-bottom: 50px;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-item h3 {
+  margin: 0;
+  font-size: 24px;
+}   
+.stat-item p {
+  margin: 0;    
+  color: var(--muted);
+}
+
+.profile-nav {
+  display: flex;
+  justify-content: center;
+  margin: 24px;
+}
+
+.profile-nav button {
+    width: 100%;
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #fff;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.profile-nav button.active {
+  background-color: #B20000;
+  border-radius: 5px;
+  border: none;
+  outline: none;
+}
+
+.profile-content {
+  display: flex;
+  justify-content: center;
+}
+
+.profile-content-cont {
+  width: 70%;
+  padding: 24px;
+  background: #5d0000;
+  border-radius: 8px;
+}
+
+.profile-personal-info-content .profile-info-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  color: #fff;
+}
+
+.profile-personal-info-content .info-icon {
+  font-size: 24px;
+  margin-right: 15px;
+}
+
+.profile-personal-info-content .edit-info-btn {
+  margin-left: auto;
+  padding: 6px 6px;
+  color: #fff;
+  background-color: #370000;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.profile-security-content .security-item {
+  margin-bottom: 20px;
+}
+
+.change-password-btn,
+.deactivate-account-btn,
+.delete-account-btn {
+  padding: 10px 15px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.change-password-btn {
+  background-color: #d32f2f;
+  color: white;
+}
+
+.deactivate-account-btn {
+  background-color: #424242;
+  color: white;
+}
+
+.delete-account-btn {
+  background-color: #d32f2f;
+  color: white;
+}
+
+.profile-workshop-contacts-content .mechanic-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 0;
+  border-bottom: 1px solid #424242;
+}
+
+.profile-workshop-contacts-content .mechanic-info {
+  display: flex;
+  align-items: center;
+}
+
+.mechanic-avatar {
+  width: 50px;
+  height: 50px;
+  background-color: white;
+  border-radius: 50%;
+  margin-right: 15px;
+}
+
+.view-profile-btn,
+.consult-btn {
+  padding: 8px 15px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+}
+
+.view-profile-btn {
+  background-color: #424242;
+  color: white;
+  margin-right: 10px;
+}
+
+.consult-btn {
+  background-color: white;
+  color: black;
+}

@@ -1,0 +1,191 @@
+:root {
+  --bg: #0b0b0b;
+  --card: #141414;
+  --muted: rgba(255, 255, 255, 0.55);
+  --accent: #d40824;
+}
+
+.turnos-container {
+  min-height: 100vh;
+  padding: 24px;
+  background: var(--bg);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.turnos-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.turnos-top h1 {
+  margin: 0;
+  font-size: 28px;
+}
+.subtitle {
+  color: var(--muted);
+  margin-top: 6px;
+}
+.top-actions .btn-primary {
+  background: var(--accent);
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: none;
+}
+
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+.metric {
+  background: var(--card);
+  padding: 16px;
+  border-radius: 10px;
+}
+.metric.big {
+  background: var(--accent);
+  color: #fff;
+}
+.metric h4 {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+.metric .value {
+  margin-top: 8px;
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+}
+.metric:not(.big) .value {
+  color: var(--accent);
+}
+
+.tabs {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  margin-top: 6px;
+}
+.tab {
+  background: transparent;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  color: var(--muted);
+  cursor: pointer;
+}
+.tab.active {
+  background: var(--accent);
+  color: #fff;
+}
+
+.turnos-table-card {
+  background: var(--card);
+  padding: 18px;
+  border-radius: 10px;
+}
+.datos-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.datos-header h2 {
+  margin: 0;
+}
+.datos-actions .link {
+  background: transparent;
+  border: none;
+  color: var(--accent);
+  cursor: pointer;
+  margin-left: 8px;
+}
+
+.table-wrap {
+  overflow: auto;
+}
+.turnos-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.turnos-table thead th {
+  text-align: left;
+  padding: 14px;
+  color: var(--muted);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+.turnos-table tbody td {
+  padding: 12px;
+  color: #fff;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+.turnos-table tr:hover {
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.01), transparent);
+}
+
+.patente {
+  font-weight: 700;
+  color: var(--accent);
+}
+.vehiculo {
+  font-size: 13px;
+  color: var(--muted);
+}
+.servicio {
+  color: var(--muted);
+}
+
+.pill {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 13px;
+}
+.pill.pending {
+  background: #fff;
+  color: #000;
+}
+.pill.done {
+  background: #dff0df;
+  color: #083318;
+}
+.pill.progress {
+  background: var(--accent);
+  color: #fff;
+}
+
+.pagination {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 14px;
+}
+.pg {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  color: var(--muted);
+  padding: 6px 10px;
+  border-radius: 6px;
+}
+.pg.active {
+  background: transparent;
+  color: var(--accent);
+  border-color: rgba(212, 8, 36, 0.2);
+}
+
+@media (max-width: 1023px) {
+  .metrics {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .turnos-top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+}

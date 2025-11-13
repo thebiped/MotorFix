@@ -55,7 +55,7 @@ const Register = () => {
       showToast("✅ Registro exitoso", "success");
 
       setTimeout(() => {
-        navigate("/"); 
+        navigate("/vehicle-selection"); 
       }, 1500);
     } catch (err) {
       console.log(err.response?.data);

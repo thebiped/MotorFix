@@ -1,0 +1,28 @@
+.info-grid {
+    display: flex;
+    gap: 2rem;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    color: #fff;
+}
+
+.info-icon {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: #ff0000;
+}
+
+.info-value {
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.info-label {
+    font-size: 0.7rem;
+    opacity: 0.8;
+}
