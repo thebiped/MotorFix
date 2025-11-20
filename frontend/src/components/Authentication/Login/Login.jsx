@@ -6,6 +6,8 @@ import api from "../../../services/api";
 import bg_login from "../../../assets/img/bg_login.png";
 import logo from "../../../assets/img/logo.png";
 import ToastNotification from "../../notification/ToastNotification";
+import LoadingScreen from "../../Loading/LoadingScreen";
+import WelcomeLoader from "../../Welcome/WelcomeLoader";
 import "./Login.css";
 
 const Login = () => {
@@ -13,6 +15,9 @@ const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [toast, setToast] = useState(null);
+
+  const [loading, setLoading] = useState(false); // Loading estilo Gotham/NFS
+  const [showWelcome, setShowWelcome] = useState(false); // Pantalla WelcomeLoader
 
   const showToast = (message, type = "error") => {
     setToast({ message, type });
@@ -38,21 +43,21 @@ const Login = () => {
       const res = await api.post("/auth/login", { username, password });
 
       if (res.data.success) {
-        // Guardar token y usuario en localStorage
+        // Guardar usuario y token
         localStorage.setItem("token", res.data.token);
         api.defaults.headers.common["Authorization"] = `Bearer ${res.data.token}`;
-        
         localStorage.setItem("user", JSON.stringify(res.data.user));
 
         showToast("✅ Inicio de sesión exitoso", "success");
 
-        // Redirección según rol
+        // Activa la animación Gotham/NFS
+        setLoading(true);
+
+        // Cuando termina el loading, activa WelcomeLoader
         setTimeout(() => {
-          const rol = res.data.user.rol;
-          if (rol === "admin") navigate("/admin/dashboard");
-          else if (rol === "mecanico") navigate("/mecanico/dashboard");
-          else navigate("/cliente/dashboard");
-        }, 1500);
+          setLoading(false);
+          setShowWelcome(true);
+        }, 2200); // Duración del loading inicial
       } else {
         showToast(res.data.message || "Error al iniciar sesión");
       }
@@ -61,8 +66,26 @@ const Login = () => {
     }
   };
 
+  // Si está en la pantalla de bienvenida, se renderiza esto
+  if (showWelcome) {
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    return (
+      <WelcomeLoader
+        name={user?.username || "Usuario"}
+        onFinish={() => {
+          const rol = user?.rol;
+          if (rol === "admin") navigate("/admin/dashboard");
+          else if (rol === "mecanico") navigate("/mecanico/dashboard");
+          else navigate("/cliente/dashboard");
+        }}
+      />
+    );
+  }
+
   return (
     <>
+      {/* Toast Notification */}
       {toast && (
         <ToastNotification
           message={toast.message}
@@ -70,6 +93,9 @@ const Login = () => {
           onClose={() => setToast(null)}
         />
       )}
+
+      {/* Animación Gotham/NFS */}
+      <LoadingScreen visible={loading} />
 
       <div className="login-container">
         <div className="login">
@@ -112,9 +138,9 @@ const Login = () => {
             </button>
           </form>
 
-          <p className="login-register-text">
+          <p className="register-text">
             ¿No tienes una cuenta?{" "}
-            <Link to="/register" className="login-register-link">
+            <Link to="/register" className="register-link">
               Registrarse
             </Link>
           </p>

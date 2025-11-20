@@ -1,130 +1,178 @@
-import { useState } from 'react';
-import ReparacionRow from './ReparacionRow';
-import './ReparacionesAdmin.css';
+import { useState, useMemo } from "react";
+import ReparacionRow from "./ReparacionRow";
+import "./ReparacionesAdmin.css"; // Asegúrate de que el CSS actualizado esté aquí
+
+// Opciones estáticas para filtros
+const ESTADOS = ["Todos", "Completado", "En progreso", "Pendiente"];
+const TIPOS = ["", "Motor", "Frenos", "Eléctrico"]; // El "" es para 'Todos'
+const PRIORIDADES = ["", "Alta", "Media", "Baja"]; // El "" es para 'Todas'
 
 const ReparacionesAdmin = () => {
-  const [activeFilter, setActiveFilter] = useState('Todos');
+  const [activeFilter, setActiveFilter] = useState("Todos"); // Para las pestañas de estado
   const [searchClient, setSearchClient] = useState("");
-  const [filterState, setFilterState] = useState("Todos");
   const [filterTipo, setFilterTipo] = useState("");
   const [filterPrioridad, setFilterPrioridad] = useState("");
 
   const reparaciones = [
-    { id: 1, title: 'Cambio de aceite', client: 'Mario Pérez', status: 'Completado', tipo: 'Motor', prioridad: 'Alta', total: 1200, dateFrom: '01/10/2025', dateTo: '02/10/2025' },
-    { id: 2, title: 'Frenos delanteros', client: 'Juan Gómez', status: 'En progreso', tipo: 'Frenos', prioridad: 'Media', total: 1500, dateFrom: '03/10/2025', dateTo: '05/10/2025' },
-    { id: 3, title: 'Cambio de batería', client: 'Ana López', status: 'Pendiente', tipo: 'Eléctrico', prioridad: 'Baja', total: 800, dateFrom: '07/10/2025', dateTo: '08/10/2025' },
+    {
+      id: 1,
+      title: "Cambio de aceite",
+      client: "Mario Pérez",
+      status: "Completado",
+      tipo: "Motor",
+      prioridad: "Alta",
+      total: 1200,
+      dateFrom: "01/10/2025",
+      dateTo: "02/10/2025",
+    },
+    {
+      id: 2,
+      title: "Frenos delanteros",
+      client: "Juan Gómez",
+      status: "En progreso",
+      tipo: "Frenos",
+      prioridad: "Media",
+      total: 1500,
+      dateFrom: "03/10/2025",
+      dateTo: "05/10/2025",
+    },
+    {
+      id: 3,
+      title: "Cambio de batería",
+      client: "Ana López",
+      status: "Pendiente",
+      tipo: "Eléctrico",
+      prioridad: "Baja",
+      total: 800,
+      dateFrom: "07/10/2025",
+      dateTo: "08/10/2025",
+    },
+    // Podrías agregar más datos aquí
   ];
 
-  const estados = ['Todos', 'Completado', 'En progreso', 'Pendiente'];
+  // Aplicamos el filtrado con useMemo para optimizar el rendimiento
+  const filteredReparaciones = useMemo(() => {
+    return reparaciones.filter((r) => {
+      const matchEstado =
+        activeFilter === "Todos" ? true : r.status === activeFilter;
+      const matchClient =
+        searchClient === ""
+          ? true
+          : r.client.toLowerCase().includes(searchClient.toLowerCase());
+      const matchTipo = filterTipo === "" ? true : r.tipo === filterTipo;
+      const matchPrioridad =
+        filterPrioridad === "" ? true : r.prioridad === filterPrioridad;
 
-  const applyFilters = () => {
-    setActiveFilter(filterState);
-  };
+      return matchEstado && matchClient && matchTipo && matchPrioridad;
+    });
+  }, [reparaciones, activeFilter, searchClient, filterTipo, filterPrioridad]);
 
-  const clearFilters = () => {
-    setSearchClient("");
-    setFilterState("Todos");
-    setFilterTipo("");
-    setFilterPrioridad("");
-    setActiveFilter("Todos");
-  };
-
-  const filteredReparaciones = reparaciones.filter(r => {
-    const matchEstado = activeFilter === 'Todos' ? true : r.status === activeFilter;
-    const matchClient = searchClient === "" ? true : r.client.toLowerCase().includes(searchClient.toLowerCase());
-    const matchTipo = filterTipo === "" ? true : r.tipo === filterTipo;
-    const matchPrioridad = filterPrioridad === "" ? true : r.prioridad === filterPrioridad;
-    return matchEstado && matchClient && matchTipo && matchPrioridad;
-  });
+  // Se eliminan las funciones applyFilters y clearFilters ya que los filtros
+  // se aplican de manera reactiva con los estados.
+  // Podrías reintroducir un 'clearFilters' para resetear todos los estados si lo necesitas.
 
   return (
     <div className="reparaciones-admin-container">
       {/* Encabezado y Acciones */}
-      <div className="reparaciones-header">
-        <h1>Gestión de Reparaciones</h1>
-        <button className="add-order-btn">Agregar orden de trabajo</button>
-      </div>
 
-      {/* Tarjetas de Estadísticas */}
-      <div className="reparaciones-stats-cards">
-        <div className="reparacion-card">
-          <p>Ingresos de hoy</p>
-          <h2>$43,000</h2>
+      {/* Tarjetas de Estadísticas - Diseño tipo Gráfico HUD */}
+      <div className="stats-grid">
+        <div className="stat-card">
+          <p className="stat-label">Ingresos de Hoy</p>
+          <h2 className="stat-value">$43,000</h2>
         </div>
-        <div className="reparacion-card">
-          <p>Finalizados Hoy</p>
-          <h2>2</h2>
+        <div className="stat-card">
+          <p className="stat-label">Finalizados Hoy</p>
+          <h2 className="stat-value">2</h2>
         </div>
-        <div className="reparacion-card">
-          <p>Activos</p>
-          <h2>3</h2>
+        <div className="stat-card">
+          <p className="stat-label">Activos</p>
+          <h2 className="stat-value">3</h2>
         </div>
-        <div className="reparacion-card">
-          <p>Alta Prioridad</p>
-          <h2>2</h2>
+        <div className="stat-card accent-card">
+          <p className="stat-label">Alta Prioridad</p>
+          <h2 className="stat-value">2</h2>
         </div>
       </div>
 
-      {/* Contenedor de Filtros y Lista */}
-      <div className="reparaciones-list-container">
-        {/* Filtros */}
-        <div className="reparaciones-filters-panel">
-          <div className="filter-group">
-            <input 
-              type="text" 
-              value={searchClient} 
-              onChange={(e) => setSearchClient(e.target.value)} 
-              placeholder="Buscar por cliente..." 
-            />
-          </div>
-          <div className="filter-group">
-            <label>Tipo</label>
-            <select value={filterTipo} onChange={e => setFilterTipo(e.target.value)}>
-              <option value="">Todos</option>
-              <option value="Motor">Motor</option>
-              <option value="Frenos">Frenos</option>
-              <option value="Eléctrico">Eléctrico</option>
-            </select>
-          </div>
-          <div className="filter-group">
-            <label>Prioridad</label>
-            <select value={filterPrioridad} onChange={e => setFilterPrioridad(e.target.value)}>
-              <option value="">Todas</option>
-              <option value="Alta">Alta</option>
-              <option value="Media">Media</option>
-              <option value="Baja">Baja</option>
-            </select>
-          </div>
-          <div className="filter-actions">
-            <button className="clear-filter-btn" onClick={clearFilters}>Limpiar</button>
-            <button className="apply-filter-btn" onClick={applyFilters}>Aplicar</button>
-          </div>
-        </div>
-
-        {/* Pestañas de Estado */}
-        <div className="reparaciones-status-tabs">
-          {estados.map(estado => (
+      {/* Contenedor Principal de la Lista */}
+      <div className="list-panel">
+        {/* Pestañas de Estado (Filtro Rápido) */}
+        <div className="status-tabs-hud">
+          {ESTADOS.map((estado) => (
             <button
               key={estado}
-              className={`status-tab ${activeFilter === estado ? 'active' : ''}`}
+              className={`status-tab ${
+                activeFilter === estado ? "active" : ""
+              }`}
               onClick={() => setActiveFilter(estado)}
             >
               {estado}
             </button>
           ))}
+          <div className="status-tabs-hub-button">
+            <button className="add-order-btn hud-button-accent">
+              + Agregar Orden
+            </button>
+          </div>
         </div>
+
+        {/* Panel de Filtros Secundarios */}
+        <div className="filters-panel">
+          <div className="filter-group">
+            <input
+              type="text"
+              value={searchClient}
+              onChange={(e) => setSearchClient(e.target.value)}
+              placeholder="Buscar por cliente, título..."
+              className="hud-input"
+            />
+          </div>
+
+          <div className="filter-group">
+            <label className="hud-label">Tipo</label>
+            <select
+              value={filterTipo}
+              onChange={(e) => setFilterTipo(e.target.value)}
+              className="hud-select"
+            >
+              <option value="">Todos</option>
+              {TIPOS.filter((t) => t !== "").map((tipo) => (
+                <option key={tipo} value={tipo}>
+                  {tipo}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="filter-group">
+            <label className="hud-label">Prioridad</label>
+            <select
+              value={filterPrioridad}
+              onChange={(e) => setFilterPrioridad(e.target.value)}
+              className="hud-select"
+            >
+              <option value="">Todas</option>
+              {PRIORIDADES.filter((p) => p !== "").map((prio) => (
+                <option key={prio} value={prio}>
+                  {prio}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div> 
 
         {/* Lista de Reparaciones */}
         <div className="reparaciones-list">
-          <p className="showing-results">
-            Mostrando {filteredReparaciones.length} de {reparaciones.length} reparaciones
-          </p>
           {filteredReparaciones.length > 0 ? (
-            filteredReparaciones.map(r => (
+            filteredReparaciones.map((r) => (
+              // Asumo que ReparacionRow también usará las nuevas clases CSS
               <ReparacionRow key={r.id} reparacion={r} />
             ))
           ) : (
-            <p className="no-results">No se encontraron reparaciones con los filtros aplicados.</p>
+            <div className="no-results hud-no-results">
+              <p>No se encontraron reparaciones con los filtros aplicados.</p>
+            </div>
           )}
         </div>
       </div>

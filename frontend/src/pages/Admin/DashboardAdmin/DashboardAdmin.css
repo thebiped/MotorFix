@@ -1,0 +1,299 @@
+/* Paleta de Colores HUD/Dark Mode:
+   Fondo Principal: #0a0a0a (Negro muy oscuro)
+   Elementos/Contenedores: #1a1a1a (Gris oscuro)
+   Texto Principal: #f0f0f0 (Blanco brillante)
+   Texto Secundario/Info: #777777 (Gris medio)
+   Acento (Rojo/Error/Alerta): #ff4444 (Rojo brillante)
+   Separadores: #222222 (Gris muy oscuro para líneas)
+   Fuente: Monospace/Consolas
+*/
+
+/* --- VARIABLES GLOBALES (Aseguran consistencia) --- */
+:root {
+  --bg: #0a0a0a;
+  --panel: #1a1a1a;
+  --accent: #ff4444;
+  --accent-dark: #c70b0b;
+  --text: #f0f0f0;
+  --muted: #777777;
+  --soft-shadow: 0 0 10px rgba(255, 68, 68, 0.15); /* Sombra roja sutil */
+  --hover-shadow: 0 0 15px rgba(255, 68, 68, 0.25);
+  --border-radius: 4px; /* Cuadrado, estilo tecnológico */
+  --transition-speed: 0.3s;
+  --font-main: "Consolas", "Roboto Mono", monospace;
+}
+
+/* --- CONTENEDOR GENERAL --- */
+.admin-dashboard.modern {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 32px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-main);
+}
+
+/* --- TOPBAR (Si se añade) --- */
+.adm-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--panel);
+  padding: 16px 24px;
+  border-radius: var(--border-radius);
+  box-shadow: var(--soft-shadow);
+  border: 1px solid #222222;
+}
+.adm-topbar h2 {
+  margin: 0;
+  font-weight: 600;
+  font-size: 20px;
+  color: var(--text);
+}
+
+/* --- MAIN GRID --- */
+.adm-content {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+}
+
+/* --- COLUMNAS --- */
+.left-col,
+.right-col {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* --- GRID DE ESTADÍSTICAS (all-stats-grid) --- */
+.all-stats-grid {
+  height: fit-content;
+  display: flex;
+  gap: 16px;
+}
+
+.stat-card {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 20px;
+  background: var(--panel) !important;
+  border-radius: var(--border-radius);
+  border: 1px solid #222222;
+  box-shadow: var(--soft-shadow);
+  transition: all var(--transition-speed);
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  background: #222222 !important;
+  border-color: #333333;
+}
+
+.card-title {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muted);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.card-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--accent);
+  margin: 0;
+}
+
+/* --- BLOQUE DE PROGRESO (GRÁFICO DE BARRAS) --- */
+.modern {
+  background-color: #111111 !important;
+}
+
+.progress-block {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px;
+  border-radius: var(--border-radius);
+  border: 1px solid #222222;
+}
+
+.progress-block h4 {
+  color: var(--accent);
+  text-transform: uppercase;
+  font-size: 16px;
+  margin: 0;
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* Controles de Gráfico (Botones) */
+.graph-controls {
+  display: flex;
+  gap: 8px;
+}
+
+.time-btn,
+.date-picker {
+  padding: 8px 14px;
+  font-weight: 500;
+  font-size: 13px;
+  color: #ddd;
+  background: #222222;
+  border: 1px solid #333333;
+  border-radius: 2px;
+  text-transform: uppercase;
+  transition: all var(--transition-speed);
+  cursor: pointer;
+}
+
+.time-btn.active {
+  background: var(--accent);
+  color: var(--bg); /* Texto oscuro sobre rojo */
+  border-color: var(--accent);
+  font-weight: 700;
+}
+
+.time-btn:hover:not(.active) {
+  background: #333333;
+  border-color: var(--accent);
+}
+
+.date-picker {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--accent);
+  color: var(--bg);
+  border-color: var(--accent);
+}
+
+.date-picker:hover {
+  background: #ff6666;
+  border-color: #ff6666;
+}
+
+/* --- ACTIVIDAD RECIENTE (recent-panel) --- */
+.recent-panel {
+  padding: 20px;
+  background: var(--panel);
+  border-radius: var(--border-radius);
+  border: 1px solid #222222;
+}
+
+.recent-panel .panel-title {
+  color: var(--accent);
+  text-transform: uppercase;
+  font-size: 16px;
+  margin: 0 0 16px 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #222222;
+}
+
+.activity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.activity-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 2px;
+  background: #222222;
+  transition: all var(--transition-speed);
+}
+
+.activity-item:hover {
+  background: #333333;
+}
+
+.act-icon {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: var(--accent);
+  background: rgba(255, 68, 68, 0.15);
+  border-radius: 50%;
+}
+
+.act-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.act-title {
+  font-weight: 700;
+  font-size: 14px;
+  color: #fff;
+}
+
+.act-sub {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* --- PIE PANEL (si se añade) --- */
+.pie-panel {
+  background: var(--panel);
+  border-radius: var(--border-radius);
+  padding: 20px;
+  border: 1px solid #222222;
+  box-shadow: var(--soft-shadow);
+}
+
+/* --- RECHARTS TOOLTIP FIX (Soluciona el problema de fondo blanco) --- */
+.recharts-tooltip-wrapper {
+  background-color: #111111 !important;
+  border: 1px solid #333333 !important;
+  border-radius: 4px !important;
+  opacity: 1 !important;
+  box-shadow: 0 0 10px rgba(255, 68, 68, 0.2);
+  z-index: 1000;
+}
+
+.recharts-default-tooltip {
+  padding: 10px !important;
+  background-color: transparent !important;
+  color: var(--text) !important;
+  font-family: var(--font-main) !important;
+  font-size: 14px;
+}
+
+.recharts-tooltip-label {
+  color: var(--accent) !important;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+.recharts-tooltip-item-list,
+.recharts-tooltip-item {
+  color: var(--text) !important;
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 1100px) {
+  .adm-content {
+    grid-template-columns: 1fr;
+  }
+  .all-stats-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+}

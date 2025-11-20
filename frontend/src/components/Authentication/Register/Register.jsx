@@ -55,7 +55,7 @@ const Register = () => {
       showToast("✅ Registro exitoso", "success");
 
       setTimeout(() => {
-        navigate("/vehicle-selection"); 
+        navigate("/vehicle-selection");
       }, 1500);
     } catch (err) {
       console.log(err.response?.data);
@@ -140,14 +140,20 @@ const Register = () => {
             </div>
           </div>
 
-          <button className="register-btn" type="button" onClick={handleSubmit}>
-            Registrarse
-          </button>
+          <div className="register-button">
+            <button
+              className="register-btn"
+              type="button"
+              onClick={handleSubmit}
+            >
+              Registrarse
+            </button>
+          </div>
         </form>
 
-        <p className="login-register-text">
+        <p className="login-text">
           ¿Ya tienes una cuenta?{" "}
-          <Link to="/" className="login-register-link">
+          <Link to="/" className="login-link">
             Iniciar sesión
           </Link>
         </p>

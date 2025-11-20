@@ -7,6 +7,8 @@ import {
   FaUserCircle,
   FaClipboardList,
   FaSearch,
+  FaChevronLeft, // Para el calendario
+  FaChevronRight, // Para el calendario
 } from "react-icons/fa";
 import ClientesTable from "./ClientesTable";
 import TurnosTable from "./TurnosTable";
@@ -22,20 +24,42 @@ const GestionesAdmin = () => {
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
 
-  // calendario (mes simple, no dependencia externa)
+  // calendario
   const [monthOffset, setMonthOffset] = useState(0);
+  const currentDate = new Date();
   const currentMonth = useMemo(() => {
     const d = new Date();
-    d.setMonth(d.getMonth() + monthOffset);
-    return d.toLocaleString("es-ES", { month: "long", year: "numeric" });
-  }, [monthOffset]);
+    d.setMonth(currentDate.getMonth() + monthOffset);
+    // Para el formato de calendario
+    return d.toLocaleString("es-ES", { month: "long", year: "numeric" }); 
+  }, [monthOffset, currentDate]);
+  
+  // Función placeholder para generar un calendario simple (solo para estilos)
+  const renderCalendarDays = () => {
+    const today = new Date().getDate();
+    const daysInMonth = 30; // Simplificado
+    let days = [];
+    // Días de ejemplo para renderizar y probar estilos
+    for (let i = 1; i <= daysInMonth; i++) {
+        days.push(
+            <div 
+                key={i} 
+                className={`calendar-date current-month ${i === today ? 'highlight' : ''}`}
+            >
+                {i}
+            </div>
+        );
+    }
+    return days;
+  };
+
 
   // estadísticas (placeholder)
   const stats = [
-    { title: "Clientes activos", value: "154" },
-    { title: "Turnos del día", value: "12" },
-    { title: "Repuestos en stock", value: "43" },
-    { title: "Servicios pendientes", value: "8" },
+    { title: "Turnos programados", value: "En espera: 52" },
+    { title: "Vehículo registrados", value: "Vehículos: 20" },
+    { title: "Repuestos en stock", value: "Stock: 43" },
+    { title: "Clientes activos", value: "Activos: 8" },
   ];
 
   // recent activities (placeholder)
@@ -92,43 +116,31 @@ const GestionesAdmin = () => {
 
       {/* Main layout: left (tables) - right (calendar + filter + recent) */}
       <main className="gestiones-main">
+        {/* COLUMNA IZQUIERDA: TABLAS */}
         <div className="tables-section">
-          {/* Tabs */}
+          {/* Tabs y Acciones */}
           <div className="tabs">
-            <button
-              className={`tab-btn ${activeTab === "clientes" ? "active" : ""}`}
-              onClick={() => setActiveTab("clientes")}
-            >
-              <FaUserCircle /> Clientes
-            </button>
-            <button
-              className={`tab-btn ${activeTab === "turnos" ? "active" : ""}`}
-              onClick={() => setActiveTab("turnos")}
-            >
-              <FaClipboardList /> Turnos
-            </button>
-            <button
-              className={`tab-btn ${activeTab === "repuestos" ? "active" : ""}`}
-              onClick={() => setActiveTab("repuestos")}
-            >
-              <FaTools /> Repuestos
-            </button>
-          </div>
-
-          {/* Actions + search (global) */}
-          <div className="table-actions">
-            <div className="left-actions">
-              <div className="search-bar">
-                <FaSearch className="search-icon" />
-                <input
-                  className="global-search"
-                  placeholder="Buscar (nombre, detalle, patente...)"
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                />
-              </div>
+            <div className="tab-group">
+                <button
+                    className={`tab-btn ${activeTab === "clientes" ? "active" : ""}`}
+                    onClick={() => setActiveTab("clientes")}
+                >
+                    <FaUserCircle /> Clientes
+                </button>
+                <button
+                    className={`tab-btn ${activeTab === "turnos" ? "active" : ""}`}
+                    onClick={() => setActiveTab("turnos")}
+                >
+                    <FaClipboardList /> Turnos
+                </button>
+                <button
+                    className={`tab-btn ${activeTab === "repuestos" ? "active" : ""}`}
+                    onClick={() => setActiveTab("repuestos")}
+                    >
+                    <FaTools /> Repuestos
+                </button>
             </div>
-
+            
             <div className="right-actions">
               <button className="action-btn export-btn">Exportar CSV</button>
               <button className="action-btn add-btn">
@@ -141,115 +153,6 @@ const GestionesAdmin = () => {
           <div className="table-container">{renderActiveTable()}</div>
         </div>
 
-        <aside className="right-sidebar">
-          {/* Calendario */}
-          <div className="calendar-card">
-            <div className="calendar-header">
-              <button
-                className="nav-btn"
-                onClick={() => setMonthOffset((m) => m - 1)}
-              >
-                ‹
-              </button>
-              <h3>{currentMonth}</h3>
-              <button
-                className="nav-btn"
-                onClick={() => setMonthOffset((m) => m + 1)}
-              >
-                ›
-              </button>
-            </div>
-
-            <div className="calendar-grid">
-              {["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"].map((d) => (
-                <div key={d} className="day-name">
-                  {d}
-                </div>
-              ))}
-              {[...Array(31).keys()].map((i) => (
-                <div
-                  key={i}
-                  className={`day ${
-                    i + 1 === new Date().getDate() && monthOffset === 0
-                      ? "active-day"
-                      : ""
-                  }`}
-                >
-                  {i + 1}
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Filtros */}
-          <div className="filter-card">
-            <h3>Filtros</h3>
-
-            <label>Estado</label>
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-            >
-              <option value="">Todos</option>
-              <option value="Activo">Activo</option>
-              <option value="Pendiente">Pendiente</option>
-              <option value="Completado">Completado</option>
-              <option value="Confirmado">Confirmado</option>
-            </select>
-
-            <label>Desde</label>
-            <input
-              type="date"
-              value={dateFrom}
-              onChange={(e) => setDateFrom(e.target.value)}
-            />
-
-            <label>Hasta</label>
-            <input
-              type="date"
-              value={dateTo}
-              onChange={(e) => setDateTo(e.target.value)}
-            />
-
-            <div className="filter-actions">
-              <button
-                className="filter-btn apply-btn"
-                onClick={() => {
-                  /* aplica filtros ya manejados por estado */
-                }}
-              >
-                Aplicar
-              </button>
-              <button
-                className="filter-btn clear-btn"
-                onClick={() => {
-                  setSearch("");
-                  setStatusFilter("");
-                  setDateFrom("");
-                  setDateTo("");
-                }}
-              >
-                Limpiar
-              </button>
-            </div>
-          </div>
-
-          {/* Actividades recientes */}
-          <div className="recent-card">
-            <h3>Actividades Recientes</h3>
-            <ul className="activity-list">
-              {recentActivities.map((a) => (
-                <li key={a.id} className="activity-item">
-                  <div className="icon">{a.icon}</div>
-                  <div>
-                    <p className="activity-title">{a.title}</p>
-                    <span className="activity-desc">{a.desc}</span>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </aside>
       </main>
     </div>
   );

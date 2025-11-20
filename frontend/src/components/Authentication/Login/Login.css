@@ -2,9 +2,9 @@
   width: 100vw;
   height: 100vh;
   display: flex;
-  font-family: 'Inter';
+  font-family: "Inter";
   color: #fff;
-  background:linear-gradient(180deg, #0b0000 40%, #1a0000 100% );
+  background: linear-gradient(180deg, #0b0000 40%, #1a0000 100%);
 }
 
 /* ---- FORMULARIO IZQUIERDO ---- */
@@ -19,7 +19,7 @@
   box-shadow: 2px 0 30px rgba(255, 0, 0, 0.2);
 }
 
-.login-logo{
+.login-logo {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -33,12 +33,12 @@
 .login-title {
   margin: 0;
   font-family: "Playfair Display SC", serif;
-  font-size: 26px;
+  font-size: 1.8rem;
   font-weight: 800;
   color: #fff;
 }
 
-.login-form-container{
+.login-form-container {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -56,19 +56,20 @@
 
 .login-form-group label {
   margin-bottom: 8px;
-  font-size: 15px;
-  color: #FF6767;
+  font-size: 1rem;
+  color: #ff6767;
 }
 
 .login-input-box {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 8px 10px;
+  padding: 0.7rem 0.8rem;
   background: rgba(255, 0, 0, 0.1);
   border: 1px solid rgba(255, 0, 0, 0.4);
   border-radius: 10px;
-  box-shadow: 0 0 8px rgba(255, 0, 0,0.25), inset 0 0 14px rgba(255, 36, 36,0.6);
+  box-shadow: 0 0 8px rgba(255, 0, 0, 0.25),
+    inset 0 0 14px rgba(255, 36, 36, 0.6);
   transition: all 0.3s ease;
 }
 
@@ -84,7 +85,7 @@
 
 .login-input-box input {
   width: 100%;
-  font-size: 15px;
+  font-size: 1rem;
   color: #fff;
   background: transparent;
   border: none;
@@ -101,14 +102,14 @@
   font-size: 14px;
 }
 
-.login-options label{
+.login-options label {
   font-size: 15px;
   font-weight: 500;
-  color: #FF2F2F;
+  color: #ff2f2f;
 }
 
 .login-options a {
-  color: #FF0000;
+  color: #ff0000;
   text-decoration: none;
 }
 .checkbox-container {
@@ -159,25 +160,26 @@
 
 .login-btn {
   width: fit-content;
-  padding: 8px 28px;
+  padding: 0.8rem 3rem;
   font-weight: bold;
   font-size: 14px;
   color: white;
   background: linear-gradient(180deg, #7a0c0c 0%, #6b0101 100%);
   border: 1px solid #620002;
   border-radius: 10px;
-  box-shadow: 0 0 6px rgba(255, 0, 0,0.25) ,inset 0 0 14px rgba(255, 44, 44,0.6);
+  box-shadow: 0 0 6px rgba(255, 0, 0, 0.25),
+    inset 0 0 14px rgba(255, 44, 44, 0.6);
   transition: all 0.3s ease;
   cursor: pointer;
 }
 
-.login-register-text {
+.register-text {
   margin-top: 25px;
-  font-size: 14px;
-  color: #FFFFFF;
+  font-size: 0.9rem;
+  color: #ffffff;
 }
 
-.login-register-link {
+.register-link {
   text-decoration: none;
   font-weight: 500;
   color: #ff3333;
@@ -195,7 +197,7 @@
   height: 100%;
   object-fit: cover;
   filter: brightness(40%);
-  box-shadow: 0 0 100px rgba(0, 0, 0,0.6);
+  box-shadow: 0 0 100px rgba(0, 0, 0, 0.6);
 }
 
 .overlay {
@@ -204,6 +206,6 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(101, 0, 0,0.3);
+  background: rgba(101, 0, 0, 0.3);
   backdrop-filter: blur(10px);
 }

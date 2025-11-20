@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import AdminLayout from "./pages/Admin/AdminLayout";
-import DashboardAdmin from "./pages/Admin/DashboardAdmin";
+import DashboardAdmin from "./pages/Admin/DashboardAdmin/DashboardAdmin";
 import GestionesAdmin from "./pages/Admin/GestionesAdmin/GestionesAdmin";
 import ReparacionesAdmin from "./pages/Admin/ReparacionesAdmin/ReparacionesAdmin";
 import VehiculosAdmin from "./pages/Admin/VehiculosAdmin/VehiculosAdmin";

@@ -4,7 +4,7 @@
   min-height: 100vh;
   display: flex;
   align-items: stretch;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   color: #fff;
   background: linear-gradient(180deg, #0b0000 40%, #1a0000 100%);
   overflow: hidden;
@@ -26,6 +26,7 @@
 
 /* LOGO Y TITULO */
 .register-logo {
+  height: 7rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -37,51 +38,9 @@
 
 .register-title {
   font-family: "Playfair Display SC";
-  font-size: 22px;
+  font-size: 1.5rem;
   font-weight: 800;
   color: #fff;
-}
-
-/* --- PROGRESO DE PASOS --- */
-.register-steps {
-  position: relative;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 40px;
-  margin-bottom: 35px;
-}
-
-.register-steps::before {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 20px;
-  right: 20px;
-  height: 2px;
-  background-color: #ff0000;
-  transform: translateY(-50%);
-  z-index: 0;
-}
-
-.step {
-  width: 22px;
-  height: 22px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-weight: bold;
-  color: #fff;
-  background-color: #0b0000;
-  border-radius: 50%;
-  border: 2px solid #ff3333;
-  z-index: 1;
-}
-
-.step.active {
-  background: #ff0000;
-  box-shadow: 0 0 10px rgba(255, 0, 0, 0.6);
 }
 
 /* --- SELECT INPUT --- */
@@ -92,7 +51,7 @@
   background: transparent;
   border: none;
   outline: none;
-  appearance: none; 
+  appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
   cursor: pointer;
@@ -131,11 +90,12 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 5px 10px;
+  padding: 8px 10px;
   background: rgba(255, 0, 0, 0.1);
   border: 1px solid rgba(255, 0, 0, 0.4);
-  border-radius: 10px;
-  box-shadow: 0 0 8px rgba(255, 0, 0, 0.25), inset 0 0 14px rgba(255, 36, 36, 0.6);
+  border-radius: 8px;
+  box-shadow: 0 0 8px rgba(255, 0, 0, 0.25),
+    inset 0 0 14px rgba(255, 36, 36, 0.6);
 }
 
 .register-input-box input {
@@ -147,6 +107,12 @@
   outline: none;
 }
 
+.register-button {
+  margin-top: 25px;
+  display: flex;
+  justify-content: center;
+}
+
 /* BOTÓN */
 .register-btn {
   align-self: flex-end;
@@ -156,7 +122,8 @@
   background: linear-gradient(180deg, #7a0c0c 0%, #6b0101 100%);
   border: 1px solid #620002;
   border-radius: 10px;
-  box-shadow: 0 0 6px rgba(255, 0, 0, 0.25), inset 0 0 14px rgba(255, 44, 44, 0.6);
+  box-shadow: 0 0 6px rgba(255, 0, 0, 0.25),
+    inset 0 0 14px rgba(255, 44, 44, 0.6);
   cursor: pointer;
 }
 
@@ -173,6 +140,18 @@
   filter: brightness(40%);
 }
 
+.login-text {
+  margin-top: 25px;
+  font-size: 0.9rem;
+  color: #FFFFFF;
+}
+
+.login-link {
+  text-decoration: none;
+  font-weight: 500;
+  color: #ff3333;
+}
+
 .overlay {
   position: absolute;
   top: 0;
@@ -181,67 +160,4 @@
   height: 100%;
   background: rgba(101, 0, 0, 0.3);
   backdrop-filter: blur(10px);
-}
-
-/* --- Paso 3 --- */
-.register-subtitle {
-  margin: 0;
-  font-size: 18px;
-  font-weight: 600;
-  color: #ffffff;
-}
-
-.register-upload-box {
-  position: relative;
-  width: 100%;
-  height: 100px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-  color: #fff;
-  background: rgba(255, 0, 0, 0.1);
-  border: 1px solid rgba(255, 0, 0, 0.4);
-  border-radius: 10px;
-  box-shadow: 0 0 8px rgba(255, 0, 0, 0.25),inset 0 0 14px rgba(255, 36, 36, 0.6);
-  cursor: pointer;
-}
-
-.register-upload-box input[type="file"] {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  cursor: pointer;
-}
-
-.register-buttons {
-  width: 100%;
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 25px;
-}
-
-.btn-skip,
-.btn-next {
-  padding: 10px 24px;
-  font-weight: 600;
-  border-radius: 10px;
-  transition: all 0.3s ease;
-  cursor: pointer;
-}
-
-.btn-skip {
-  color: #fff;
-  background: rgba(255, 0, 0, 0.1);
-  border: 1px solid rgba(255, 0, 0, 0.3);
-}
-
-.btn-next {
-  color: white;
-  background: linear-gradient(180deg, #7a0c0c 0%, #6b0101 100%);
-  border: 1px solid #620002;
-  box-shadow: 0 0 6px rgba(255, 0, 0, 0.25),inset 0 0 14px rgba(255, 44, 44, 0.6);
 }

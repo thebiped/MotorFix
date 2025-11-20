@@ -31,19 +31,29 @@ const pieData = [
 const COLORS = ["#ff4b4b", "#222", "#c70b0b"];
 
 const recentActivities = [
-  { id: 1, title: "Servicio Completado", subtitle: "Ford Focus", icon: <FaTools /> },
-  { id: 2, title: "Nuevo cliente", subtitle: "Maria López - Toyota Corolla", icon: <FaUserCircle /> },
-  { id: 3, title: "Turno Agendado", subtitle: "Volkswagen Gol", icon: <FaCalendarAlt /> },
+  {
+    id: 1,
+    title: "Servicio Completado",
+    subtitle: "Ford Focus",
+    icon: <FaTools />,
+  },
+  {
+    id: 2,
+    title: "Nuevo cliente",
+    subtitle: "Maria López - Toyota Corolla",
+    icon: <FaUserCircle />,
+  },
+  {
+    id: 3,
+    title: "Turno Agendado",
+    subtitle: "Volkswagen Gol",
+    icon: <FaCalendarAlt />,
+  },
 ];
 
 const DashboardAdmin = () => {
   return (
     <div className="admin-dashboard modern">
-      {/* TOPBAR */}
-      <header className="adm-topbar">
-        <h2>Dashboard</h2>
-      </header>
-
       <main className="adm-content">
         {/* COLUMNA IZQUIERDA */}
         <section className="left-col">
@@ -68,7 +78,12 @@ const DashboardAdmin = () => {
               <h4>Progreso de Servicios</h4>
               <div className="graph-controls">
                 {["Día", "Semana", "Mes", "Año"].map((label, idx) => (
-                  <button key={idx} className={`time-btn ${idx === 0 ? "active" : ""}`}>{label}</button>
+                  <button
+                    key={idx}
+                    className={`time-btn ${idx === 0 ? "active" : ""}`}
+                  >
+                    {label}
+                  </button>
                 ))}
                 <button className="date-picker">
                   <FaCalendarAlt /> <span>14 Oct 2025</span>
@@ -76,13 +91,30 @@ const DashboardAdmin = () => {
               </div>
             </div>
             <ResponsiveContainer width="100%" height={280}>
-              <BarChart data={barData} margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
-                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 12 }} />
-                <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12 }} />
+              <BarChart
+                data={barData}
+                margin={{ top: 0, right: 0, left: 0, bottom: 0 }}
+              >
+                <XAxis
+                  dataKey="name"
+                  axisLine={false}
+                  tickLine={false}
+                  /* Ejes en blanco para tema oscuro */
+                  tick={{ fontSize: 12, fill: '#f0f0f0' }} 
+                />
+                <YAxis
+                  axisLine={false}
+                  tickLine={false}
+                  /* Ejes en blanco para tema oscuro */
+                  tick={{ fontSize: 12, fill: '#f0f0f0' }}
+                />
                 <Tooltip />
                 <Bar dataKey="value" radius={[8, 8, 8, 8]}>
                   {barData.map((entry, idx) => (
-                    <Cell key={idx} fill={`rgba(255,75,75,${0.6 + idx * 0.05})`} />
+                    <Cell
+                      key={idx}
+                      fill={`rgba(255,75,75,${0.6 + idx * 0.05})`}
+                    />
                   ))}
                 </Bar>
               </BarChart>
@@ -90,29 +122,8 @@ const DashboardAdmin = () => {
           </div>
         </section>
 
-        {/* COLUMNA DERECHA */}
-        <aside className="right-col">
-          {/* PIE CHART DE EFICIENCIA */}
-          <div className="pie-panel modern">
-            <h4 className="panel-title">Eficiencia del Taller</h4>
-            <ResponsiveContainer width="100%" height={280}>
-              <PieChart>
-                <Pie
-                  data={pieData}
-                  dataKey="value"
-                  nameKey="name"
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={50}
-                  outerRadius={90}
-                  label={({ percent }) => `${(percent * 100).toFixed(0)}%`}
-                >
-                  {pieData.map((entry, idx) => <Cell key={idx} fill={COLORS[idx % COLORS.length]} />)}
-                </Pie>
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-
+        {/* COLUMNA DERECHA (Ahora envuelve el contenido) */}
+        <section className="right-col"> 
           {/* ACTIVIDAD RECIENTE */}
           <div className="recent-panel modern">
             <h4 className="panel-title">Actividad Reciente</h4>
@@ -128,7 +139,8 @@ const DashboardAdmin = () => {
               ))}
             </div>
           </div>
-        </aside>
+        </section> {/* Cierre de la columna derecha */}
+
       </main>
     </div>
   );

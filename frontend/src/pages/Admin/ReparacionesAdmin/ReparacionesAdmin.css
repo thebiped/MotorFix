@@ -1,67 +1,78 @@
-/* --- Contenedor Principal --- */
+/* --- Contenedor Principal (Corrección de Scroll Horizontal) --- */
 .reparaciones-admin-container {
-  background-color: #f5f5f5;
-  padding: 24px;
-  font-family: 'Roboto', sans-serif;
-  color: #202124;
+  background-color: #0a0a0a;
+  padding: 32px;
+  max-width: 100vw;
+  overflow-x: hidden;
+  min-height: 100vh;
+  font-family: "Consolas", "Roboto Mono", monospace;
+  color: #f0f0f0;
 }
 
-/* --- Encabezado --- */
-.reparaciones-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
-}
 
-.reparaciones-header h1 {
-  font-size: 24px;
-  font-weight: 400;
-  margin: 0;
-}
-
-/* --- Tarjetas de Estadísticas --- */
-.reparaciones-stats-cards {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-  margin-bottom: 24px;
-}
-
-.reparacion-card {
-  background-color: #ffffff;
-  padding: 16px;
-  border: 1px solid #dadce0;
-  border-radius: 8px;
-}
-
-.reparacion-card p {
-  margin: 0 0 8px 0;
-  color: #5f6368;
-  font-size: 14px;
-}
-
-.reparacion-card h2 {
-  margin: 0;
-  font-size: 28px;
-  font-weight: 400;
-  color: #d93025; /* Rojo Google */
+.stat-card{
+  background: #111111 !important;
 }
 
 /* --- Contenedor de Lista y Filtros --- */
-.reparaciones-list-container {
-  background-color: #ffffff;
-  border: 1px solid #dadce0;
-  border-radius: 8px;
+.list-panel {
+  background-color: #111111;
+  border-radius: 4px;
+  border: 1px solid #222222;
+  padding: 0;
 }
 
-/* --- Panel de Filtros --- */
-.reparaciones-filters-panel {
+/* --- Pestañas de Estado (Filtro Rápido) - AJUSTES AQUÍ --- */
+.status-tabs-hud {
+  display: flex;
+  gap: 8px;
+  padding: 16px;
+  border-bottom: 1px solid #222222;
+}
+
+.status-tabs-hub-button {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.status-tab {
+  width: 20%;
+  padding: 10px 18px; /* Ajustado el padding */
+  font-weight: 500;
+  color: #777777;
+  background: #1111;
+  border: 1px solid #333333;
+  border-radius: 2px;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: all 0.2s;
+}
+
+.status-tab:hover {
+  color: #f0f0f0;
+  border-color: #ff4444; /* Resaltar borde al pasar el mouse */
+}
+
+.status-tab.active {
+  color: #f0f0f0;
+  background: #ff4444; /* Fondo rojo vibrante cuando está activo */
+  border-color: #ff4444;
+  font-weight: 700;
+  box-shadow: 0 0 5px rgba(255, 68, 68, 0.5); /* Sutil brillo rojo */
+}
+
+/* --- Panel de Filtros Secundarios - AJUSTES AQUÍ --- */
+.filters-panel {
   display: flex;
   align-items: center;
-  gap: 16px;
+  flex-wrap: wrap;
+  gap: 20px;
   padding: 16px;
-  border-bottom: 1px solid #dadce0;
+  background-color: #1a1a1a;
+  border-bottom: 1px solid #222222;
+  border-left: 3px solid #1a1a1a;
+  border-right: 3px solid #1a1a1a;
 }
 
 .filter-group {
@@ -70,50 +81,58 @@
   gap: 8px;
 }
 
-.filter-group label {
+.hud-label {
   font-size: 14px;
-  color: #5f6368;
+  color: #777777;
+  text-transform: uppercase;
 }
 
-.reparaciones-filters-panel input[type="text"],
-.reparaciones-filters-panel select {
-  border: 1px solid #dadce0;
-  border-radius: 4px;
-  padding: 8px 12px;
+.hud-input,
+.hud-select {
+  border-radius: 2px;
+  padding: 8px 10px;
   font-size: 14px;
-  background-color: #f5f5f5;
+  background: #222222;
+  border: 1px solid #333333;
+  color: #f0f0f0;
+  font-family: "Consolas", "Roboto Mono", monospace;
+  transition: border-color 0.2s;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill='%23ff4444' d='M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 10px;
 }
 
-.reparaciones-filters-panel input[type="text"] {
-  width: 250px;
+.hud-input:focus,
+.hud-select:focus {
+  border-color: #ff4444;
+  outline: none;
+  box-shadow: 0 0 5px rgba(255, 68, 68, 0.3); /* Sutil brillo al enfocarse */
 }
 
-.filter-actions {
-  margin-left: auto;
+.hud-input {
+  max-width: 250px;
+  width: 100%;
+}
+
+/* ... (Encabezado y Stats Grid se mantienen, son correctos) ... */
+
+/* --- Panel de Filtros Secundarios (Ajuste de inputs) --- */
+.filters-panel {
   display: flex;
-  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 16px;
+  border-bottom: 1px solid #222222;
 }
 
-/* --- Pestañas de Estado --- */
-.reparaciones-status-tabs {
-  display: flex;
-  padding: 0 16px;
-  border-bottom: 1px solid #dadce0;
-}
-
-.status-tab {
-  background: none;
-  border: none;
-  padding: 12px 16px;
-  cursor: pointer;
-  color: #5f6368;
-  font-weight: 500;
-  border-bottom: 2px solid transparent;
-}
-
-.status-tab.active {
-  color: #d93025;
-  border-bottom-color: #d93025;
+.hud-input {
+  max-width: 250px;
+  width: 100%;
 }
 
 /* --- Lista de Reparaciones --- */
@@ -121,195 +140,150 @@
   padding: 16px;
 }
 
-.showing-results {
-  color: #5f6368;
-  font-size: 14px;
-  margin-bottom: 16px;
-}
-
-.no-results {
-  text-align: center;
-  padding: 32px;
-  color: #5f6368;
-}
-
 /* --- Botones --- */
-.add-order-btn, .apply-filter-btn {
-  background-color: #d93025;
-  color: #ffffff;
-  border: none;
-  padding: 10px 24px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: 500;
+/* Se añade un estilo de botón pequeño para las acciones de Editar/Eliminar */
+.hud-button-small {
+  padding: 6px 12px;
+  font-size: 14px;
+  border-radius: 2px;
 }
 
-.clear-filter-btn {
-  background-color: transparent;
-  color: #d93025;
-  border: 1px solid #dadce0;
-  padding: 10px 16px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: 500;
-}
+/* --- Estilos para ReparacionRow (El problema de la columna/fila) --- */
 
-/* --- Estilos para ReparacionRow --- */
 .reparacion-row-container {
-  border: 1px solid #dadce0;
-  border-radius: 8px;
-  margin-bottom: 12px;
-  overflow: hidden;
+  margin-bottom: 8px;
+  border: 1px solid #222222;
+  border-radius: 4px;
+  background-color: #1a1a1a;
+  transition: background-color 0.2s;
+  overflow: hidden; /* Esencial para la transición de altura */
 }
 
-.reparacion-row {
+.reparacion-row-container:hover {
+  background-color: #222222;
+}
+
+/* ESTILO CLAVE: La cabecera de la fila ahora está en formato horizontal (row) */
+.reparacion-row-main {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-between; /* Distribuye el ID/Título y el Estado/Icono */
   align-items: center;
   padding: 16px;
   cursor: pointer;
-  background-color: #ffffff;
+  border-bottom: 1px solid transparent; /* Inicialmente transparente */
 }
 
-.reparacion-info {
+.reparacion-row-main:hover {
+  /* Destacar la fila cuando se pasa el ratón */
+  border-bottom: 1px solid #333333;
+}
+
+.reparacion-info-group {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.reparacion-title-client {
+  /* Asegura que el título y el cliente estén apilados (columna) */
+  display: flex;
+  flex-direction: column;
+}
+
+.reparacion-status-actions {
   display: flex;
   align-items: center;
   gap: 16px;
 }
 
 .reparacion-id {
-  color: #d93025;
-  font-weight: 500;
+  color: #ff4444;
+  font-weight: 700;
   font-size: 16px;
+  /* Para centrar visualmente con el texto apilado */
+  align-self: flex-start;
 }
-
-.reparacion-info h4 {
+.reparacion-info-group h4,
+.reparacion-info-group p {
   margin: 0;
-  font-size: 16px;
-  font-weight: 500;
-}
-.reparacion-info p {
-  margin: 0;
-  color: #5f6368;
-  font-size: 14px;
 }
 
-.status-badge {
-  padding: 4px 12px;
-  border-radius: 16px;
-  font-size: 12px;
-  font-weight: 500;
-  color: #ffffff;
+/* --- Detalles Expandibles (La magia de la transición) --- */
+.reparacion-details-slider {
+  max-height: 0; /* Punto de partida: altura 0 */
+  opacity: 0;
+  transition: max-height 0.4s ease-in-out, opacity 0.4s ease-in-out;
+  overflow: hidden; /* Oculta el contenido cuando max-height es 0 */
+  background-color: #0a0a0a;
 }
 
-.status-completed { background-color: #1e8e3e; } /* Verde */
-.status-in-progress { background-color: #1a73e8; } /* Azul */
-.status-pending { background-color: #d93025; } /* Rojo */
+.reparacion-details-slider.expanded {
+  max-height: 500px; /* Suficientemente grande para mostrar el contenido */
+  opacity: 1;
+  border-top: 1px solid #222222; /* Separador cuando está expandido */
+}
 
+/* Icono de Despliegue */
 .chevron-icon {
-  color: #5f6368;
-  transition: transform 0.2s;
+  color: #777777;
+  transition: transform 0.3s;
+  margin-left: 8px;
 }
 .chevron-icon.expanded {
   transform: rotate(180deg);
 }
 
-/* --- Detalles Expandibles --- */
-.reparacion-details-slider {
-  max-height: 0;
-  opacity: 0;
-  overflow: hidden;
-  transition: max-height 0.3s ease, opacity 0.3s ease;
-  background-color: #f5f5f5;
-}
-
-.reparacion-details-slider.expanded {
-  max-height: 500px; /* Ajustar según sea necesario */
-  opacity: 1;
-}
-
-.reparacion-details-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 24px;
-  border-top: 1px solid #dadce0;
-}
-
-.reparacion-details-header h4 {
-  margin: 0;
-  font-size: 16px;
-  font-weight: 500;
-  color: #202124;
-}
-
-.details-actions {
-  display: flex;
-  gap: 1rem; /* 16px */
-}
-
 .reparacion-details-content {
+  padding: 20px;
   display: flex;
-  justify-content: space-between;
-  padding: 24px;
-  border-top: 1px solid #dadce0;
+  justify-content: space-between; /* Coloca la info y las acciones una al lado de la otra */
+  gap: 30px;
+  align-items: flex-start;
 }
 
-.reparacion-details-info p {
-  margin: 0 0 12px 0;
+.reparacion-details-info {
+  flex-grow: 1;
+}
+
+.details-heading {
   font-size: 14px;
+  color: #ff4444;
+  text-transform: uppercase;
+  margin-top: 0;
+  margin-bottom: 12px;
 }
 
-.reparacion-details-info strong {
-  color: #5f6368;
-  margin-right: 8px;
+.details-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Muestra los detalles en 2 columnas */
+  gap: 8px;
 }
 
-/* --- Barra de Progreso Vertical --- */
-.progress-container {
+.reparacion-details-actions {
   display: flex;
-  flex-direction: column;
+  flex-direction: column; /* Apila los botones de acción */
+  gap: 10px;
+  min-width: 120px;
+}
+
+.edit-btn,
+.delete-btn {
+  display: flex;
   align-items: center;
   justify-content: center;
-  padding-left: 24px;
-}
-
-.progress-vertical {
-  width: 12px;
-  height: 100px;
-  background-color: #e0e0e0;
-  border-radius: 6px;
-  position: relative;
-  overflow: hidden;
-  margin-bottom: 8px;
-}
-
-.progress-fill {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  background-color: #1a73e8; /* Azul Google */
-  border-radius: 6px;
-  transition: height 0.3s ease;
-}
-
-.progress-label {
-  font-weight: 500;
-  color: #5f6368;
-  font-size: 14px;
-}
-
-.edit-btn, .delete-btn {
-  display: flex;
-  align-items: center;
   gap: 8px;
-  border: 1px solid #dadce0;
-  padding: 8px 16px;
-  border-radius: 4px;
+  font-weight: 700;
+  background: #333333;
+  border: 1px solid #555555;
   cursor: pointer;
-  background: none;
-  font-weight: 500;
+  width: 100%;
 }
 
-.edit-btn { color: #1a73e8; }
-.delete-btn { color: #d93025; }
+.edit-btn {
+  color: #f0f0f0;
+}
+.delete-btn {
+  color: #ff4444;
+  border-color: #ff4444;
+  background: rgba(255, 68, 68, 0.1);
+}
