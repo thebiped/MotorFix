@@ -1,5 +1,4 @@
 import React from 'react';
-import './ConsumoMantenimiento.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTint, faGasPump, faStar, faRoad } from '@fortawesome/free-solid-svg-icons';
 

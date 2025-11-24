@@ -1,0 +1,617 @@
+/* --- CONTENEDOR PRINCIPAL --- */
+.vehiculos-admin-container {
+  position: relative;
+  height: 89.2%;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  color: #ffffff;
+  background-color: #1a1a1a;
+  overflow: hidden; /* Esto previene el scroll */
+}
+
+/* --- FORMA DEL FONDO (NUEVO) --- */
+.background-shape {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 75%;
+  height: 85%;
+  background: linear-gradient(145deg, #ffffff 30%, #e9ecef 100%);
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+  z-index: 1;
+}
+
+/* --- CABECERA --- */
+.vehiculo-header {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  color: #212529;
+  z-index: 2;
+  flex-shrink: 0; /* Evita que el header se encoja */
+}
+
+.brand-line {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.brand-logo-vehiculo {
+  width: 32px;
+  height: auto;
+}
+
+.brand-title {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.owner-details {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding-left: 50px;
+}
+
+.owner-icon {
+  background-color: #ff0000;
+  color: #fff;
+  border-radius: 50%;
+  padding: 0.75rem;
+  width: 50px;
+  height: 50px;
+  box-sizing: border-box;
+}
+
+.owner-name {
+  margin: 0;
+  font-size: 2.2rem;
+  font-weight: 700;
+}
+
+.car-model {
+  font-size: 1.25rem;
+  font-weight: 500;
+  margin: 0;
+  opacity: 0.9;
+}
+
+/* --- SECCIÓN PRINCIPAL (CONTENEDOR ABSOLUTO) --- */
+.slider-content {
+  position: relative;
+  width: 100%;
+  flex-grow: 1;
+  margin-top: 1rem;
+  z-index: 2;
+
+  /* ESTO CREA LAS 3 COLUMNAS: NAV | AUTO | SLIDER */
+  display: grid;
+  grid-template-columns: 260px 1fr 320px;
+  gap: 1rem;
+  align-items: center;
+}
+
+.view-selector {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  position: relative; /* Ya no es absolute */
+  z-index: 3;
+}
+
+.nav-button-admin {
+  width: fit-content;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 1rem;
+  text-align: left;
+  color: #000;
+  background: transparent;
+  border: none;
+  transition: all 0.3s ease;
+  outline: none;
+  cursor: pointer;
+}
+
+.nav-button-admin:hover > .icon {
+  background: #444;
+  transform: scale(1.02);
+  color: #fff;
+}
+
+.nav-button-admin.active::selection {
+  border: none;
+  outline: none;
+}
+
+.nav-button-admin.active > .icon {
+  background: #000000;
+  color: #fff;
+}
+
+/* === CAMBIO ===: Iconos de navegación como círculos rojos sólidos */
+.icon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  color: #ffffff; /* Icono (SVG) blanco */
+  background-color: #ff0000;
+  border-radius: 50%;
+  box-sizing: border-box;
+}
+
+/* --- COCHE Y TARJETA (POSICIONADOS ABSOLUTAMENTE) --- */
+
+.hero-car-section {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-car-image {
+  width: 85%;
+  max-width: 600px;
+  height: auto;
+  object-fit: contain;
+  display: block; /* Importante para transform */
+  z-index: 2;
+}
+
+.hero-car-image.anim-next {
+  animation: slideInFromRight 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.hero-car-image.anim-prev {
+  animation: slideInFromLeft 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.hero-car-image img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.cards-slider-section {
+  position: relative;
+  width: 100%;
+  height: 280px;
+  display: flex;
+  align-items: center;
+  overflow: hidden; /* Esconde las cards que salen */
+  padding-left: 10px;
+}
+
+.cards-track {
+  display: flex;
+  gap: 20px; /* Espacio entre cards */
+  transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.vehicle-card-mini {
+  width: 130px;
+  height: 160px;
+  background-color: #ffffff; /* Card blanca */
+  border-radius: 16px;
+  padding: 15px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  opacity: 0.6;
+  transform: scale(0.9);
+}
+
+.card-header-mini {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.vehicle-card-mini.active {
+  opacity: 1;
+  transform: scale(1.05);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+  z-index: 10;
+}
+
+.mini-brand {
+  color: #000;
+  font-weight: 700;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.mini-img {
+  width: 100%;
+  height: 90px;
+  object-fit: contain;
+}
+
+.red-arrow-btn {
+  background-color: #ff0000;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  z-index: 20;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: transform 0.2s;
+}
+.red-arrow-btn:hover {
+  transform: translateY(-50%) scale(1.1);
+}
+
+/* Posiciones específicas */
+.arrow-left {
+  right: 20px;
+} /* En la sección central, a la derecha del auto */
+.arrow-right {
+  right: 10px;
+} /* En la sección derecha, al final */
+
+.vehicle-card {
+  position: absolute;
+  top: 2.5rem;
+  right: 12rem;
+  width: 220px;
+  height: auto;
+  padding: 1rem;
+  color: #ffffff;
+  background-color: #ff0000;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  z-index: 4; /* Encima de todo */
+}
+
+/* === TARJETA 2 (NUEVA) === */
+.vehicle-card-2 {
+  position: absolute;
+  top: 3.5rem;
+  right: 2rem;
+  width: 180px;
+  height: auto;
+  padding: 0.8rem;
+  color: #ffffff;
+  background-color: #ff0000;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  z-index: 3;
+  opacity: 0.8;
+}
+
+.vehicle-card-header,
+.vehicle-card-2 .vehicle-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.card-brand-logo,
+.vehicle-card-2 .card-brand-logo {
+  width: 24px;
+  height: auto;
+  filter: brightness(0) invert(1);
+}
+
+.card-edit-button,
+.vehicle-card-2 .card-edit-button {
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  color: #ffffff;
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+.card-edit-button:hover,
+.vehicle-card-2 .card-edit-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.vehicle-card-image-main,
+.vehicle-card-2 .vehicle-card-image-main {
+  width: 100%;
+  padding-top: 1rem;
+  object-fit: contain;
+}
+
+/* Estilos más pequeños para la tarjeta 2 */
+.vehicle-card-2 .vehicle-card-header {
+  font-size: 0.8rem;
+}
+.vehicle-card-2 .card-brand-logo {
+  width: 20px;
+}
+.vehicle-card-2 .card-edit-button {
+  width: 26px;
+  height: 26px;
+}
+.vehicle-card-2 .vehicle-card-image-main {
+  padding-top: 0.75rem;
+}
+
+/* --- PIE (CON INFO Y CARRUSEL) --- */
+.slider-info {
+  width: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 2;
+  padding: 0;
+}
+
+.info-details {
+  flex-grow: 1;
+}
+
+/* --- ESTILOS PARA INFO-GRID (NUEVO) --- */
+.info-grid {
+  display: flex;
+  align-items: flex-start;
+  gap: 2rem;
+  padding: 1.5rem 0;
+  color: #ffffff;
+  flex-wrap: wrap;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
+}
+
+.info-item-primary {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* === CAMBIO ===: Se usa el .icon global de arriba, 
+   pero estos items de info tienen su propio estilo de .icon */
+.info-item .icon {
+  background: transparent;
+  color: #ffffff; /* Asegura que el icono SVG sea blanco */
+  width: auto;
+  height: auto;
+}
+
+.info-item.small-icon {
+  gap: 0.5rem;
+}
+.info-item.small-icon > svg {
+  width: 20px;
+  height: 20px;
+  opacity: 0.8;
+}
+
+.info-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.info-label {
+  font-size: 0.8rem;
+  opacity: 0.7;
+  text-transform: capitalize;
+}
+
+/* --- CARRUSEL DE CONDUCTORES (NUEVO) --- */
+.other-drivers-carousel {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0; /* Evita que se encoja */
+}
+
+.carousel-arrow {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: #ffffff;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.carousel-arrow:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.driver-avatar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.driver-avatar .avatar-icon {
+  background: rgba(255, 0, 0, 0.2);
+  border-radius: 50%;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  box-sizing: border-box;
+}
+
+.driver-avatar span {
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.driver-avatar.active {
+  border: 2px solid #ff0000;
+}
+
+.driver-avatar.active .avatar-icon {
+  background-color: #ff0000;
+}
+
+/* --- ESTILOS DEL MODAL DE HISTORIAL --- */
+/* (Esta parte no se modificó) */
+.historial-vehiculo-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(26, 26, 26, 0.8);
+  backdrop-filter: blur(10px);
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+  opacity: 0;
+  z-index: 100;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+.vehiculos-admin-container.history-visible .historial-vehiculo-container {
+  visibility: visible;
+  opacity: 1;
+}
+
+.historial-content {
+  background: #272727;
+  padding: 1.5rem 2rem;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 90vw;
+  color: white;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.back-button {
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-bottom: 1rem;
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+}
+.back-button:hover {
+  opacity: 1;
+}
+
+.historial-title {
+  font-size: 1.75rem;
+  margin: 0;
+}
+
+.historial-subtitle {
+  font-size: 0.9rem;
+  opacity: 0.7;
+  margin: 0.25rem 0 1.5rem 0;
+}
+
+.table-wrapper {
+  overflow-y: auto;
+}
+
+.historial-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.historial-table th,
+.historial-table td {
+  padding: 0.85rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid #3a3a3a;
+}
+
+.historial-table th {
+  color: #999;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+}
+
+.historial-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.status-historial {
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+
+.status-historial.finalizado {
+  background-color: rgba(40, 167, 69, 0.2);
+  color: #28a745;
+}
+
+.status-historial.en-progreso {
+  background-color: rgba(255, 193, 7, 0.2);
+  color: #ffc107;
+}
+
+/* --- ANIMACIONES DEL AUTO CENTRAL --- */
+
+/* Definición de movimientos (Keyframes) */
+@keyframes slideInFromRight {
+  from { opacity: 0; transform: translateX(100px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInFromLeft {
+  from { opacity: 0; transform: translateX(-100px); }
+  to { opacity: 1; transform: translateX(0); }
+}

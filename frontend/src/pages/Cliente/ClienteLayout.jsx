@@ -1,53 +1,43 @@
-import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import { NavLink, Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import {
   LayoutDashboard,
-  Clock,
   Car,
   Calendar,
+  Clock,
   User,
   Bell,
   LogOut,
 } from "lucide-react";
-import Logo from "../../assets/img/Logo.png";
 import "./ClienteLayout.css";
 
 const menuItems = [
-  {
-    path: "/cliente/dashboard",
-    icon: <LayoutDashboard size={24} strokeWidth={1.5} />,
-    label: "Dashboard",
-  },
-  {
-    path: "/cliente/vehiculo",
-    icon: <Car size={24} strokeWidth={1.5} />,
-    label: "Vehículo",
-  },
-  {
-    path: "/cliente/turnos",
-    icon: <Calendar size={24} strokeWidth={1.5} />,
-    label: "Turnos",
-  },
-  {
-    path: "/cliente/historial",
-    icon: <Clock size={24} strokeWidth={1.5} />,
-    label: "Historial",
-  },
-  {
-    path: "/cliente/perfil",
-    icon: <User size={24} strokeWidth={1.5} />,
-    label: "Perfil",
-  },
+  { path: "/cliente/dashboard", icon: <LayoutDashboard size={22} />, label: "Dashboard" },
+  { path: "/cliente/vehiculo", icon: <Car size={22} />, label: "Vehículo" },
+  { path: "/cliente/turnos", icon: <Calendar size={22} />, label: "Turnos" },
+  { path: "/cliente/historial", icon: <Clock size={22} />, label: "Historial" },
+  { path: "/cliente/perfil", icon: <User size={22} />, label: "Perfil" },
+  { path: "/cliente/notificaciones", icon: <Bell size={22} />, label: "Notificaciones" },
 ];
 
 const ClienteLayout = () => {
   const navigate = useNavigate();
-  const [sidebarExpanded, setSidebarExpanded] = useState(false);
+  const location = useLocation();
 
+  const [showVignette, setShowVignette] = useState(false);
+
+  // ⛔ Verifica rol
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
     if (!storedUser || storedUser.rol !== "cliente") navigate("/");
   }, [navigate]);
+
+  // 🔥 Mostrar animación en cada cambio de ruta
+  useEffect(() => {
+    setShowVignette(true);
+    const timer = setTimeout(() => setShowVignette(false), 800); // duración
+    return () => clearTimeout(timer);
+  }, [location.pathname]);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -57,47 +47,30 @@ const ClienteLayout = () => {
 
   return (
     <div className="cliente-layout">
-      <aside
-        className={`cliente-sidebar ${sidebarExpanded ? "expanded" : ""}`}
-        onMouseEnter={() => setSidebarExpanded(true)}
-        onMouseLeave={() => setSidebarExpanded(false)}
-      >
-        <div className="cliente-logo">
-          <img src={Logo} alt="logo" />
-        </div>
-        <nav className="cliente-nav">
-          {menuItems.map((item, index) => (
-            <NavLink key={index} to={item.path} className="cliente-link">
-              {item.icon}
-              {sidebarExpanded && (
-                <span className="link-label">{item.label}</span>
-              )}
-            </NavLink>
-          ))}
-        </nav>
-      </aside>
 
+      {/* 🔥 EFECTO ARKHAM VIGNETTE */}
+      {showVignette && <div className="vignette-cinematic" />}
+
+      {/* CONTENIDO */}
       <div className="cliente-main">
-        <header className="cliente-header">
-          <input
-            type="text"
-            placeholder="Buscar..."
-            className="cliente-search"
-          />
-          <div className="cliente-header-actions">
-            <Bell className="icon-btn" />
-            <User
-              className="icon-btn"
-              onClick={() => navigate("/cliente/perfil")}
-            />
-            <LogOut className="icon-btn logout" onClick={handleLogout} />
-          </div>
-        </header>
-
         <main className="cliente-content">
           <Outlet />
         </main>
       </div>
+
+      {/* NAVBAR INFERIOR */}
+      <nav className="bat-navbar">
+        <div className="bat-panel">
+          {menuItems.map((item, index) => (
+            <NavLink key={index} to={item.path} className="bat-link">
+              {item.icon}
+              <span className="bat-tooltip">{item.label}</span>
+            </NavLink>
+          ))}
+
+          <LogOut className="bat-link logout-btn" onClick={handleLogout} />
+        </div>
+      </nav>
     </div>
   );
 };

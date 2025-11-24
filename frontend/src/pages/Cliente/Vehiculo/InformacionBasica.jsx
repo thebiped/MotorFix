@@ -1,5 +1,4 @@
 import React from 'react';
-import './InformacionBasica.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTachometerAlt, faBolt, faHorseHead, faCogs, faPalette, faIdCard } from '@fortawesome/free-solid-svg-icons';
 

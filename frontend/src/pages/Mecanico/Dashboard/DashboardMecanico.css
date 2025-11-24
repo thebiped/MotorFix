@@ -1,383 +1,166 @@
-:root {
-  --red: #ff0000;
-  --bg-dark: #1a1a1a;
-  --card-bg: #2d2d2d;
-  --white: #ffffff;;
+/* ============================================================
+   Dashboard Mecánico — Extensión del estilo Admin HUD
+   Paleta Arkham Knight / Tema Oscuro Tecnológico
+   Reutiliza variables globales ya declaradas en DashboardAdmin.css
+   ============================================================ */
+
+/* --- CONTENEDOR ESPECÍFICO DEL MECÁNICO --- */
+.dashboard-mecanico {
+  padding-top: 12px;
 }
 
-.dashboard-container {
-  min-height: 100vh;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-  padding: 24px;
-  background-color: rgb(24, 11, 11);
+/* --- TARJETAS (usan la base del admin, pero con tweaks opcionales) --- */
+.dashboard-mecanico .stat-card {
+  background: var(--panel) !important;
+  border: 1px solid #222;
+  box-shadow: var(--soft-shadow);
+  transition: all 0.25s ease;
 }
 
-.dashboard-container {
-  min-height: 100vh;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 24px;
-  padding: 24px;
-  font-family: system-ui, -apple-system, sans-serif;
-  background-color: var(--bg-dark);
+.dashboard-mecanico .stat-card:hover {
+  transform: translateY(-2px);
+  background: #222 !important;
+  border-color: #333;
 }
 
-/* Cards */
-.stats-card {
-  min-height: 80px;
-  display: flex;
-  flex-direction: column;
-  padding: 24px;
-  background-color: var(--card-bg);
-  border-radius: 16px;
+/* --- BLOQUE DE PROGRESO --- */
+.dashboard-mecanico .progress-block {
+  background: var(--panel);
+  border: 1px solid #222;
+  border-radius: var(--border-radius);
+  box-shadow: var(--soft-shadow);
 }
 
-.stats-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.stats-header h3 {
-  margin: 0;
-  font-size: 15px;
-  font-weight: 500;
-  color: var(--white);
-}
-
-.stats-value {
-  margin: 16px 0 8px;
-  font-size: 32px;
-  font-weight: 600;
-  color: var(--white);
-}
-
-.ganancias-card {
-  background-color: var(--red);
-}
-
-.stats-trend {
-  color: #4eff4e;
-  font-size: 14px;
-  font-weight: 500;
-}
-
-/* Charts Container */
-.chart-container {
-  min-height: 380px;
-  grid-column: span 2;
-  background-color: var(--card-bg);
-  padding: 24px;
-  border-radius: 16px;
-}
-
-.chart-title {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
-}
-
-.chart-title h3 {
-  color: var(--white);
-  font-size: 18px;
-  margin: 0;
-  font-weight: 500;
-}
-
-/* Bar Chart */
-.recharts-cartesian-grid line {
-  stroke: rgba(255, 255, 255, 0.1);
-}
-
-.recharts-text {
-  fill: var(--white) !important;
-  font-size: 12px;
-}
-
-.custom-tooltip {
-  background-color: var(--card-bg);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  padding: 12px;
-  color: var(--white);
-}
-
-/* Jobs List */
-.job-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px 0;
-  background: none;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.job-info {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.job-number {
-  width: 28px;
-  height: 28px;
-  background-color: var(--red);
-  color: var(--white);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-}
-
-.job-details h4 {
-  color: var(--white);
-  margin: 0;
-  font-size: 15px;
-  font-weight: 500;
-}
-
-.job-details p {
-  color: rgba(255, 255, 255, 0.6);
-  margin: 4px 0 0;
-  font-size: 13px;
-}
-
-.job-price {
-  color: var(--red);
-  font-weight: 600;
+/* --- Encabezado de paneles --- */
+.dashboard-mecanico h4 {
+  color: var(--accent);
   font-size: 16px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
 }
 
-/* Activity Items */
-.activity-item {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 16px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+/* --- Controles de periodo del gráfico --- */
+.dashboard-mecanico .graph-controls button {
+  font-family: var(--font-main);
 }
 
-.activity-icon {
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: rgba(255, 0, 0, 0.1);
-  border-radius: 50%;
+.dashboard-mecanico .graph-controls .time-btn.active {
+  background: var(--accent);
+  color: var(--bg);
 }
 
-.activity-icon svg {
-  width: 20px;
-  height: 20px;
-  color: var(--red);
-}
+/* ============================================================
+   PANEL: Actividad Reciente
+   ============================================================ */
 
-.activity-details h4 {
-  margin: 0;
-  font-weight: 500;
-  font-size: 15px;
-  color: var(--white);
-}
-
-.activity-details p {
-  margin: 4px 0 0;
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.6);
-}
-
-/* Pie Chart Labels */
-.pie-label {
-  fill: var(--white);
-  font-size: 16px;
-  font-weight: 600;
-}
-
-.stats-card {
-  display: flex;
-  flex-direction: column;
+.dashboard-mecanico .recent-panel {
+  background: var(--panel);
+  border: 1px solid #222;
+  border-radius: var(--border-radius);
+  box-shadow: var(--soft-shadow);
   padding: 20px;
-  color: #fff;
-  background-color: var(--card-bg);
-  border-radius: 16px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
-.stats-card:hover {
-  transform: translateY(-5px);
+.dashboard-mecanico .activity-item {
+  background: #1f1f1f;
+  border: 1px solid #2a2a2a;
+  border-radius: 3px;
+  transition: background var(--transition-speed);
 }
 
-.ganancias-card {
-  background-color: #ff0000;
-  color: white;
+.dashboard-mecanico .activity-item:hover {
+  background: #292929;
 }
 
-.stats-header {
+.dashboard-mecanico .act-icon {
+  width: 38px;
+  height: 38px;
+  color: var(--accent);
+  background: rgba(255, 68, 68, 0.18);
+  border-radius: 50%;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
+}
+
+/* ============================================================
+   PANEL: PieChart (Eficiencia del Taller)
+   ============================================================ */
+
+.dashboard-mecanico .pie-panel {
+  background: var(--panel);
+  border: 1px solid #222;
+  border-radius: var(--border-radius);
+  padding: 20px;
+  box-shadow: var(--soft-shadow);
+}
+
+.dashboard-mecanico .pie-panel h4 {
   margin-bottom: 10px;
 }
 
-.stats-value {
-  font-size: 28px;
-  font-weight: bold;
-  margin: 10px 0;
-}
+/* ============================================================
+   PANEL: Mejores Trabajos
+   ============================================================ */
 
-.stats-trend {
-  color: #00ff00;
-  font-size: 14px;
-}
-
-.chart-container {
-  grid-column: span 2;
-  background-color: var(--card-bg);
-  border-radius: 12px;
-  padding: 20px;
-  color: white;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.chart-title {
-  font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 20px;
+.dashboard-mecanico .job-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: white;
+
+  padding: 12px 14px;
+  background: #1f1f1f;
+  border: 1px solid #2b2b2b;
+  border-radius: 3px;
+  transition: all 0.2s ease;
 }
 
-.chart-content {
-  height: 300px;
-  padding: 15px 0;
+.dashboard-mecanico .job-item:hover {
+  background: #272727;
+  border-color: #333;
 }
 
-.bar-chart {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.bar-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: white;
-}
-
-.bar-label {
-  min-width: 120px;
-}
-
-.bar {
-  height: 30px;
-  background-color: #ff0000;
-  border-radius: 4px;
-  transition: width 0.3s ease;
-}
-
-.bar-value {
-  margin-left: 10px;
-  color: white;
-}
-
-.pie-chart {
-  height: 200px;
-  width: 200px;
-  margin: 0 auto;
-}
-
-.top-jobs {
-  grid-column: span 2;
-  padding: 20px;
-  color: #fff;
-  background-color: var(--card-bg);
-  border-radius: 8px;
-}
-
-.job-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 0;
-  border-bottom: 1px solid #333;
-}
-
-.job-info {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.job-number {
-  width: 24px;
-  height: 24px;
-  background-color: #d40824;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-}
-
-.job-details h4 {
-  margin: 0;
-  font-size: 16px;
-}
-
-.job-details p {
-  margin: 0;
+.dashboard-mecanico .job-item h4 {
   font-size: 14px;
-  color: #888;
-}
-
-.job-price {
-  font-weight: bold;
-  color: #d40824;
-}
-
-.recent-activity {
-  background-color: var(--card-bg);
-  border-radius: 12px;
-  padding: 20px;
-  color: white;
-  grid-column: span 2;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.activity-item {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  padding: 12px 0;
-  background: none;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.activity-icon {
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #ff0000;
-  background-color: rgba(255, 0, 0, 0.1);
-  border-radius: 50%;
-}
-
-.activity-details h4 {
+  color: var(--text);
   margin: 0;
-  font-size: 16px;
 }
 
-.activity-details p {
-  margin: 0;
-  font-size: 14px;
-  color: #888;
+.dashboard-mecanico .job-item p {
+  color: var(--muted);
+  margin: 2px 0 0 0;
+  font-size: 12px;
+}
+
+.dashboard-mecanico .job-price {
+  color: var(--accent);
+  font-weight: 800;
+  font-size: 15px;
+}
+
+/* ============================================================
+   Tooltip de Recharts ajustado para HUD oscuro
+   ============================================================ */
+
+.dashboard-mecanico .recharts-tooltip-wrapper {
+  background: #111 !important;
+  border: 1px solid #333 !important;
+  border-radius: 4px !important;
+  padding: 8px !important;
+  color: var(--text) !important;
+}
+
+.dashboard-mecanico .recharts-default-tooltip {
+  background: transparent !important;
+  color: var(--text) !important;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 1100px) {
+  .dashboard-mecanico .adm-content {
+    grid-template-columns: 1fr !important;
+  }
 }

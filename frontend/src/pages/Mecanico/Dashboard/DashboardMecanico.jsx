@@ -1,204 +1,200 @@
 import React, { useMemo } from "react";
 import {
-  Wrench,
-  Star,
-  Car,
-  ArrowUpRight,
-  CheckCircle,
-  Calendar,
-  ToolCase,
-} from "lucide-react";
-import {
   BarChart,
   Bar,
   XAxis,
   YAxis,
   CartesianGrid,
-  Tooltip,
   ResponsiveContainer,
   PieChart,
   Pie,
   Cell,
 } from "recharts";
+import { Calendar, CheckCircle, TrendingUp, ToolCase } from "lucide-react";
 import "./DashboardMecanico.css";
 
-// Datos de ejemplo - En un caso real estos vendrían de una API
-const statsData = {
-  ganancias: 12300,
-  autosReparacion: 12,
-  autosReparadosHoy: 5,
-  turnosPendientes: 8,
-  calificacion: 4.8,
-};
+/**
+ * DashboardMecanico.jsx
+ * - Mantiene el estilo del Admin
+ * - Dashboard simplificado y funcional
+ */
 
 const barData = [
-  { name: "Cambio de aceite", value: 24 },
+  { name: "Aceite", value: 24 },
   { name: "Frenos", value: 42 },
-  { name: "Diagnóstico", value: 35 },
-  { name: "Baterías", value: 28 },
+  { name: "Diag", value: 35 },
+  { name: "Batería", value: 28 },
   { name: "Suspensión", value: 45 },
   { name: "Otros", value: 60 },
 ];
 
 const pieData = [
-  { name: "Servicios completados", value: 98 },
-  { name: "Satisfacción cliente", value: 50 },
-  { name: "Utilización mecánicos", value: 75 },
+  { name: "Completados", value: 98 },
+  { name: "Satisfacción", value: 50 },
+  { name: "Utilización", value: 75 },
 ];
 
-const mejoresTrabajos = [
-  { id: 1, nombre: "Motor Diesel - Diagnóstico completo", fecha: "04/11", precio: 850 },
-  { id: 2, nombre: "Cambio de transmisión - Toyota", fecha: "04/08/23", precio: 720 },
-  { id: 3, nombre: "Sistema eléctrico - Volkswagen", fecha: "04/08/23", precio: 650 },
+const recent = [
+  {
+    id: 1,
+    title: "Servicio completado",
+    sub: "Ford Focus — Cambio de aceite",
+    icon: <CheckCircle />,
+  },
+  {
+    id: 2,
+    title: "Nuevo trabajo",
+    sub: "Toyota Corolla — Diagnóstico motor",
+    icon: <ToolCase />,
+  },
+  {
+    id: 3,
+    title: "Turno agendado",
+    sub: "Volkswagen Gol — 14:00",
+    icon: <Calendar />,
+  },
 ];
 
-const actividadReciente = [
-  { tipo: "completado", descripcion: "Servicio Completado", detalle: "Cambio de aceite • Ford Focus", tiempo: "Hace 2 horas" },
-  { tipo: "nuevo", descripcion: "Nuevo trabajo asignado", detalle: "Revisión de motor • Toyota Camry", tiempo: "Hace 2 horas" },
-  { tipo: "turno", descripcion: "Turno Próximo", detalle: "Volkswagen UP • cita de horas a las 14:00", tiempo: "Hace 2 horas" },
+const topJobs = [
+  { id: 1, title: "Diagnóstico completo - Motor Diesel", date: "04/11", price: 850 },
+  { id: 2, title: "Cambio de transmisión - Toyota", date: "03/11", price: 720 },
+  { id: 3, title: "Sistema eléctrico - VW", date: "02/11", price: 650 },
 ];
-
-// Tooltip personalizado para Recharts
-const CustomTooltip = ({ active, payload, label }) => {
-  if (active && payload && payload.length) {
-    return (
-      <div className="custom-tooltip">
-        <p>{`${label}: ${payload[0].value}`}</p>
-      </div>
-    );
-  }
-  return null;
-};
 
 const DashboardMecanico = () => {
-  const COLORS = useMemo(() => ["#ff0000", "#4CAF50", "#2196F3"], []);
+  const COLORS = useMemo(() => ["#ff4b4b", "#222", "#c70b0b"], []);
+
+  const stats = {
+    ingresos: "$12.300",
+    enReparacion: 12,
+    reparadosHoy: 5,
+    calif: 4.8,
+  };
 
   return (
-    <div className="dashboard-container">
+    <div className="admin-dashboard modern dashboard-mecanico">
+      <main className="adm-content">
+        <section className="left-col">
+          <div className="all-stats-grid">
+            <div className="card stat-card">
+              <p className="card-title">Ingresos del Mes</p>
+              <h3 className="card-value">{stats.ingresos}</h3>
+            </div>
+            <div className="card stat-card">
+              <p className="card-title">Autos en reparación</p>
+              <h3 className="card-value">{stats.enReparacion}</h3>
+            </div>
+            <div className="card stat-card">
+              <p className="card-title">Reparados hoy</p>
+              <h3 className="card-value">{stats.reparadosHoy}</h3>
+            </div>
+            <div className="card stat-card">
+              <p className="card-title">Calificación</p>
+              <h3 className="card-value">{stats.calif}</h3>
+            </div>
+          </div>
 
-      {/* --- MÉTRICAS --- */}
-      <div className="stats-card ganancias-card">
-        <div className="stats-header">
-          <h3>Ganancias del Mes</h3>
-          <ToolCase color="white" size={20} />
-        </div>
-        <div className="stats-value">{`$${statsData.ganancias.toLocaleString()}`}</div>
-        <div className="stats-trend">+15% vs mes anterior</div>
-      </div>
-
-      <div className="stats-card">
-        <div className="stats-header">
-          <h3>Autos en reparación</h3>
-          <Car color="white" size={20} />
-        </div>
-        <div className="stats-value">{statsData.autosReparacion}</div>
-      </div>
-
-      <div className="stats-card">
-        <div className="stats-header">
-          <h3>Autos reparados hoy</h3>
-          <Wrench color="white" size={20} />
-        </div>
-        <div className="stats-value">{statsData.autosReparadosHoy}</div>
-      </div>
-
-      <div className="stats-card">
-        <div className="stats-header">
-          <h3>Calificación promedio</h3>
-          <Star color="white" size={20} />
-        </div>
-        <div className="stats-value">{statsData.calificacion}</div>
-      </div>
-
-      {/* --- BARRA (Progreso de servicios) --- */}
-      <div className="chart-container">
-        <div className="chart-title">
-          <h3>Progreso de Servicios Realizados</h3>
-          <ArrowUpRight color="white" size={20} />
-        </div>
-        <div className="bar-chart-container">
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={barData} margin={{ top: 10, right: 20, left: 10, bottom: 10 }}>
-              <CartesianGrid stroke="rgba(255,255,255,0.06)" vertical={false} />
-              <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#ddd' }} />
-              <YAxis axisLine={false} tickLine={false} tick={{ fill: '#ddd' }} />
-              <Tooltip content={<CustomTooltip />} />
-              <Bar dataKey="value" radius={[8,8,8,8]} maxBarSize={48}>
-                {barData.map((entry, idx) => (
-                  <Cell key={`bar-${idx}`} fill={`rgba(255,40,40,${0.6 + idx * 0.05})`} />
-                ))}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
-
-      {/* --- Mejores Trabajos --- */}
-      <div className="top-jobs">
-        <div className="chart-title">
-          <h3>Mejores Trabajos</h3>
-          <ArrowUpRight color="white" size={18} />
-        </div>
-        {mejoresTrabajos.map((t) => (
-          <div key={t.id} className="job-item">
-            <div className="job-info">
-              <div className="job-number">{t.id}</div>
-              <div className="job-details">
-                <h4>{t.nombre}</h4>
-                <p>{t.fecha}</p>
+          <div className="progress-block">
+            <div className="progress-header">
+              <h4>Progreso de Servicios</h4>
+              <div className="graph-controls">
+                <button className="time-btn active">Semana</button>
+                <button className="time-btn">Mes</button>
+                <button className="date-picker">
+                  <TrendingUp /> <span style={{ marginLeft: 6 }}>Hoy</span>
+                </button>
               </div>
             </div>
-            <div className="job-price">{`$${t.precio}`}</div>
-          </div>
-        ))}
-      </div>
 
-      <div className="chart-container">
-        <div className="chart-title">
-          <h3>Eficiencia del Taller</h3>
-          <ArrowUpRight color="white" size={18} />
-        </div>
-        <ResponsiveContainer width="100%" height={300}>
-          <PieChart>
-            <Pie
-              data={pieData}
-              dataKey="value"
-              cx="50%"
-              cy="50%"
-              innerRadius={70}
-              outerRadius={110}
-              startAngle={90}
-              endAngle={450}
-            >
-              {pieData.map((_, i) => (
-                <Cell key={i} fill={COLORS[i % COLORS.length]} />
+            <ResponsiveContainer width="100%" height={260}>
+              <BarChart data={barData} margin={{ top: 6, right: 4, left: 0, bottom: 6 }}>
+                <CartesianGrid vertical={false} stroke="rgba(255,255,255,0.03)" />
+                <XAxis
+                  dataKey="name"
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fill: "var(--text)", fontSize: 12 }}
+                />
+                <YAxis
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fill: "var(--text)", fontSize: 12 }}
+                />
+                <ToolCase />
+                <Bar dataKey="value" radius={[8, 8, 8, 8]}>
+                  {barData.map((entry, idx) => (
+                    <Cell
+                      key={`c-${idx}`}
+                      fill={`rgba(255,75,75,${0.6 + idx * 0.04})`}
+                    />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </section>
+
+        <section className="right-col">
+          <div className="recent-panel">
+            <h4 className="panel-title">Actividad Reciente</h4>
+            <div className="activity-list">
+              {recent.map((r) => (
+                <div key={r.id} className="activity-item">
+                  <div className="act-icon">{r.icon}</div>
+                  <div className="act-content">
+                    <div className="act-title">{r.title}</div>
+                    <div className="act-sub">{r.sub}</div>
+                  </div>
+                </div>
               ))}
-            </Pie>
-          </PieChart>
-        </ResponsiveContainer>
-      </div>
-      {/* --- Actividad Reciente --- */}
-      <div className="recent-activity">
-        <div className="chart-title">
-          <h3>Actividad Reciente</h3>
-        </div>
-        {actividadReciente.map((a, i) => (
-          <div key={i} className="activity-item">
-            <div className="activity-icon">
-              {a.tipo === "completado" && <CheckCircle />}
-              {a.tipo === "nuevo" && <ToolCase />}
-              {a.tipo === "turno" && <Calendar />}
-            </div>
-            <div className="activity-details">
-              <h4>{a.descripcion}</h4>
-              <p>{a.detalle}</p>
-              <p>{a.tiempo}</p>
             </div>
           </div>
-        ))}
-      </div>
 
-      {/* --- Pie (Eficiencia) --- */}
+          <div className="pie-panel" style={{ marginTop: 16 }}>
+            <h4 className="panel-title" style={{ marginBottom: 12 }}>
+              Eficiencia del Taller
+            </h4>
+            <ResponsiveContainer width="100%" height={220}>
+              <PieChart>
+                <Pie
+                  data={pieData}
+                  dataKey="value"
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={50}
+                  outerRadius={90}
+                  startAngle={90}
+                  endAngle={450}
+                >
+                  {pieData.map((_, i) => (
+                    <Cell key={i} fill={COLORS[i % COLORS.length]} />
+                  ))}
+                </Pie>
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+
+          <div className="recent-panel" style={{ marginTop: 16 }}>
+            <h4 className="panel-title">Mejores Trabajos</h4>
+            <div className="activity-list" style={{ marginTop: 8 }}>
+              {topJobs.map((j) => (
+                <div key={j.id} className="activity-item" style={{ justifyContent: "space-between" }}>
+                  <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+                    <div className="act-icon">
+                      <ToolCase />
+                    </div>
+                    <div>
+                      <div className="act-title">{j.title}</div>
+                      <div className="act-sub">{j.date}</div>
+                    </div>
+                  </div>
+                  <div style={{ color: "var(--accent)", fontWeight: 700 }}>{`$${j.price}`}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      </main>
     </div>
   );
 };

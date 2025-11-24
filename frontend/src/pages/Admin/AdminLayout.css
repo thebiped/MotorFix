@@ -1,116 +1,179 @@
+/* LAYOUT */
 .admin-layout {
   width: 100vw;
   height: 100vh;
   display: flex;
-  color: #2d2d2d;
-  background: #fff;
-}
-
-/* --- SIDEBAR --- */
-.admin-sidebar {
-  width: 80px;
+  flex-direction: column;
   background: #000;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 16px 0;
-  gap: 20px;
-  transition: width 0.3s ease;
-  overflow: hidden;
-}
-
-.admin-sidebar.expanded {
-  width: 220px;
-}
-
-.admin-logo img {
-  width: 80px;
-  height: 60px;
-  margin-bottom: 20px;
-}
-
-.admin-nav {
-  width: 60%;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.admin-link {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 15px 15px;
-  color: #ddd;
-  background: #111;
-  border-radius: 50px;
-  transition: all 0.3s ease;
-}
-
-.admin-link.active,
-.admin-link:hover {
   color: #fff;
-  background: #D40824;
-  transform: scale(1.05);
 }
 
-.link-label {
-  font-family: 'Inter', sans-serif;
-  font-size: 14px;
-  color: #fff;
-  white-space: nowrap;
-}
-
-/* --- MAIN --- */
+/* CONTENIDO */
 .admin-main {
   flex: 1;
-  display: flex;
-  flex-direction: column;
 }
-
-/* HEADER */
-.admin-header {
-  display: flex;
-  justify-content: end;
-  align-items: center;
-  background: #000;
-  padding: 10px 20px;
-  color: white;
-}
-
-.admin-search {
-  width: 300px;
-  padding: 8px 14px;
-  border: none;
-  border-radius: 6px;
-  outline: none;
-  background: #2a2a2a;
-  color: white;
-}
-
-.admin-header-actions {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.icon-btn {
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.icon-btn:hover {
-  color: #ff4d4d;
-  transform: scale(1.1);
-}
-
-.icon-btn.logout:hover {
-  color: #ff6b6b;
-}
-
-/* CONTENT */
 .admin-content {
-  flex: 1;
+  height: 100%;
   overflow-y: auto;
-  padding: 0;
+}
+
+/* ------------------------------------------ */
+/*       ⚫ BOTTOM NAVBAR ARKHAM SUTIL        */
+/* ------------------------------------------ */
+
+.bat-navbar {
+  position: fixed;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  width: 80%;
+  max-width: 1050px;
+
+  display: flex;
+  justify-content: center;
+
+  z-index: 999;
+}
+
+/* panel central */
+/* ------------------------------------------ */
+/*     ⚫ BOTTOM NAVBAR — ARKHAM HUD STYLE    */
+/* ------------------------------------------ */
+
+.bat-panel {
+  width: 60%;
+  height: 58px;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+
+  /* Fondo holográfico HUD */
+  background: linear-gradient(
+    to right,
+    rgba(10, 10, 10, 0.85) 0%,
+    rgba(14, 14, 14, 0.55) 50%,
+    rgba(10, 10, 10, 0.85) 100%
+  );
+
+  backdrop-filter: blur(10px);
+
+  border: 1.5px solid rgba(212, 8, 36, 0.35);
+  border-radius: 10px;
+
+  /* Glow interno + bordes futuristas */
+  box-shadow:
+    0 0 10px rgba(212, 8, 36, 0.22),
+    inset 0 0 12px rgba(212, 8, 36, 0.25),
+    inset 0 0 4px rgba(255, 255, 255, 0.05);
+
+  /* Panel inclinado estilo nave */
+  transform: skewX(-6deg);
+
+  /* 💠 Línea HUD interna (detalle sutil) */
+  position: relative;
+}
+
+.bat-panel::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  height: 2px;
+  left: 10px;
+  right: 10px;
+
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(212, 8, 36, 0.45),
+    transparent
+  );
+
+  /* Línea superior brillante tipo HUD */
+  filter: blur(0.8px);
+
+  pointer-events: none;
+}
+
+.bat-panel::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 25%;
+  width: 50%;
+  height: 2px;
+
+  /* Línea inferior corta tipo targeting */
+  background: rgba(212, 8, 36, 0.28);
+
+  box-shadow: 0 0 8px rgba(212, 8, 36, 0.45);
+
+  pointer-events: none;
+}
+
+/* LINKS HUD */
+.bat-link {
+  position: relative;
+  color: #b9b9b9;
+  padding: 8px;
+  transform: skewX(6deg);
+  transition: 0.22s ease;
+}
+
+/* Destello HUD al hacer hover */
+.bat-link:hover {
+  color: #fff;
+  transform: skewX(6deg) translateY(-2px) scale(1.18);
+  filter: drop-shadow(0 0 6px rgba(212, 8, 36, 0.4));
+}
+
+/* Icono activo con glow */
+.bat-link.active {
+  color: #d40824;
+  text-shadow: 0 0 7px #d40824, 0 0 12px rgba(212, 8, 36, 0.5);
+}
+
+/* Cursor de red tron-like al hover */
+.bat-link::after {
+  content: "";
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  width: 0px;
+  height: 2px;
+
+  background: rgba(212, 8, 36, 0.8);
+  box-shadow: 0 0 6px rgba(212, 8, 36, 0.65);
+
+  transform: translateX(-50%);
+  transition: 0.25s ease;
+}
+
+.bat-link:hover::after {
+  width: 16px;
+}
+
+/* Tooltip igual */
+.bat-tooltip {
+  position: absolute;
+  bottom: 46px;
+  left: 50%;
+  transform: translateX(-50%) skewX(-6deg);
+
+  opacity: 0;
+  padding: 3px 8px;
+
+  background: rgba(0, 0, 0, 0.85);
+  border: 1px solid rgba(212, 8, 36, 0.35);
+
+  font-size: 10px;
+  border-radius: 4px;
+
+  transition: 0.22s ease;
+  pointer-events: none;
+}
+
+.bat-link:hover .bat-tooltip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(-4px) skewX(-6deg);
 }

@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import AdminLayout from "./pages/Admin/AdminLayout";
 import DashboardAdmin from "./pages/Admin/DashboardAdmin/DashboardAdmin";
 import GestionesAdmin from "./pages/Admin/GestionesAdmin/GestionesAdmin";
-import ReparacionesAdmin from "./pages/Admin/ReparacionesAdmin/ReparacionesAdmin";
+import ReparacionesAdmin from "./pages/Admin/ReparacionesAdmin/VehicleRepairs";
 import VehiculosAdmin from "./pages/Admin/VehiculosAdmin/VehiculosAdmin";
 import PerfilAdmin from "./pages/Admin/PerfilAdmin/PerfilAdmin";
 import Login from "./components/Authentication/Login/Login";
@@ -10,19 +10,18 @@ import Register from "./components/Authentication/Register/Register";
 import VehicleSelection from "./components/Authentication/VehicleSelection/VehicleSelection";
 import MecanicoLayout from "./pages/Mecanico/MecanicoLayout";
 import DashboardMecanico from "./pages/Mecanico/Dashboard/DashboardMecanico";
-import HorarioMecanico from "./pages/Mecanico/Horario/HorarioMecanico";
 import HistorialMecanico from "./pages/Mecanico/Historial/HistorialMecanico";
 import PerfilMecanico from "./pages/Mecanico/Perfil/PerfilMecanico";
-import ReparacionesMecanico from "./pages/Mecanico/Reparaciones/ReparacionesMecanico";
+import ReparacionesMecanico from "./pages/Mecanico/Reparaciones/VehicleRepairs";
 import ClienteLayout from "./pages/Cliente/ClienteLayout";
 import DashboardCliente from "./pages/Cliente/Dashboard/DashboardCliente";
 import HistorialCliente from "./pages/Cliente/Historial/HistorialCliente";
 import TurnosCliente from "./pages/Cliente/Turnos/TurnosCliente";
 import PerfilCliente from "./pages/Cliente/Perfil/PerfilCliente";
 import VehiculoCliente from "./pages/Cliente/Vehiculo/VehiculoCliente";
-// import SetupCar from "./components/modelo_3d/SetupCar";
-
-// Importaciones de Mecanico (componentes organizados en subcarpetas)
+import ForgotPasswordRequest from "./components/Authentication/ForgotPassword/ForgotPasswordRequest";
+import ForgotPasswordVerify from "./components/Authentication/ForgotPassword/ForgotPasswordVerify";
+import ForgotPasswordReset from "./components/Authentication/ForgotPassword/ForgotPasswordReset";
 
 function App() {
   return (
@@ -32,6 +31,16 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/vehicle-selection" element={<VehicleSelection />} />
+        <Route path="/forgot-password" element={<ForgotPasswordRequest />} />
+        <Route
+          path="/forgot-password/verify"
+          element={<ForgotPasswordVerify />}
+        />
+        <Route
+          path="/forgot-password/reset"
+          element={<ForgotPasswordReset />}
+        />
+
         {/* <Route path="/setup" element={<SetupCar />} /> */}
 
         {/* Rutas admin */}
@@ -49,7 +58,6 @@ function App() {
           <Route index element={<DashboardMecanico />} />
           <Route path="dashboard" element={<DashboardMecanico />} />
           <Route path="reparaciones" element={<ReparacionesMecanico />} />
-          <Route path="horario" element={<HorarioMecanico />} />
           <Route path="historial" element={<HistorialMecanico />} />
           <Route path="perfil" element={<PerfilMecanico />} />
         </Route>

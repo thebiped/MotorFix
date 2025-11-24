@@ -1,107 +1,88 @@
-import React from 'react';
-import './HistorialMecanico.css';
+import React, { useEffect, useState } from "react";
+import "./HistorialMecanico.css";
+
+const dummyData = [
+  { patente: "DEF 456", vehiculo: "Volkswagen Gol 2019", cliente: "Ana García", trabajo: "Cambio de aceite y filtros", ingreso: "12/03/2024", estimada: "14/03/2024", costo: "$4050", calificacion: "5★" },
+  { patente: "ABC 123", vehiculo: "Ford Focus 2020", cliente: "Juan Pérez", trabajo: "Frenos", ingreso: "10/03/2024", estimada: "12/03/2024", costo: "$5200", calificacion: "4★" },
+  { patente: "GHI 789", vehiculo: "Renault Clio 2021", cliente: "Lucía Fernández", trabajo: "Suspensión", ingreso: "15/03/2024", estimada: "17/03/2024", costo: "$6200", calificacion: "5★" }
+];
 
 const HistorialMecanico = () => {
+  const [loading, setLoading] = useState(true);
+  const [rows, setRows] = useState([]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setRows(dummyData);
+      setLoading(false);
+    }, 1200);
+  }, []);
+
   return (
-    <div className="historial-container">
-      <div className="historial-header">
-        <div className="header-title">
-          <h1>Historial de Reparaciones</h1>
-          <p>Revisa todas tus reparaciones completadas</p>
-        </div>
-        <button className="btn-descargar">
-          <i className="fas fa-download"></i> Descargar Historial
-        </button>
-      </div>
+    <div className="hud-container">
+      <header className="hud-header">
+        <h1>HISTORIAL DE REPARACIONES</h1>
+        <p>Revisa todas tus reparaciones completadas</p>
+      </header>
 
       <div className="status-cards">
-        <div className="status-card">
+        <div className="status-card holo-fade" style={{ animationDelay: "0.1s" }}>
           <h3>Total Reparaciones</h3>
-          <div className="card-content">
-            <span className="number">26</span>
-            <p>Completadas</p>
-          </div>
+          <span className="number">26</span>
         </div>
-        <div className="status-card">
-          <h3>Ganancias Totales</h3>
-          <div className="card-content">
-            <span className="number">$3000250</span>
-            <p>En reparaciones</p>
-          </div>
+        <div className="status-card holo-fade" style={{ animationDelay: "0.2s" }}>
+          <h3>Ganancias</h3>
+          <span className="number">$3.000.250</span>
         </div>
-        <div className="status-card">
+        <div className="status-card holo-fade" style={{ animationDelay: "0.3s" }}>
           <h3>Calificación Promedio</h3>
-          <div className="card-content">
-            <span className="number">4.9/5.0</span>
-            <p>Satisfacción de clientes</p>
-          </div>
+          <span className="number">4.9/5</span>
         </div>
       </div>
 
-      <div className="historial-table">
-        <div className="table-header">
-          <div className="search-bar">
-            <i className="fas fa-search search-icon"></i>
-            <input 
-              type="text" 
-              placeholder="Buscar por cliente o vehículos..." 
-              className="search-input"
-            />
+      <div className="table-container">
+        {loading ? (
+          <div className="loading-overlay">
+            <div className="hud-loader"></div>
           </div>
-          <div className="table-actions">
-            <button className="btn-borrar">Borrar</button>
-            <button className="btn-editar">Editar</button>
-          </div>
-        </div>
-
-        <div className="datos-vehiculos">
-          <h2>DATOS VEHÍCULOS</h2>
-          <div className="table-content">
-            <table>
+        ) : (
+          <div className="table-scanner-wrapper">
+            <table className="hud-table">
               <thead>
                 <tr>
-                  <th></th>
                   <th>Patente</th>
                   <th>Vehículo</th>
                   <th>Cliente</th>
-                  <th>Trabajo Realizado</th>
-                  <th>Fecha Ingreso</th>
-                  <th>Fecha Estimada</th>
+                  <th>Trabajo</th>
+                  <th>Ingreso</th>
+                  <th>Estimada</th>
                   <th>Costo</th>
                   <th>Calificación</th>
                 </tr>
               </thead>
               <tbody>
-                {/* Example row */}
-                <tr>
-                  <td><input type="checkbox" /></td>
-                  <td>DEF 456</td>
-                  <td>Volkswagen Gol 2019</td>
-                  <td>Ana García</td>
-                  <td>Cambio de aceite y filtros</td>
-                  <td>12/03/2024</td>
-                  <td>14/03/2024</td>
-                  <td>$4050</td>
-                  <td>5★</td>
-                </tr>
-                {/* Add more rows as needed */}
+                {rows.map((row, i) => (
+                  <tr
+                    key={i}
+                    style={{ animationDelay: `${i * 0.15 + 0.2}s` }}
+                    className="fade-row holo-fade"
+                  >
+                    <td>{row.patente}</td>
+                    <td>{row.vehiculo}</td>
+                    <td>{row.cliente}</td>
+                    <td>{row.trabajo}</td>
+                    <td>{row.ingreso}</td>
+                    <td>{row.estimada}</td>
+                    <td>{row.costo}</td>
+                    <td>{row.calificacion}</td>
+                  </tr>
+                ))}
               </tbody>
             </table>
-          </div>
-        </div>
 
-        <div className="pagination">
-          <button className="pagination-btn"><i className="fas fa-chevron-left"></i></button>
-          <button className="pagination-btn active">1</button>
-          <button className="pagination-btn">2</button>
-          <button className="pagination-btn">3</button>
-          <button className="pagination-btn">4</button>
-          <button className="pagination-btn">5</button>
-          <button className="pagination-btn">6</button>
-          <span>...</span>
-          <button className="pagination-btn">24</button>
-          <button className="pagination-btn"><i className="fas fa-chevron-right"></i></button>
-        </div>
+            <div className="hud-scanner"></div>
+          </div>
+        )}
       </div>
     </div>
   );

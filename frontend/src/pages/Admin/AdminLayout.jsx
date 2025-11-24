@@ -1,48 +1,45 @@
-import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import { NavLink, Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import {
   LayoutDashboard,
-  Users,
-  CalendarDays,
-  Package,
+  ClipboardList,
   Wrench,
+  Car,
   User,
   Bell,
   LogOut,
-  ClipboardList,
-  Car,
 } from "lucide-react";
-import Logo from "../../assets/img/Logo.png";
+import ScreenVignette from "../../components/ScreenVignette/ScreenVignette";
 import "./AdminLayout.css";
 
 const menuItems = [
-  {
-    path: "/admin/dashboard",
-    icon: <LayoutDashboard size={22} />,
-    label: "Dashboard",
-  },
-  {
-    path: "/admin/gestiones",
-    icon: <ClipboardList size={22} />,
-    label: "Gestiones",
-  },
-  {
-    path: "/admin/reparaciones",
-    icon: <Wrench size={22} />,
-    label: "Reparaciones",
-  },
+  { path: "/admin/dashboard", icon: <LayoutDashboard size={22} />, label: "Dashboard" },
+  { path: "/admin/gestiones", icon: <ClipboardList size={22} />, label: "Gestiones" },
+  { path: "/admin/reparaciones", icon: <Wrench size={22} />, label: "Reparaciones" },
   { path: "/admin/vehiculos", icon: <Car size={22} />, label: "Vehículos" },
+  { path: "/admin/notificaciones", icon: <Bell size={22} />, label: "Notificaciones" },
   { path: "/admin/perfil", icon: <User size={22} />, label: "Perfil" },
 ];
 
 const AdminLayout = () => {
   const navigate = useNavigate();
-  const [sidebarExpanded, setSidebarExpanded] = useState(false);
+  const location = useLocation();
+
+  const [showVignette, setShowVignette] = useState(false);
 
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
     if (!storedUser || storedUser.rol !== "admin") navigate("/");
   }, [navigate]);
+
+  // 🔥 Disparar animación al cambiar de sección
+  useEffect(() => {
+    setShowVignette(true);
+
+    const timeout = setTimeout(() => setShowVignette(false), 1800);
+
+    return () => clearTimeout(timeout);
+  }, [location.pathname]);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -52,40 +49,28 @@ const AdminLayout = () => {
 
   return (
     <div className="admin-layout">
-      {/* SIDEBAR */}
-      <aside className={`admin-sidebar`}>
-        <div className="admin-logo">
-          <img src={Logo} alt="logo" />
-        </div>
 
-        <nav className="admin-nav">
-          {menuItems.map((item, index) => (
-            <NavLink key={index} to={item.path} className="admin-link">
-              {item.icon}
-            </NavLink>
-          ))}
-        </nav>
-      </aside>
+      {/* 🔥 ANIMACIÓN HUD ACTIVA SEGÚN ESTADO */}
+      {showVignette && <ScreenVignette />}
 
-      {/* MAIN CONTENT */}
       <div className="admin-main">
-        {/* HEADER */}
-        <header className="admin-header">
-          <div className="admin-header-actions">
-            <Bell className="icon-btn" />
-            <User
-              className="icon-btn"
-              onClick={() => navigate("/admin/perfil")}
-            />
-            <LogOut className="icon-btn logout" onClick={handleLogout} />
-          </div>
-        </header>
-
-        {/* DYNAMIC CONTENT */}
         <main className="admin-content">
           <Outlet />
         </main>
       </div>
+
+      <nav className="bat-navbar">
+        <div className="bat-panel">
+          {menuItems.map((item, index) => (
+            <NavLink key={index} to={item.path} className="bat-link">
+              {item.icon}
+              <span className="bat-tooltip">{item.label}</span>
+            </NavLink>
+          ))}
+
+          <LogOut className="bat-link logout-btn" onClick={handleLogout} />
+        </div>
+      </nav>
     </div>
   );
 };

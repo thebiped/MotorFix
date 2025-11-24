@@ -1,0 +1,61 @@
+.vignette-cinematic {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 99998;
+  opacity: 1;
+
+  background:
+    radial-gradient(circle at center,
+      rgba(26, 0, 0, 0) 30%,
+      rgba(26, 0, 0, 0.45) 55%,
+      rgba(26, 0, 0, 0.72) 80%,
+      rgba(26, 0, 0, 0.95) 100%
+    ),
+    radial-gradient(circle at center,
+      rgba(26, 0, 0, 0.0) 25%,
+      rgba(26, 0, 0, 0.28) 50%,
+      rgba(26, 0, 0, 0.6) 72%,
+      rgba(26, 0, 0, 0.85) 100%
+    );
+
+  animation:
+    vignetteBreath 2200ms ease-in-out 1,
+    vignetteFadeOut 1800ms ease-out 1;
+  animation-fill-mode: forwards;
+}
+
+.vignette-cinematic::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: radial-gradient(rgba(255,255,255,0.018) 1px, transparent 1px);
+  background-size: 6px 6px;
+  mix-blend-mode: overlay;
+  animation: grainMove 600ms steps(2) infinite;
+  opacity: 0.22;
+}
+
+@keyframes vignetteBreath {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.02); opacity: 0.98; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes vignetteFadeOut {
+  0% { opacity: 1; }
+  40% { opacity: 0.95; }
+  70% { opacity: 0.55; }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(1.01);
+  }
+}
+
+@keyframes grainMove {
+  0% { transform: translate(0,0); }
+  50% { transform: translate(-1px, 1px); }
+  100% { transform: translate(0,0); }
+}

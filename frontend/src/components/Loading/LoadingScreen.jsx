@@ -1,11 +1,17 @@
-import "./LoadingScreen.css";
+import React from "react";
 
 const LoadingScreen = ({ visible }) => {
+  if (!visible) return null;
+
   return (
-    <div className={`loading-overlay ${visible ? "show" : ""}`}>
-      <div className="loading-circle"></div>
-      <p className="loading-text">Iniciando sesión...</p>
-    </div>
+    <>
+      <div className="loading-screen-overlay">
+        <div className="loading-indicator">
+          <div className="loading-spinner"></div>
+          <p>AUTENTICANDO CREDENCIALES...</p>
+        </div>
+      </div>
+    </>
   );
 };
 
