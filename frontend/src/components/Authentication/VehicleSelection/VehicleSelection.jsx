@@ -128,11 +128,10 @@ const BrandSelector = ({ onBrandSelect }) => {
                   <div className="brand-bar" />
                 </div>
 
-                <img
-                  src={brand.example_car_url || PLACEHOLDER_CAR}
-                  alt=""
-                  className="brand-bg-car"
-                />
+                <div className="brand_car">
+                  <img src={brand.example_car_url || PLACEHOLDER_CAR} />
+                </div>
+
               </div>
             );
           })}
@@ -244,7 +243,7 @@ const ModelSelector = ({ brand, onBack, onVehicleSelect }) => {
           className="nfs-nav-btn left"
           onClick={() => changeSlide("prev")}
         >
-          <ChevronLeft size={40} />
+          <div className="icon"><ChevronLeft size={40} /></div>
         </button>
 
         <div className="car-showcase">
@@ -315,7 +314,7 @@ const ModelSelector = ({ brand, onBack, onVehicleSelect }) => {
           className="nfs-nav-btn right"
           onClick={() => changeSlide("next")}
         >
-          <ChevronRight size={40} />
+          <div className="icon"><ChevronRight size={40}  /></div>
         </button>
       </div>
 

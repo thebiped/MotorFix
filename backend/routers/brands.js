@@ -1,4 +1,3 @@
-// backend/routers/brands.js
 const express = require("express");
 const multer = require("multer");
 const path = require("path");
@@ -6,7 +5,7 @@ const db = require("../database");
 
 const router = express.Router();
 
-// Multer - guardar imágenes en /backend/uploads/images
+// Multer config
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, path.join(__dirname, "..", "uploads", "images"));
@@ -18,35 +17,54 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-// GET /api/brands  -> lista marcas con logo_path (ruta pública)
+
+// GET /api/brands
 router.get("/", (req, res) => {
-  db.all("SELECT id_brand, name, logo_path, description FROM brands ORDER BY name", [], (err, rows) => {
-    if (err) return res.status(500).json({ message: "Error al obtener marcas", err });
-    // Convertir logo_path a URL pública si existe
-    const host = req.get("host");
-    const proto = req.protocol;
-    const result = rows.map((r) => ({
-      ...r,
-      logo_url: r.logo_path ? `${proto}://${host}/uploads/images/${path.basename(r.logo_path)}` : null,
-    }));
-    res.json(result);
-  });
-});
+  db.all(
+    "SELECT id_brand, name, logo_path, example_car_url, description FROM brands ORDER BY name",
+    [],
+    (err, rows) => {
+      if (err) return res.status(500).json({ message: "Error al obtener marcas", err });
 
-// POST /api/brands (form-data: name, description, logo file)
-router.post("/", upload.single("logo"), (req, res) => {
-  const { name, description } = req.body;
-  const logoPath = req.file ? req.file.path : null;
+      const host = req.get("host");
+      const proto = req.protocol;
 
-  if (!name) return res.status(400).json({ message: "Falta el nombre de la marca" });
+      const result = rows.map((r) => ({
+        ...r,
+        logo_url: r.logo_path
+          ? `${proto}://${host}/uploads/images/${path.basename(r.logo_path)}`
+          : null,
+        example_car_url: r.example_car_url
+          ? `${proto}://${host}/uploads/images/${path.basename(r.example_car_url)}`
+          : null,
+      }));
 
-  db.run("INSERT INTO brands (name, logo_path, description) VALUES (?, ?, ?)", [name, logoPath, description || ""], function (err) {
-    if (err) {
-      console.error(err);
-      return res.status(500).json({ message: "Error al crear marca" });
+      res.json(result);
     }
-    res.json({ success: true, id_brand: this.lastID });
-  });
+  );
 });
+
+
+// POST /api/brands
+router.post(
+  "/",
+  upload.fields([{ name: "logo" }, { name: "logo_car" }]),
+  (req, res) => {
+    const { name, description } = req.body;
+
+    const logoPath = req.files["logo"] ? req.files["logo"][0].path : null;
+    const exampleCarPath = req.files["logo_car"] ? req.files["logo_car"][0].path : null;
+
+    db.run(
+      "INSERT INTO brands (name, logo_path, example_car_url, description) VALUES (?, ?, ?, ?)",
+      [name, logoPath, exampleCarPath, description || ""],
+      function (err) {
+        if (err) return res.status(500).json({ message: "Error al crear marca", err });
+
+        res.json({ success: true, id_brand: this.lastID });
+      }
+    );
+  }
+);
 
 module.exports = router;
