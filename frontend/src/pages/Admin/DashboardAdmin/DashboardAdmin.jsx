@@ -1,149 +1,214 @@
-import React from "react";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell,
-} from "recharts";
+
+import React, { useState, useEffect } from "react";
+import { ChevronRight } from "lucide-react";
 import { FaCalendarAlt, FaTools, FaUserCircle } from "react-icons/fa";
 import "./DashboardAdmin.css";
 
-const barData = [
-  { name: "Semana 1", value: 12000 },
-  { name: "Semana 2", value: 48000 },
-  { name: "Semana 3", value: 30000 },
-  { name: "Semana 4", value: 20000 },
-  { name: "Semana 5", value: 45000 },
-  { name: "Semana 6", value: 60000 },
+// ==========================
+// 🎛️ CIRCULAR HUD — ANIMADO
+// ==========================
+
+const CircularHUD = ({ size = 120, stroke = 8, value = 75, label = "CPU" }) => {
+  const radius = (size - stroke) / 2;
+  const circumference = 2 * Math.PI * radius;
+  const dash = circumference * (value / 100); // longitud visible
+  const gap = circumference - dash; // resto
+
+  const [animatedValue, setAnimatedValue] = useState(0);
+  const [dashOffset, setDashOffset] = useState(circumference);
+
+  useEffect(() => {
+    const duration = 1400; // ms
+    const start = performance.now();
+
+    function animate(time) {
+      const elapsed = time - start;
+      const progress = Math.min(elapsed / duration, 1);
+
+      setAnimatedValue(Math.round(progress * value));
+      setDashOffset(circumference - progress * dash);
+
+      if (progress < 1) requestAnimationFrame(animate);
+    }
+
+    requestAnimationFrame(animate);
+  }, [value, dash, circumference]);
+
+  return (
+    <div className="circular-hud" style={{ width: size, height: size }}>
+      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="circle-anim">
+        <defs>
+          <linearGradient id="g1" x1="0" x2="1">
+            <stop offset="0%" stopColor="var(--neon-2)" />
+            <stop offset="100%" stopColor="var(--neon)" />
+          </linearGradient>
+        </defs>
+        <g transform={`translate(${size / 2}, ${size / 2})`}>
+          <circle r={radius} fill="none" stroke="rgba(255,255,255,0.03)" strokeWidth={stroke} />
+          <circle
+            r={radius}
+            fill="none"
+            stroke="url(#g1)"
+            strokeWidth={stroke}
+            strokeLinecap="round"
+            strokeDasharray={`${dash} ${gap}`}
+            strokeDashoffset={dashOffset}
+            transform="rotate(-90)"
+          />
+        </g>
+      </svg>
+      <div className="circular-label fadeInDelayed">
+        <div className="circular-value">{animatedValue}%</div>
+        <div className="circular-text">{label}</div>
+      </div>
+    </div>
+  );
+}
+
+
+const stats = [
+  { id: 1, label: "Ingresos (Mes)", value: "$67.000" },
+  { id: 2, label: "Servicios Activos", value: "47" },
+  { id: 3, label: "Servicios Acabados", value: "35" },
+  { id: 4, label: "Turnos Pendientes", value: "12" },
 ];
 
-const pieData = [
-  { name: "Servicios completados", value: 98 },
-  { name: "Satisfacción cliente", value: 50 },
-  { name: "Utilización mecánicos", value: 75 },
+const hudIndicators = [
+  { id: 1, label: "Servicios completados", value: 98 },
+  { id: 2, label: "Satisfacción cliente", value: 75 },
+  { id: 3, label: "Utilización mecánicos", value: 63 },
 ];
-
-const COLORS = ["#ff4b4b", "#222", "#c70b0b"];
 
 const recentActivities = [
-  {
-    id: 1,
-    title: "Servicio Completado",
-    subtitle: "Ford Focus",
-    icon: <FaTools />,
-  },
-  {
-    id: 2,
-    title: "Nuevo cliente",
-    subtitle: "Maria López - Toyota Corolla",
-    icon: <FaUserCircle />,
-  },
-  {
-    id: 3,
-    title: "Turno Agendado",
-    subtitle: "Volkswagen Gol",
-    icon: <FaCalendarAlt />,
-  },
+  { id: 1, icon: <FaTools />, title: "Servicio completado", sub: "Ford Focus" },
+  { id: 2, icon: <FaUserCircle />, title: "Nuevo cliente", sub: "María López" },
+  { id: 3, icon: <FaCalendarAlt />, title: "Turno agendado", sub: "Volkswagen Gol" },
 ];
 
-const DashboardAdmin = () => {
+// ==========================
+// MAIN COMPONENT
+// ==========================
+function DashboardAdmin() {
+  const [loaded, setLoaded] = useState(false);
+  useEffect(() => {
+    const timeout = setTimeout(() => setLoaded(true), 80);
+    return () => clearTimeout(timeout);
+  }, []);
+
   return (
-    <div className="admin-dashboard modern">
-      <main className="adm-content">
-        {/* COLUMNA IZQUIERDA */}
-        <section className="left-col">
-          {/* ESTADÍSTICAS PRINCIPALES */}
-          <div className="all-stats-grid modern">
-            {[
-              { title: "Ingresos del Mes", value: "$67.000" },
-              { title: "Servicios Activos", value: "47" },
-              { title: "Servicios Acabados", value: "35" },
-              { title: "Turnos Pendientes", value: "12" },
-            ].map((stat, idx) => (
-              <div key={idx} className="card modern stat-card">
-                <p className="card-title">{stat.title}</p>
-                <h3 className="card-value">{stat.value}</h3>
-              </div>
-            ))}
-          </div>
+    <div className={`hud-dashboard ${loaded ? "hud-loaded" : ""}`}>
+      {/* LEFT */}
+      <aside className="hud-left slideInLeft">
+        <div className="hud-left-header fadeInFast">
+          <div className="hud-title">GARAJE - HUD</div>
+          <div className="hud-subtitle">Panel de control</div>
+        </div>
 
-          {/* BLOQUE DE PROGRESO DE SERVICIOS */}
-          <div className="progress-block modern">
-            <div className="progress-header">
-              <h4>Progreso de Servicios</h4>
-              <div className="graph-controls">
-                {["Día", "Semana", "Mes", "Año"].map((label, idx) => (
-                  <button
-                    key={idx}
-                    className={`time-btn ${idx === 0 ? "active" : ""}`}
-                  >
-                    {label}
-                  </button>
-                ))}
-                <button className="date-picker">
-                  <FaCalendarAlt /> <span>14 Oct 2025</span>
-                </button>
-              </div>
+        {/* Stats */}
+        <div className="hud-stats">
+          {stats.map((s) => (
+            <div className="hud-stat-card popIn" key={s.id}>
+              <div className="stat-label">{s.label}</div>
+              <div className="stat-value">{s.value}</div>
             </div>
-            <ResponsiveContainer width="100%" height={280}>
-              <BarChart
-                data={barData}
-                margin={{ top: 0, right: 0, left: 0, bottom: 0 }}
-              >
-                <XAxis
-                  dataKey="name"
-                  axisLine={false}
-                  tickLine={false}
-                  /* Ejes en blanco para tema oscuro */
-                  tick={{ fontSize: 12, fill: '#f0f0f0' }} 
-                />
-                <YAxis
-                  axisLine={false}
-                  tickLine={false}
-                  /* Ejes en blanco para tema oscuro */
-                  tick={{ fontSize: 12, fill: '#f0f0f0' }}
-                />
-                <Tooltip />
-                <Bar dataKey="value" radius={[8, 8, 8, 8]}>
-                  {barData.map((entry, idx) => (
-                    <Cell
-                      key={idx}
-                      fill={`rgba(255,75,75,${0.6 + idx * 0.05})`}
-                    />
-                  ))}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </section>
+          ))}
+        </div>
 
-        {/* COLUMNA DERECHA (Ahora envuelve el contenido) */}
-        <section className="right-col"> 
-          {/* ACTIVIDAD RECIENTE */}
-          <div className="recent-panel modern">
-            <h4 className="panel-title">Actividad Reciente</h4>
-            <div className="activity-list">
-              {recentActivities.map((act) => (
-                <div key={act.id} className="activity-item modern">
-                  <div className="act-icon">{act.icon}</div>
-                  <div className="act-content">
-                    <div className="act-title">{act.title}</div>
-                    <div className="act-sub">{act.subtitle}</div>
+        {/* Quicklist */}
+        <div className="hud-quicklist fadeInSlow">
+          <div className="ql-header">Reparaciones recientes</div>
+          <div className="ql-list">
+            <div className="ql-item hoverGlow">
+              <div className="ql-pos">01</div>
+              <div>
+                <div className="ql-title">Toyota Corolla</div>
+                <div className="ql-sub">Cambio pastillas freno</div>
+              </div>
+              <div className="ql-tag">ACTIVO</div>
+            </div>
+
+            <div className="ql-item hoverGlow">
+              <div className="ql-pos">02</div>
+              <div>
+                <div className="ql-title">Renault Clio</div>
+                <div className="ql-sub">Correa + poleas</div>
+              </div>
+              <div className="ql-tag done">OK</div>
+            </div>
+          </div>
+        </div>
+
+      </aside>
+
+      {/* CENTER */}
+      <main className="hud-center fadeIn">
+        <div className="center-top">
+          <div className="center-title">
+            <h1>Panel Central</h1>
+            <div className="center-sub">Resumen general del sistema</div>
+          </div>
+        </div>
+
+        {/* PANEL */}
+        <div className="hud-panel popIn">
+          <div className="hud-grid-bg" />
+
+          {/* Left Block */}
+          <div className="hud-left-block">
+            <div className="hud-block-title">Indicadores del sistema</div>
+
+            <div className="hud-indicators">
+              {hudIndicators.map((ind) => (
+                <div className="indicator-row slideInUp" key={ind.id}>
+                  <div className="indicator-left">
+                    <div className="indicator-label">{ind.label}</div>
+                    <div className="indicator-sub">Actualizado</div>
+                  </div>
+
+                  <div className="indicator-gauge">
+                    <div className="gauge-bar">
+                      <div
+                        className="gauge-fill"
+                        style={{ width: ind.value + "%" }}
+                      />
+                    </div>
+                    <div className="gauge-value">{ind.value}%</div>
                   </div>
                 </div>
               ))}
             </div>
           </div>
-        </section> {/* Cierre de la columna derecha */}
 
+          {/* Right Block */}
+          <div className="hud-right-block">
+            <div className="hud-circles">
+              <CircularHUD value={84} label="Eficiencia" />
+              <CircularHUD value={63} label="Productividad" />
+              <CircularHUD value={92} label="Precisión" />
+            </div>
+          </div>
+        </div>
       </main>
+
+      {/* RIGHT */}
+      <aside className="hud-right slideInRight">
+        <div className="right-title">Actividad reciente</div>
+        <div className="right-sub">Últimos movimientos registrados</div>
+
+        <div className="recent-list">
+          {recentActivities.map((act) => (
+            <div className="recent-row fadeInUpSmall" key={act.id}>
+              <div className="recent-icon">{act.icon}</div>
+              <div>
+                <div className="recent-title">{act.title}</div>
+                <div className="recent-sub">{act.sub}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </aside>
     </div>
   );
-};
+}
 
 export default DashboardAdmin;

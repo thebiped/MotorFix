@@ -1,53 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useOutletContext } from "react-router-dom";
 import "./TurnosCliente.css";
-
-const rows = [
-  {
-    id: 1,
-    fecha: "19/03/2024",
-    hora: "09:00",
-    vehiculo: "Volkswagen Gol 2019",
-    servicio: "Cambio de aceite y filtros",
-    mecanico: "Ana García",
-    estado: "En progreso",
-  },
-  {
-    id: 2,
-    fecha: "19/03/2024",
-    hora: "10:30",
-    vehiculo: "Volkswagen Gol 2019",
-    servicio: "Cambio de aceite y filtros",
-    mecanico: "Ana García",
-    estado: "Pendiente",
-  },
-  {
-    id: 3,
-    fecha: "19/03/2024",
-    hora: "11:00",
-    vehiculo: "Volkswagen Gol 2019",
-    servicio: "Cambio de aceite y filtros",
-    mecanico: "Ana García",
-    estado: "Completado",
-  },
-  {
-    id: 4,
-    fecha: "19/03/2024",
-    hora: "13:00",
-    vehiculo: "Volkswagen Gol 2019",
-    servicio: "Cambio de aceite y filtros",
-    mecanico: "Ana García",
-    estado: "En progreso",
-  },
-  {
-    id: 5,
-    fecha: "19/03/2024",
-    hora: "15:00",
-    vehiculo: "Volkswagen Gol 2019",
-    servicio: "Cambio de aceite y filtros",
-    mecanico: "Ana García",
-    estado: "En progreso",
-  },
-];
 
 const StatusPill = ({ status }) => {
   const cls =
@@ -61,76 +14,224 @@ const StatusPill = ({ status }) => {
 };
 
 const TurnosCliente = () => {
-  // <-- AHORA SÍ: LOS HOOKS DENTRO DEL COMPONENTE
+  // userId desde Outlet o localStorage
+  const outlet = useOutletContext?.() ?? {};
+  const outletUserId = outlet?.userId;
+  const [editTurno, setEditTurno] = useState(null);
+
+  const storedUser = (() => {
+    try {
+      return JSON.parse(localStorage.getItem("user")) || null;
+    } catch (e) {
+      return null;
+    }
+  })();
+
+  const userId =
+    outletUserId ?? storedUser?.id ?? storedUser?.id_usuario ?? null;
+
+  const [turnos, setTurnos] = useState([]);
+  const [vehiculos, setVehiculos] = useState([]);
+
   const [showModal, setShowModal] = useState(false);
   const [problema, setProblema] = useState("");
   const [tipoReparacion, setTipoReparacion] = useState("");
   const [vehiculoId, setVehiculoId] = useState("");
 
+  useEffect(() => {
+    console.log("[TurnosCliente] effective userId:", userId);
+  }, [userId]);
+
+  // Cargar turnos del usuario
+  useEffect(() => {
+    if (!userId) {
+      setTurnos([]);
+      return;
+    }
+
+    const url = `http://localhost:3001/api/turnos/user/${userId}`;
+    console.log("[TurnosCliente] fetching turnos from", url);
+
+    fetch(url)
+      .then((r) => r.json())
+      .then((data) => {
+        console.log("[TurnosCliente] turnos response:", data);
+        setTurnos(Array.isArray(data) ? data : []);
+      })
+      .catch((err) => {
+        console.error("Error fetching turnos:", err);
+        setTurnos([]);
+      });
+  }, [userId]);
+
+  // Cargar vehículos del usuario
+  useEffect(() => {
+    if (!userId) {
+      setVehiculos([]);
+      return;
+    }
+
+    const url = `http://localhost:3001/api/vehiculos/user/${userId}`;
+    console.log("[TurnosCliente] fetching vehiculos from", url);
+
+    fetch(url)
+      .then((r) => r.json())
+      .then((data) => {
+        console.log("[TurnosCliente] vehiculos response:", data);
+        setVehiculos(Array.isArray(data) ? data : []);
+      })
+      .catch((err) => {
+        console.error("Error fetching vehiculos:", err);
+        setVehiculos([]);
+      });
+  }, [userId]);
+
   const handleCrearTurno = async () => {
+    if (!vehiculoId || !problema || !tipoReparacion) {
+      alert("Completa todos los campos");
+      return;
+    }
+
     try {
-      const response = await fetch("http://localhost:3001/api/turnos/create", {
+      const res = await fetch("http://localhost:3001/api/turnos/create", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          user_id: 1,
+          user_id: userId,
           vehicle_id: vehiculoId,
           problema,
           tipo_reparacion: tipoReparacion,
         }),
       });
 
-      const data = await response.json();
-      console.log("Turno creado:", data);
+      const data = await res.json();
+      console.log("[TurnosCliente] create turno response:", data);
 
-      alert("Turno creado con éxito");
-      setShowModal(false);
-    } catch (error) {
-      console.error(error);
-      alert("Error al crear turno");
+      if (data.success) {
+        alert("Turno creado");
+
+        // refrescar lista
+        const lista = await fetch(
+          `http://localhost:3001/api/turnos/user/${userId}`
+        ).then((r) => r.json());
+
+        setTurnos(Array.isArray(lista) ? lista : []);
+
+        setShowModal(false);
+        setProblema("");
+        setTipoReparacion("");
+        setVehiculoId("");
+      } else {
+        alert(
+          "Error: " + (data.error || data.message || "respuesta sin éxito")
+        );
+      }
+    } catch (err) {
+      console.error("Error al crear turno:", err);
+      alert("Error al conectar con el servidor");
     }
+  };
+
+  const handleEliminar = async (id) => {
+    if (!window.confirm("¿Seguro que deseas eliminar este turno?")) return;
+
+    try {
+      const res = await fetch(`http://localhost:3001/api/turnos/${id}`, {
+        method: "DELETE",
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        alert("Turno eliminado");
+
+        const lista = await fetch(
+          `http://localhost:3001/api/turnos/user/${userId}`
+        ).then((r) => r.json());
+
+        setTurnos(Array.isArray(lista) ? lista : []);
+      } else {
+        alert("Error: " + (data.error || "No se pudo eliminar"));
+      }
+    } catch (e) {
+      console.error(e);
+      alert("Error al conectar con el servidor");
+    }
+  };
+
+  const handleGuardarEdicion = async () => {
+    if (!editTurno) return;
+
+    try {
+      const res = await fetch(
+        `http://localhost:3001/api/turnos/${editTurno.id}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            problema: editTurno.problema,
+            tipo_reparacion: editTurno.tipo_reparacion,
+          }),
+        }
+      );
+
+      const data = await res.json();
+
+      if (res.ok) {
+        alert("Turno actualizado");
+
+        const lista = await fetch(
+          `http://localhost:3001/api/turnos/user/${userId}`
+        ).then((r) => r.json());
+
+        setTurnos(Array.isArray(lista) ? lista : []);
+        setEditTurno(null);
+      } else {
+        alert("Error al actualizar: " + data.error);
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Error de servidor");
+    }
+  };
+
+  // unifica marca/modelo con diferentes nombres según el backend
+  const renderMarcaModelo = (v) => {
+    const marca =
+      v.marca ??
+      v.brand ??
+      v.nombre ??
+      v.brand_name ??
+      v.marca_nombre ??
+      v.nombre_marca ??
+      v.nombreBrand;
+
+    const modelo =
+      v.modelo ??
+      v.model ??
+      v.model_name ??
+      v.nombre_modelo ??
+      v.modelo_nombre ??
+      v.nombreModel;
+
+    const idModel = v.id_model ?? v.idModel ?? v.id_modelo ?? "";
+
+    return `${marca ?? idModel ?? ""}${marca || idModel ? " " : ""}${
+      modelo ?? ""
+    }`.trim();
   };
 
   return (
     <div className="turnos-container">
       <div className="turnos-top">
-        <div>
-          <h1>MIS TURNOS</h1>
-          <p className="subtitle">Gestiona tus citas y servicios programados</p>
-        </div>
-      </div>
-
-      <div className="metrics">
-        <div className="metric big">
-          <h4>Total Turnos</h4>
-          <div className="value">$45.200</div>
-        </div>
-        <div className="metric">
-          <h4>Pendientes</h4>
-          <div className="value">3</div>
-        </div>
-        <div className="metric">
-          <h4>Completados</h4>
-          <div className="value">8</div>
-        </div>
-        <div className="metric">
-          <h4>Confirmados</h4>
-          <div className="value">12</div>
-        </div>
-      </div>
-
-      <div className="tabs">
-        <button className="tab active">Todas (5)</button>
-        <button className="tab">Pendientes (2)</button>
-        <button className="tab">En progreso (1)</button>
-        <button className="tab">Completadas (2)</button>
+        <h1>MIS TURNOS</h1>
+        <p className="subtitle">Gestiona tus citas y servicios programados</p>
       </div>
 
       <div className="datos-vehiculos turnos-table-card">
         <div className="datos-header">
-          <h2>DATOS VEHICULOS</h2>
+          <h2>TUS TURNOS</h2>
           <div className="datos-actions">
-            <button className="btn-primary">Descargar PDF</button>
             <button className="btn-primary" onClick={() => setShowModal(true)}>
               Nuevo Turno
             </button>
@@ -142,50 +243,63 @@ const TurnosCliente = () => {
             <thead>
               <tr>
                 <th></th>
-                <th>Fecha y Hora</th>
+                <th>Fecha</th>
                 <th>Vehículo</th>
-                <th>Servicio</th>
-                <th>Mecánico</th>
+                <th>Tipo reparación</th>
+                <th>Problema</th>
                 <th>Estado</th>
-                <th>Acciones</th>
+                <th>Accion</th>
               </tr>
             </thead>
             <tbody>
-              {rows.map((r) => (
-                <tr key={r.id}>
+              {turnos.length === 0 && (
+                <tr>
+                  <td colSpan="6" style={{ textAlign: "center", padding: 16 }}>
+                    No hay turnos
+                  </td>
+                </tr>
+              )}
+              {turnos.map((t) => (
+                <tr key={t.id}>
                   <td>
                     <input type="checkbox" />
                   </td>
-                  <td>{`${r.fecha} • ${r.hora}`}</td>
+                  <td>{t.fecha_creado}</td>
                   <td>
-                    <div className="patente">{r.patente}</div>
-                    <div className="vehiculo">{r.vehiculo}</div>
+                    {t.patente
+                      ? `${t.patente} — ${renderMarcaModelo(t)}`
+                      : renderMarcaModelo(t)}
                   </td>
-                  <td className="servicio">{r.servicio}</td>
-                  <td>{r.mecanico}</td>
+                  <td>{t.tipo_reparacion}</td>
+                  <td>{t.problema}</td>
                   <td>
-                    <StatusPill status={r.estado} />
+                    <StatusPill status={t.estado} />
                   </td>
                   <td>
-                    <div className="datos-actions">
-                      <button className="link">Borrar</button>
-                      <button className="link">Editar</button>
-                    </div>
+                    <button
+                      className="btn-edit"
+                      onClick={() =>
+                        setEditTurno({
+                          id: t.id,
+                          problema: t.problema,
+                          tipo_reparacion: t.tipo_reparacion,
+                        })
+                      }
+                    >
+                      ✏️
+                    </button>
+
+                    <button
+                      className="btn-delete"
+                      onClick={() => handleEliminar(t.id)}
+                    >
+                      🗑️
+                    </button>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
-        </div>
-
-        <div className="pagination">
-          <button className="pg">‹</button>
-          <button className="pg active">1</button>
-          <button className="pg">2</button>
-          <button className="pg">3</button>
-          <span className="dots">...</span>
-          <button className="pg">24</button>
-          <button className="pg">›</button>
         </div>
       </div>
 
@@ -219,12 +333,26 @@ const TurnosCliente = () => {
 
             <div className="field">
               <label>Vehículo</label>
-              <input
-                type="text"
-                placeholder="ID del vehículo"
+              <select
                 value={vehiculoId}
                 onChange={(e) => setVehiculoId(e.target.value)}
-              />
+              >
+                <option value="">Seleccionar vehículo</option>
+                {vehiculos.map((v) => {
+                  const label = `${renderMarcaModelo(v)}${
+                    v.patente ? ` - ${v.patente}` : ""
+                  }`.trim();
+
+                  return (
+                    <option
+                      key={v.id_vehiculo ?? v.id}
+                      value={v.id_vehiculo ?? v.id}
+                    >
+                      {label || `vehículo #${v.id_vehiculo ?? v.id}`}
+                    </option>
+                  );
+                })}
+              </select>
             </div>
 
             <div className="modal-actions">
@@ -236,6 +364,55 @@ const TurnosCliente = () => {
               </button>
               <button className="btn-primary" onClick={handleCrearTurno}>
                 Crear Turno
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {editTurno && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <h2>Editar Turno</h2>
+
+            <div className="field">
+              <label>Problema</label>
+              <input
+                type="text"
+                value={editTurno.problema}
+                onChange={(e) =>
+                  setEditTurno({ ...editTurno, problema: e.target.value })
+                }
+              />
+            </div>
+
+            <div className="field">
+              <label>Tipo Reparación</label>
+              <select
+                value={editTurno.tipo_reparacion}
+                onChange={(e) =>
+                  setEditTurno({
+                    ...editTurno,
+                    tipo_reparacion: e.target.value,
+                  })
+                }
+              >
+                <option value="">Seleccionar</option>
+                <option value="mecanica">Mecánica</option>
+                <option value="electrico">Eléctrico</option>
+                <option value="service">Service</option>
+                <option value="chapa">Chapa y pintura</option>
+              </select>
+            </div>
+
+            <div className="modal-actions">
+              <button
+                className="btn-secondary"
+                onClick={() => setEditTurno(null)}
+              >
+                Cancelar
+              </button>
+              <button className="btn-primary" onClick={handleGuardarEdicion}>
+                Guardar cambios
               </button>
             </div>
           </div>

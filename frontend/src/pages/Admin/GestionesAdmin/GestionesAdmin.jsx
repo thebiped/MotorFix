@@ -12,7 +12,6 @@ import {
 } from "react-icons/fa";
 import ClientesTable from "./ClientesTable";
 import TurnosTable from "./TurnosTable";
-import RepuestosTable from "./RepuestosTable";
 import "./GestionesAdmin.css";
 
 const GestionesAdmin = () => {
@@ -63,26 +62,6 @@ const GestionesAdmin = () => {
   ];
 
   // recent activities (placeholder)
-  const recentActivities = [
-    {
-      id: 1,
-      title: "Nuevo Cliente",
-      desc: "María López registrada",
-      icon: <FaUserCircle />,
-    },
-    {
-      id: 2,
-      title: "Turno confirmado",
-      desc: "Ford Focus - 10:30 AM",
-      icon: <FaCalendarAlt />,
-    },
-    {
-      id: 3,
-      title: "Repuesto agregado",
-      desc: "Batería Bosch 12V",
-      icon: <FaTools />,
-    },
-  ];
 
   const renderActiveTable = () => {
     const filterProps = { search, statusFilter, dateFrom, dateTo };
@@ -91,8 +70,6 @@ const GestionesAdmin = () => {
         return <ClientesTable filters={filterProps} />;
       case "turnos":
         return <TurnosTable filters={filterProps} />;
-      case "repuestos":
-        return <RepuestosTable filters={filterProps} />;
       default:
         return null;
     }
@@ -132,12 +109,6 @@ const GestionesAdmin = () => {
                     onClick={() => setActiveTab("turnos")}
                 >
                     <FaClipboardList /> Turnos
-                </button>
-                <button
-                    className={`tab-btn ${activeTab === "repuestos" ? "active" : ""}`}
-                    onClick={() => setActiveTab("repuestos")}
-                    >
-                    <FaTools /> Repuestos
                 </button>
             </div>
             

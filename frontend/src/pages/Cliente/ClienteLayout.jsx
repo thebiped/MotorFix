@@ -25,17 +25,30 @@ const ClienteLayout = () => {
   const location = useLocation();
 
   const [showVignette, setShowVignette] = useState(false);
+  const [userId, setUserId] = useState(null);
 
-  // ⛔ Verifica rol
+  // ⛔ Verifica rol y obtiene user desde localStorage (o redirige)
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem("user"));
-    if (!storedUser || storedUser.rol !== "cliente") navigate("/");
+    try {
+      const storedUser = JSON.parse(localStorage.getItem("user"));
+      if (!storedUser || storedUser.rol !== "cliente") {
+        navigate("/");
+        return;
+      }
+      // el user object puede tener id o id_usuario, cubrimos ambos
+      const id = storedUser?.id ?? storedUser?.id_usuario ?? storedUser?.userId;
+      setUserId(id ?? null);
+      console.log("[ClienteLayout] storedUser:", storedUser, "-> userId:", id);
+    } catch (err) {
+      console.warn("Error parseando localStorage user", err);
+      navigate("/");
+    }
   }, [navigate]);
 
-  // 🔥 Mostrar animación en cada cambio de ruta
+  // animación
   useEffect(() => {
     setShowVignette(true);
-    const timer = setTimeout(() => setShowVignette(false), 800); // duración
+    const timer = setTimeout(() => setShowVignette(false), 800);
     return () => clearTimeout(timer);
   }, [location.pathname]);
 
@@ -47,18 +60,15 @@ const ClienteLayout = () => {
 
   return (
     <div className="cliente-layout">
-
-      {/* 🔥 EFECTO ARKHAM VIGNETTE */}
       {showVignette && <div className="vignette-cinematic" />}
 
-      {/* CONTENIDO */}
       <div className="cliente-main">
         <main className="cliente-content">
-          <Outlet />
+          {/* pasamos userId (si lo tenemos) al Outlet */}
+          <Outlet context={{ userId }} />
         </main>
       </div>
 
-      {/* NAVBAR INFERIOR */}
       <nav className="bat-navbar">
         <div className="bat-panel">
           {menuItems.map((item, index) => (

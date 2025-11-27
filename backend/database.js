@@ -64,14 +64,17 @@ db.serialize(() => {
       FOREIGN KEY (brand_id) REFERENCES brands(id_brand)
   )`);
   db.run(`CREATE TABLE IF NOT EXISTS turnos (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER NOT NULL,
-    vehicle_id INTEGER NOT NULL,
-    problema TEXT NOT NULL,
-    tipo_reparacion TEXT NOT NULL,
-    estado TEXT DEFAULT 'pendiente',
-    fecha_creado TEXT DEFAULT CURRENT_TIMESTAMP
-  )`);
+  id_turno INTEGER PRIMARY KEY AUTOINCREMENT,
+  fecha TEXT NOT NULL,
+  hora TEXT NOT NULL,
+  descripcion TEXT,
+  
+  id_usuario INTEGER NOT NULL,
+  id_vehiculo INTEGER NOT NULL,
+
+  FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario),
+  FOREIGN KEY (id_vehiculo) REFERENCES vehiculos(id_vehiculo)
+);`);
 });
 
 module.exports = db;
