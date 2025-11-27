@@ -34,7 +34,10 @@ const BrandSelector = ({ onBrandSelect }) => {
       .catch((err) => {
         console.error("Error fetching brands", err);
       })
-      .finally(() => mounted && setLoading(false));
+      .finally(() => {
+        // Delay mínimo para loader más suave
+        setTimeout(() => mounted && setLoading(false), 800);
+      });
     return () => (mounted = false);
   }, []);
 
@@ -101,10 +104,6 @@ const BrandSelector = ({ onBrandSelect }) => {
 
         <div className="brand-slider" ref={sliderRef}>
           {visible.map((brand, idx) => {
-            // compute index in original array to preserve selection behavior if needed
-            const globalIndex = brands.findIndex(
-              (b) => b.id_brand === brand.id_brand
-            );
             const isActive = idx === activeIndex;
             return (
               <div
@@ -131,7 +130,6 @@ const BrandSelector = ({ onBrandSelect }) => {
                 <div className="brand_car">
                   <img src={brand.example_car_url || PLACEHOLDER_CAR} />
                 </div>
-
               </div>
             );
           })}
@@ -170,7 +168,10 @@ const ModelSelector = ({ brand, onBack, onVehicleSelect }) => {
         setIndex(0);
       })
       .catch((err) => console.error("Error loading models", err))
-      .finally(() => mounted && setLoading(false));
+      .finally(() => {
+        // Delay mínimo para loader más suave
+        setTimeout(() => mounted && setLoading(false), 800);
+      });
     return () => (mounted = false);
   }, [brandId]);
 
@@ -186,8 +187,9 @@ const ModelSelector = ({ brand, onBack, onVehicleSelect }) => {
           : (index - 1 + models.length) % models.length;
       setIndex(newIndex);
       setAnim(enter);
-      setTimeout(() => setAnim("idle"), 60);
-    }, 300);
+      // Entrada más lenta
+      setTimeout(() => setAnim("idle"), 300);
+    }, 500); // Salida más lenta
   };
 
   if (loading) {
@@ -275,7 +277,6 @@ const ModelSelector = ({ brand, onBack, onVehicleSelect }) => {
             <div className="stat-row">
               <span className="label">ACEL</span>
               <div className="bar">
-                {/* acceleration is seconds 0-100; smaller = better so we invert to % */}
                 <div
                   className="fill"
                   style={{
@@ -314,7 +315,7 @@ const ModelSelector = ({ brand, onBack, onVehicleSelect }) => {
           className="nfs-nav-btn right"
           onClick={() => changeSlide("next")}
         >
-          <div className="icon"><ChevronRight size={40}  /></div>
+          <div className="icon"><ChevronRight size={40} /></div>
         </button>
       </div>
 
@@ -389,7 +390,7 @@ const VehicleSelection = ({ onVehicleSelect }) => {
             <ModelSelector
               brand={selectedBrand}
               onBack={() => setSelectedBrand(null)}
-              onVehicleSelect={onVehicleSelect} // <--- PASAR la prop
+              onVehicleSelect={onVehicleSelect}
             />
           )}
         </div>

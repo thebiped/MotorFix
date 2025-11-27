@@ -5,51 +5,56 @@ import { CiLock } from "react-icons/ci";
 import api from "../../../services/api";
 import bg_login from "../../../assets/img/bg_login.png";
 import logo from "../../../assets/img/logo.png";
-import ToastNotification from "../../notification/ToastNotification";
 import WelcomeLoader from "../../Welcome/WelcomeLoader";
 import "./Login.css";
 
-const LOADING_DURATION = 2200; // ms - loader duration
-const VIGNETTE_DURATION = 1800; // ms - vignette visible time (fade out in CSS)
-const TEXT_ROTATE_INTERVAL = 500; // ms - (if you want text rotation later)
+/* Timings cinematográficos */
+const TEXT_ROTATE_INTERVAL = 3600;
+const LOADING_DURATION = 5200;
+const FINAL_HOLD = 2600;
+const ERROR_HOLD = 3600;
+const SUCCESS_HOLD = 2600; // tiempo que se queda el mensaje verde de éxito
 
-/**
- * Versión B: Mantengo tu estructura, mejoro timings, sync loader -> vignette -> welcome.
- * - loader (progress) se muestra y anima del 0 al 100
- * - al terminar loader aparece la vignette (cinemática) durante VIGNETTE_DURATION
- * - luego se muestra WelcomeLoader
- */
+/* Textos estilo Arkham */
+const texts = [
+  "Inicializando protocolos…",
+  "Autenticando usuario…",
+  "Sincronizando módulo de entrada…",
+];
 
-const Login = () => {
+function Login() {
   const navigate = useNavigate();
 
+  /* Campos formulario */
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
-  const [toast, setToast] = useState(null);
 
-  // loader states
+  /* Loader HUD */
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
   const progressRef = useRef(null);
 
-  // vignette and welcome states
-  const [showVignette, setShowVignette] = useState(false);
-  const [showWelcome, setShowWelcome] = useState(false);
-
-  // optional rotating texts state (left ready - not enabled by default)
-  const texts = [
-    "Inicializando protocolos…",
-    "Autenticando usuario…",
-    "Sincronizando módulo de entrada…",
-  ];
+  /* Textos */
   const [rotTextIndex, setRotTextIndex] = useState(0);
   const rotRef = useRef(null);
 
+  /* Resultado API */
+  const [loginResult, setLoginResult] = useState(null);
+
+  /* Mensajes */
+  const [loaderMessage, setLoaderMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+
+  /* Welcome */
+  const [showWelcome, setShowWelcome] = useState(false);
+
+  /* Autocompletar */
   useEffect(() => {
-    const savedUsername = localStorage.getItem("rememberedUsername");
-    if (savedUsername) {
-      setUsername(savedUsername);
+    const saved = localStorage.getItem("rememberedUsername");
+    if (saved) {
+      setUsername(saved);
       setRememberMe(true);
     }
 
@@ -59,101 +64,155 @@ const Login = () => {
     };
   }, []);
 
-  // small helper to show toast
-  const showToast = (message, type = "error") => {
-    setToast({ message, type });
-    setTimeout(() => setToast(null), 3000);
+  /* ROTACIÓN DE TEXTOS */
+  const startRotatingTexts = () => {
+    if (rotRef.current) clearInterval(rotRef.current);
+
+    setRotTextIndex(0);
+
+    rotRef.current = setInterval(() => {
+      setRotTextIndex((prev) => (prev + 1) % texts.length);
+    }, TEXT_ROTATE_INTERVAL);
   };
 
-  // progress animation driven by JS (so width updates smoothly with state)
+  const stopRotatingTexts = () => {
+    if (rotRef.current) {
+      clearInterval(rotRef.current);
+      rotRef.current = null;
+    }
+  };
+
+  /* BARRA DE PROGRESO LENTA */
   const startProgress = () => {
-    // We'll step progress at 30fps
     const fps = 30;
     const steps = Math.max(1, Math.floor((LOADING_DURATION / 1000) * fps));
     const increment = Math.ceil(100 / steps);
+
     let current = 0;
     setProgress(0);
 
     if (progressRef.current) clearInterval(progressRef.current);
+
     progressRef.current = setInterval(() => {
       current = Math.min(100, current + increment);
       setProgress(current);
+
       if (current >= 100) {
         clearInterval(progressRef.current);
+        progressRef.current = null;
       }
     }, Math.floor(LOADING_DURATION / steps));
   };
 
-  // Optional: rotate texts (not required but ready).
-  const startRotatingTexts = () => {
-    if (rotRef.current) clearInterval(rotRef.current);
-    rotRef.current = setInterval(() => {
-      setRotTextIndex((i) => (i + 1) % texts.length);
-    }, TEXT_ROTATE_INTERVAL);
+  /* SINCRONIZACIÓN TOTAL DEL HUD */
+  useEffect(() => {
+    if (!loading) {
+      stopRotatingTexts();
+      setLoaderMessage("");
+      setErrorMessage("");
+      setSuccessMessage("");
+      return;
+    }
+
+    /* --- TEXTOS SEGÚN PROGRESO --- */
+    let dynamicMessage = texts[rotTextIndex];
+
+    if (progress >= 30 && progress < 70) {
+      dynamicMessage = "Analizando integridad del sistema…";
+    } else if (progress >= 70 && progress < 100) {
+      dynamicMessage = "Armando enlace seguro…";
+    } else if (progress >= 100 && loginResult == null) {
+      dynamicMessage = "Finalizando proceso…";
+    }
+
+    /* No mostrar mensaje si la barra ya terminó */
+    if (progress >= 100) {
+      dynamicMessage = "";
+    }
+
+    setLoaderMessage(dynamicMessage);
+
+    /* --- ÉXITO: APARECE MENSAJE HUD VERDE --- */
+    if (progress >= 100 && loginResult === "success") {
+      stopRotatingTexts();
+
+      setSuccessMessage("ACCESO CONCEDIDO — Bienvenido al sistema.");
+
+      setTimeout(() => {
+        setSuccessMessage("");
+        setLoading(false);
+        setShowWelcome(true);
+      }, SUCCESS_HOLD);
+    }
+
+    /* --- ERROR: REPENTINO --- */
+    if (progress >= 100 && typeof loginResult === "object") {
+      stopRotatingTexts();
+
+      setTimeout(() => {
+        setErrorMessage(loginResult.error);
+      }, 150);
+
+      setTimeout(() => {
+        setLoading(false);
+        setLoginResult(null);
+      }, ERROR_HOLD);
+    }
+  }, [loading, rotTextIndex, progress, loginResult]);
+
+  /* ERROR INSTANTÁNEO */
+  const showImmediateLoaderError = (msg) => {
+    setErrorMessage("");
+    setLoginResult({ error: msg });
+    setLoading(true);
+    startProgress();
   };
 
+  /* SUBMIT */
   const handleLogin = async (e) => {
     e.preventDefault();
 
     if (!username.trim() || !password.trim()) {
-      showToast("⚠️ Debes completar todos los campos.");
+      showImmediateLoaderError("Debes completar todos los campos.");
       return;
     }
+
+    setLoading(true);
+    setProgress(0);
+    setLoginResult(null);
+
+    startRotatingTexts();
+    startProgress();
+    setLoaderMessage(texts[0]);
 
     try {
       const res = await api.post("/auth/login", { username, password });
 
-      if (res.data.success) {
-        // persist token & user
+      if (res.data?.success) {
         localStorage.setItem("token", res.data.token);
-        api.defaults.headers.common[
-          "Authorization"
-        ] = `Bearer ${res.data.token}`;
+        api.defaults.headers.common["Authorization"] =
+          `Bearer ${res.data.token}`;
+
         localStorage.setItem("user", JSON.stringify(res.data.user));
 
-        if (rememberMe) {
+        if (rememberMe)
           localStorage.setItem("rememberedUsername", username);
-        } else {
-          localStorage.removeItem("rememberedUsername");
-        }
+        else localStorage.removeItem("rememberedUsername");
 
-        showToast("🔥 Autenticación correcta", "success");
-
-        // Start loader cycle
-        setLoading(true);
-        setProgress(0);
-        startProgress();
-        // (optional) start rotating texts while loader shows:
-        // startRotatingTexts();
-
-        // After loader ends -> hide loader, show vignette, then WelcomeLoader
-        setTimeout(() => {
-          setLoading(false);
-
-          // stop rotating texts (optional)
-          if (rotRef.current) {
-            clearInterval(rotRef.current);
-            rotRef.current = null;
-            setRotTextIndex(0);
-          }
-
-          // show vignette (fade & cinematic). It hides itself via timeout here.
-          setShowVignette(true);
-
-          setTimeout(() => {
-            setShowVignette(false);
-            setShowWelcome(true);
-          }, VIGNETTE_DURATION + 120); // small buffer
-        }, LOADING_DURATION + 60);
+        setLoginResult("success");
       } else {
-        showToast(res.data.message || "Error al iniciar sesión");
+        setLoginResult({
+          error: res.data?.message || "Credenciales incorrectas.",
+        });
       }
     } catch (err) {
-      showToast(err.response?.data?.message || "Error al iniciar sesión");
+      setLoginResult({
+        error: err.response?.data?.message || "Error de servidor.",
+      });
     }
   };
 
-  // If welcome step active show WelcomeLoader (keeps your flow)
+  /* MOSTRAR WELCOME */
   if (showWelcome) {
     const user = JSON.parse(localStorage.getItem("user"));
     return (
@@ -171,26 +230,33 @@ const Login = () => {
 
   return (
     <>
-      {/* TOAST */}
-      {toast && <ToastNotification message={toast.message} type={toast.type} />}
-
-      {/* LOADER GLITCH (visible while loading === true) */}
       {loading && (
-        <div
-          className="initial-loader-overlay"
-          role="status"
-          aria-live="polite"
-        >
-          <div className="initial-loader-content">
-            {/* If you want text rotation enable startRotatingTexts() above */}
-            <div
-              className="glitch-title"
-              data-text={`${texts[rotTextIndex]} ${progress}%`}
-            >
-              {`${texts[rotTextIndex]} ${progress}%`}
-            </div>
+        <div className="initial-loader-overlay" role="status">
+          <div className="initial-loader-content arkham">
 
-            <div className="loader-bar" aria-hidden="true">
+            {/* TEXTO PRINCIPAL */}
+            {loaderMessage && (
+              <div className="glitch-title" data-text={loaderMessage}>
+                {loaderMessage}
+              </div>
+            )}
+
+            {/* MENSAJE DE ÉXITO (VERDE HUD) */}
+            {successMessage && (
+              <div className="hud-success-message">
+                {successMessage}
+              </div>
+            )}
+
+            {/* MENSAJE DE ERROR (ROJO ALERT) */}
+            {errorMessage && (
+              <div className="hud-error-message">
+                ERROR: {errorMessage}
+              </div>
+            )}
+
+            {/* BARRA */}
+            <div className="loader-bar">
               <div
                 className="loader-bar-fill"
                 style={{ width: `${progress}%` }}
@@ -200,9 +266,7 @@ const Login = () => {
         </div>
       )}
 
-      {/* VIGNETTE: only render when showVignette is true (prevents overlapping) */}
-
-      {/* MAIN SCREEN */}
+      {/* FORM LOGIN */}
       <div className="login-container">
         <div className="login">
           <div className="login-logo">
@@ -220,7 +284,6 @@ const Login = () => {
                   placeholder="Tu usuario..."
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  autoComplete="username"
                 />
               </div>
             </div>
@@ -234,10 +297,10 @@ const Login = () => {
                   placeholder="Tu contraseña..."
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  autoComplete="current-password"
                 />
               </div>
             </div>
+
             <div className="login-options">
               <label className="remember-me">
                 <input
@@ -275,6 +338,6 @@ const Login = () => {
       </div>
     </>
   );
-};
+}
 
 export default Login;

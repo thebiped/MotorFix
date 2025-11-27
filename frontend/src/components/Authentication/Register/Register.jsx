@@ -3,22 +3,30 @@ import { useNavigate, Link } from "react-router-dom";
 import { FaRegUser } from "react-icons/fa";
 import { CiLock } from "react-icons/ci";
 import { MdOutlineEmail } from "react-icons/md";
-import api from "../../../services/api";
 
-import ToastNotification from "../../notification/ToastNotification";
+import api from "../../../services/api";
 import "./Register.css";
 
 import logo from "../../../assets/img/logo.png";
 import bg_register from "../../../assets/img/bg_register.png";
 
-const LOADING_DURATION = 2200;
-const VIGNETTE_DURATION = 1800;
+/* TIMINGS CINEMÁTICOS */
+const TEXT_ROTATE_INTERVAL = 3000;
+const LOADING_DURATION = 5200;
+const ERROR_HOLD = 3600;
+const SUCCESS_HOLD = 2600;
+
+/* Textos HUD estilo Arkham */
+const texts = [
+  "Inicializando sistema…",
+  "Cargando módulos de usuario…",
+  "Preparando selección de vehículos…",
+];
 
 const Register = () => {
   const navigate = useNavigate();
 
-  const [toast, setToast] = useState(null);
-
+  /* Campos form */
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -26,33 +34,42 @@ const Register = () => {
     confirmPassword: "",
   });
 
-  // loader states
+  /* Loader HUD */
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
   const progressRef = useRef(null);
 
-  // vignette
-  const [showVignette, setShowVignette] = useState(false);
+  /* Textos rotativos */
+  const [rotTextIndex, setRotTextIndex] = useState(0);
+  const rotRef = useRef(null);
 
-  useEffect(() => {
-    return () => {
-      if (progressRef.current) clearInterval(progressRef.current);
-    };
-  }, []);
+  /* Mensajes HUD */
+  const [loaderMessage, setLoaderMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
-  const showToast = (message, type = "error") => {
-    setToast({ message, type });
-    setTimeout(() => setToast(null), 3000);
+  /* Rotación lenta */
+  const startRotatingTexts = () => {
+    if (rotRef.current) clearInterval(rotRef.current);
+
+    setRotTextIndex(0);
+
+    rotRef.current = setInterval(() => {
+      setRotTextIndex((prev) => (prev + 1) % texts.length);
+    }, TEXT_ROTATE_INTERVAL);
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((s) => ({ ...s, [name]: value }));
+  const stopRotatingTexts = () => {
+    if (rotRef.current) {
+      clearInterval(rotRef.current);
+      rotRef.current = null;
+    }
   };
 
+  /* Progress lento */
   const startProgress = () => {
     const fps = 30;
-    const steps = Math.floor((LOADING_DURATION / 1000) * fps);
+    const steps = Math.max(1, Math.floor((LOADING_DURATION / 1000) * fps));
     const increment = Math.ceil(100 / steps);
 
     let current = 0;
@@ -66,57 +83,129 @@ const Register = () => {
 
       if (current >= 100) {
         clearInterval(progressRef.current);
+        progressRef.current = null;
       }
     }, Math.floor(LOADING_DURATION / steps));
   };
 
+  /* Reacciones del HUD durante el proceso */
+  useEffect(() => {
+    if (!loading) {
+      setLoaderMessage("");
+      setErrorMessage("");
+      setSuccessMessage("");
+      stopRotatingTexts();
+      return;
+    }
+
+    let dynamicMessage = texts[rotTextIndex];
+
+    if (progress >= 30 && progress < 70)
+      dynamicMessage = "Verificando integridad de los datos…";
+
+    if (progress >= 70 && progress < 100)
+      dynamicMessage = "Conectando con el servidor…";
+
+    if (progress >= 100)
+      dynamicMessage = "";
+
+    setLoaderMessage(dynamicMessage);
+
+  }, [loading, progress, rotTextIndex]);
+
+  /* On Submit */
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     const { username, email, password, confirmPassword } = formData;
 
-    if (!username || !email || !password || !confirmPassword)
-      return showToast("⚠️ Todos los campos son obligatorios");
+    if (!username || !email || !password || !confirmPassword) {
+      triggerError("Debes completar todos los campos.");
+      return;
+    }
 
-    if (password !== confirmPassword)
-      return showToast("❌ Las contraseñas no coinciden");
+    if (password !== confirmPassword) {
+      triggerError("Las contraseñas no coinciden.");
+      return;
+    }
 
     try {
-      // Real request optional:
       await api.post("/auth/register", { username, email, password });
 
-      showToast("✅ Procesando registro…", "success");
-
       setLoading(true);
+      setSuccessMessage("");
+      setErrorMessage("");
+
+      startRotatingTexts();
       startProgress();
+      setLoaderMessage(texts[0]);
+
+      setTimeout(() => {
+        setSuccessMessage("Registro completado — Bienvenido al sistema.");
+
+        setTimeout(() => {
+          setLoading(false);
+          navigate("/vehicle-selection");
+        }, SUCCESS_HOLD);
+
+      }, LOADING_DURATION + 120);
+
+    } catch (err) {
+      triggerError(err.response?.data?.message || "Error en el registro.");
+    }
+  };
+
+  /* ERROR estilo Arkham Knight */
+  const triggerError = (msg) => {
+    setLoading(true);
+    setErrorMessage("");
+    setSuccessMessage("");
+
+    startRotatingTexts();
+    startProgress();
+    setLoaderMessage(texts[0]);
+
+    setTimeout(() => {
+      setErrorMessage(msg);
 
       setTimeout(() => {
         setLoading(false);
-        setShowVignette(true);
+        setErrorMessage("");
+      }, ERROR_HOLD);
 
-        setTimeout(() => {
-          setShowVignette(false);
-          navigate("/vehicle-selection");
-        }, VIGNETTE_DURATION + 80);
-      }, LOADING_DURATION + 80);
-    } catch (err) {
-      console.error(err);
-      showToast("Error en el registro");
-    }
+    }, LOADING_DURATION - 120);
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((s) => ({ ...s, [name]: value }));
   };
 
   return (
     <>
-      {/* LOADER GLITCH */}
+      {/* LOADER HUD */}
       {loading && (
         <div className="initial-register-overlay">
-          <div className="initial-register-content">
-            <div
-              className="register-glitch-title"
-              data-text={`Procesando registro… ${progress}%`}
-            >
-              {`Procesando registro… ${progress}%`}
-            </div>
+          <div className="initial-register-content arkham">
 
+            {/* TEXTO PRINCIPAL */}
+            {loaderMessage && (
+              <div className="register-glitch-title" data-text={loaderMessage}>
+                {loaderMessage}
+              </div>
+            )}
+
+            {/* ÉXITO */}
+            {successMessage && (
+              <div className="hud-success-message">{successMessage}</div>
+            )}
+
+            {/* ERROR */}
+            {errorMessage && (
+              <div className="hud-error-message">ERROR: {errorMessage}</div>
+            )}
+
+            {/* Barra */}
             <div className="register-loader-bar">
               <div
                 className="register-loader-bar-fill"
@@ -127,15 +216,13 @@ const Register = () => {
         </div>
       )}
 
-      {/* VIGNETTE CINEMÁTICA */}
-
-      {/* MAIN LAYOUT */}
+      {/* FORMULARIO */}
       <div className="register-container">
-        {/* FORM FIRST (para que loader y vignette queden arriba) */}
         <div className="register-bg">
           <div className="register-overlay" />
           <img src={bg_register} alt="Background" />
         </div>
+
         <div className="register-form-section">
           <div className="register-logo">
             <img src={logo} alt="Logo" />
@@ -213,8 +300,6 @@ const Register = () => {
             </Link>
           </p>
         </div>
-
-        {/* BACKGROUND SEGUNDO */}
       </div>
     </>
   );

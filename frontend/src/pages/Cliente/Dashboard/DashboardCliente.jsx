@@ -1,184 +1,220 @@
-import React, { useMemo } from "react";
-import {
-  ArrowUpRight,
-  Calendar,
-  Clock,
-  CheckCircle,
-  Wrench,
-} from "lucide-react";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  Cell,
-} from "recharts";
+// DashboardCliente.jsx (versión modificada para clientes)
+// Basado en DashboardAdmin pero adaptado para vista del cliente
+
+import React, { useState, useEffect } from "react";
+import { ChevronRight } from "lucide-react";
+import { FaCalendarAlt, FaTools, FaUserCircle } from "react-icons/fa";
 import "./DashboardCliente.css";
 
-const stats = {
-  gastoTotal: 45200,
-  misAutos: 3,
-  serviciosRealizados: 8,
-  turnosActivos: 12,
-};
+// ==========================
+// 🎛️ CIRCULAR HUD — ANIMADO
+// ==========================
 
-const barData = [
-  { name: "Cambio de aceite", value: 24 },
-  { name: "Frenos", value: 42 },
-  { name: "Diagnóstico", value: 32 },
-  { name: "Baterías", value: 28 },
-  { name: "Suspensión", value: 45 },
-  { name: "Otros", value: 52 },
-];
+const CircularHUD = ({ size = 120, stroke = 8, value = 75, label = "Estado" }) => {
+  const radius = (size - stroke) / 2;
+  const circumference = 2 * Math.PI * radius;
+  const dash = circumference * (value / 100);
+  const gap = circumference - dash;
 
-const proximasCitas = new Array(6).fill(0).map((_, i) => ({
-  id: i + 1,
-  title: "Cambio de aceite y filtros",
-  car: "Ford Focus 2020",
-  datetime: "19/03/2024 a las 09:00",
-  person: "Usuario M",
-}));
+  const [animatedValue, setAnimatedValue] = useState(0);
+  const [dashOffset, setDashOffset] = useState(circumference);
 
-const actividadReciente = [
-  {
-    tipo: "completado",
-    titulo: "Servicio Completado",
-    detalle: "Cambio de aceite • Ford Focus",
-    tiempo: "Hace 2 horas",
-  },
-  {
-    tipo: "nuevo",
-    titulo: "Nuevo trabajo asignado",
-    detalle: "Revisión de motor • Toyota Camry",
-    tiempo: "Hace 8 horas",
-  },
-  {
-    tipo: "turno",
-    titulo: "Turno Próximo",
-    detalle: "Volkswagen Gold • Cambio de frenos a las 14:00",
-    tiempo: "Hace 1 día",
-  },
-];
+  useEffect(() => {
+    const duration = 1400;
+    const start = performance.now();
 
-const CustomTooltip = ({ active, payload, label }) => {
-  if (active && payload && payload.length) {
-    return (
-      <div className="custom-tooltip">{`${label}: ${payload[0].value}`}</div>
-    );
-  }
-  return null;
-};
+    function animate(time) {
+      const elapsed = time - start;
+      const progress = Math.min(elapsed / duration, 1);
 
-const DashboardCliente = () => {
-  const COLORS = useMemo(() => ["#ff3b3b", "#ff6b6b", "#ff8b8b"], []);
+      setAnimatedValue(Math.round(progress * value));
+      setDashOffset(circumference - progress * dash);
+
+      if (progress < 1) requestAnimationFrame(animate);
+    }
+
+    requestAnimationFrame(animate);
+  }, [value, dash, circumference]);
 
   return (
-    <div className="dashboard-cliente-container">
-      <div className="left-grid">
-        <div className="big-card gasto-card">
-          <div className="card-header">
-            <h3>Gasto Total Este Año</h3>
-          </div>
-          <div className="gasto-value">{`$${stats.gastoTotal.toLocaleString()}`}</div>
-          <div className="gasto-sub">+15% vs mes anterior</div>
+    <div className="circular-hud" style={{ width: size, height: size }}>
+      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="circle-anim">
+        <defs>
+          <linearGradient id="g1" x1="0" x2="1">
+            <stop offset="0%" stopColor="var(--neon-2)" />
+            <stop offset="100%" stopColor="var(--neon)" />
+          </linearGradient>
+        </defs>
+        <g transform={`translate(${size / 2}, ${size / 2})`}>
+          <circle r={radius} fill="none" stroke="rgba(255,255,255,0.03)" strokeWidth={stroke} />
+          <circle
+            r={radius}
+            fill="none"
+            stroke="url(#g1)"
+            strokeWidth={stroke}
+            strokeLinecap="round"
+            strokeDasharray={`${dash} ${gap}`}
+            strokeDashoffset={dashOffset}
+            transform="rotate(-90)"
+          />
+        </g>
+      </svg>
+      <div className="circular-label fadeInDelayed">
+        <div className="circular-value">{animatedValue}%</div>
+        <div className="circular-text">{label}</div>
+      </div>
+    </div>
+  );
+};
+
+// ==========================
+// CLIENT-SPECIFIC DATA
+// ==========================
+
+const stats = [
+  { id: 1, label: "Próximo turno", value: "15 Feb" },
+  { id: 2, label: "Servicios en curso", value: "2" },
+  { id: 3, label: "Historial total", value: "14 servicios" },
+  { id: 4, label: "Avisos pendientes", value: "1" },
+];
+
+const hudIndicators = [
+  { id: 1, label: "Estado general del vehículo", value: 82 },
+  { id: 2, label: "Mantenimiento actualizado", value: 67 },
+  { id: 3, label: "Confianza del sistema", value: 92 },
+];
+
+const recentActivities = [
+  { id: 1, icon: <FaTools />, title: "Diagnóstico completado", sub: "Motor y electrónica" },
+  { id: 2, icon: <FaCalendarAlt />, title: "Turno confirmado", sub: "Cambio de aceite" },
+  { id: 3, icon: <FaUserCircle />, title: "Actualización del perfil", sub: "Datos personales" },
+];
+
+// ==========================
+// MAIN COMPONENT — CLIENTE
+// ==========================
+
+function DashboardCliente() {
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => setLoaded(true), 80);
+    return () => clearTimeout(timeout);
+  }, []);
+
+  return (
+    <div className={`hud-dashboard ${loaded ? "hud-loaded" : ""}`}>
+      {/* LEFT */}
+      <aside className="hud-left slideInLeft">
+        <div className="hud-left-header fadeInFast">
+          <div className="hud-title">TU VEHÍCULO</div>
+          <div className="hud-subtitle">Resumen y estado</div>
         </div>
 
-        <div className="mini-card">
-          <h4>Mis Autos</h4>
-          <div className="mini-value">{stats.misAutos}</div>
+        {/* Stats */}
+        <div className="hud-stats">
+          {stats.map((s) => (
+            <div className="hud-stat-card popIn" key={s.id}>
+              <div className="stat-label">{s.label}</div>
+              <div className="stat-value">{s.value}</div>
+            </div>
+          ))}
         </div>
 
-        <div className="mini-card">
-          <h4>Servicios Realizados</h4>
-          <div className="mini-value">{stats.serviciosRealizados}</div>
-        </div>
-
-        <div className="mini-card">
-          <h4>Turnos Activos</h4>
-          <div className="mini-value">{stats.turnosActivos}</div>
-        </div>
-
-        <div className="chart-block">
-          <div className="chart-title">
-            <h3>Progreso de Servicios Realizados</h3>
-            <ArrowUpRight color="white" size={18} />
-          </div>
-          <div className="chart-area">
-            <ResponsiveContainer width="100%" height={260}>
-              <BarChart
-                data={barData}
-                margin={{ top: 10, right: 10, left: 10, bottom: 10 }}
-              >
-                <CartesianGrid
-                  stroke="rgba(255,255,255,0.06)"
-                  vertical={false}
-                />
-                <XAxis
-                  dataKey="name"
-                  axisLine={false}
-                  tickLine={false}
-                  tick={{ fill: "#ddd" }}
-                />
-                <YAxis
-                  axisLine={false}
-                  tickLine={false}
-                  tick={{ fill: "#ddd" }}
-                />
-                <Tooltip content={<CustomTooltip />} />
-                <Bar dataKey="value" radius={[8, 8, 8, 8]}>
-                  {barData.map((entry, idx) => (
-                    <Cell
-                      key={idx}
-                      fill={`rgba(255,40,40,${0.6 + idx * 0.05})`}
-                    />
-                  ))}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-
-        <div className="recent-activity cliente-activity">
-          <h3>Actividad Reciente</h3>
-          {actividadReciente.map((a, i) => (
-            <div className="activity-item" key={i}>
-              <div className="activity-icon">
-                {a.tipo === "completado" && <CheckCircle />}
-                {a.tipo === "nuevo" && <Wrench />}
-                {a.tipo === "turno" && <Clock />}
+        {/* Quicklist */}
+        <div className="hud-quicklist fadeInSlow">
+          <div className="ql-header">Actividades recientes</div>
+          <div className="ql-list">
+            <div className="ql-item hoverGlow">
+              <div className="ql-pos">01</div>
+              <div>
+                <div className="ql-title">Cambio de aceite</div>
+                <div className="ql-sub">Programado</div>
               </div>
-              <div className="activity-details">
-                <h4>{a.titulo}</h4>
-                <p className="muted">{a.detalle}</p>
-                <p className="muted small">{a.tiempo}</p>
+              <div className="ql-tag">PRÓXIMO</div>
+            </div>
+
+            <div className="ql-item hoverGlow">
+              <div className="ql-pos">02</div>
+              <div>
+                <div className="ql-title">Alineación y balanceo</div>
+                <div className="ql-sub">Finalizado</div>
+              </div>
+              <div className="ql-tag done">OK</div>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      {/* CENTER */}
+      <main className="hud-center fadeIn">
+        <div className="center-top">
+          <div className="center-title">
+            <h1>Panel del Cliente</h1>
+            <div className="center-sub">Estado actual y próximas acciones</div>
+          </div>
+        </div>
+
+        {/* PANEL */}
+        <div className="hud-panel popIn">
+          <div className="hud-grid-bg" />
+
+          {/* Left Block */}
+          <div className="hud-left-block">
+            <div className="hud-block-title">Estado del vehículo</div>
+
+            <div className="hud-indicators">
+              {hudIndicators.map((ind) => (
+                <div className="indicator-row slideInUp" key={ind.id}>
+                  <div className="indicator-left">
+                    <div className="indicator-label">{ind.label}</div>
+                    <div className="indicator-sub">Actualizado</div>
+                  </div>
+
+                  <div className="indicator-gauge">
+                    <div className="gauge-bar">
+                      <div
+                        className="gauge-fill"
+                        style={{ width: ind.value + "%" }}
+                      />
+                    </div>
+                    <div className="gauge-value">{ind.value}%</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Right Block */}
+          <div className="hud-right-block">
+            <div className="hud-circles">
+              <CircularHUD value={84} label="Salud" />
+              <CircularHUD value={63} label="Mantenimiento" />
+              <CircularHUD value={92} label="Confiabilidad" />
+            </div>
+          </div>
+        </div>
+      </main>
+
+      {/* RIGHT */}
+      <aside className="hud-right slideInRight">
+        <div className="right-title">Actividad reciente</div>
+        <div className="right-sub">Últimos movimientos en tu cuenta</div>
+
+        <div className="recent-list">
+          {recentActivities.map((act) => (
+            <div className="recent-row fadeInUpSmall" key={act.id}>
+              <div className="recent-icon">{act.icon}</div>
+              <div>
+                <div className="recent-title">{act.title}</div>
+                <div className="recent-sub">{act.sub}</div>
               </div>
             </div>
           ))}
         </div>
-      </div>
-
-      <aside className="right-column">
-        <div className="upcoming-card">
-          <h3>Próximas Citas</h3>
-          <div className="appointments">
-            {proximasCitas.map((c) => (
-              <div key={c.id} className="appointment-item">
-                <div className="badge">1</div>
-                <div className="appointment-info">
-                  <strong>{c.title}</strong>
-                  <p className="muted">{c.car}</p>
-                  <p className="muted small">{`${c.datetime} • ${c.person}`}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
       </aside>
     </div>
   );
-};
+}
 
 export default DashboardCliente;
