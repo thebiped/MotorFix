@@ -49,9 +49,16 @@ const MecanicoLayout = () => {
   const navigate = useNavigate();
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
 
+  // 🔹 Declaramos el estado para el ID del mecánico
+  const [mecanicoId, setMecanicoId] = useState(null);
+
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
-    if (!storedUser || storedUser.rol !== "mecanico") navigate("/");
+    if (!storedUser || storedUser.rol !== "mecanico") {
+      navigate("/");
+      return;
+    }
+    setMecanicoId(storedUser.id); // Guardamos el id del mecánico
   }, [navigate]);
 
   const handleLogout = () => {
@@ -65,11 +72,12 @@ const MecanicoLayout = () => {
       {/* CONTENIDO */}
       <div className="mecanico-main">
         <main className="mecanico-content">
-          <Outlet />
+          {/* Pasamos mecanicoId a los hijos */}
+          <Outlet context={{ mecanicoId }} />
         </main>
       </div>
 
-      {/* 🔥 MISMA NAVBAR INFERIOR ARKHAM FUTURISTA */}
+      {/* NAVBAR INFERIOR */}
       <nav className="bat-navbar">
         <div className="bat-panel">
           {menuItems.map((item, index) => (

@@ -292,8 +292,6 @@ router.get("/mecanico/:id", (req, res) => {
 
       v.id_vehiculo,
       v.patente,
-      v.marca AS vehicle_brand_id,
-      v.modelo AS vehicle_model_id,
 
       b.name AS car_brand,
       m.name AS car_model,
@@ -314,11 +312,10 @@ router.get("/mecanico/:id", (req, res) => {
   db.all(sql, [mecanicoId], (err, rows) => {
     if (err) return res.status(500).json({ error: err.message });
 
-    // Transformación para el frontend
     const result = rows.map((t) => ({
       id: t.id,
       estado: t.estado,
-      prioridad: "normal", // opcional
+      prioridad: "normal",
       user: { id: t.user_id, name: t.user_name },
       car: {
         id: t.id_vehiculo,

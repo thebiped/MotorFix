@@ -475,7 +475,7 @@ body {
   position: absolute;
   right: -42px;
   bottom: 18px;
-  width: 260px;
+  width: fit-content;
   background: rgba(6, 6, 6, 0.9);
   padding: 1rem;
   border: 1px solid rgba(255, 255, 255, 0.04);
@@ -699,6 +699,212 @@ body {
 .brand-card:nth-child(3) { animation-delay: .24s; }
 .brand-card:nth-child(4) { animation-delay: .30s; }
 .brand-card:nth-child(5) { animation-delay: .36s; }
+/* =====================================================
+   NUEVO LOADER ESTILO NFS + HUD
+   Colores: rojo (#ff1b1b), blanco (#fff), negro (#000)
+   ===================================================== */
+
+.nfs-loading {
+  width: 100%;
+  text-align: center;
+  padding-top: 4rem;
+  animation: fadeIn 0.6s ease forwards;
+}
+
+.nfs-loading-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 4px;
+  margin-bottom: 1.5rem;
+  text-shadow: 0 0 10px #ff1b1b;
+  animation: glitch 1.4s infinite;
+}
+
+/* -------- BARRA DE CARGA -------- */
+.nfs-loading-bar {
+  position: relative;
+  width: 70%;
+  height: 12px;
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.15);
+  overflow: hidden;
+  border-radius: 6px;
+  box-shadow: 0 0 10px #ff1b1b55;
+}
+
+.nfs-loading-bar-fill {
+  height: 100%;
+  width: 0%;
+  background: #ff1b1b;
+  animation: loadBar 3s ease-in-out forwards;
+  box-shadow: 0 0 15px #ff1b1bcc;
+}
+
+/* -------- SUBTEXTO -------- */
+.nfs-loading-sub {
+  margin-top: 0.8rem;
+  font-size: 0.9rem;
+  color: #fff;
+  opacity: 0.7;
+  letter-spacing: 2px;
+}
+
+/* ==========================
+   🔥 FINAL LOGIN LOADER (HUD)
+   ========================== */
+
+.vehicle-selection-final-loader-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.92);
+  backdrop-filter: blur(6px);
+  animation: fadeInHUD 0.3s ease-out forwards;
+  z-index: 999999;
+}
+
+@keyframes fadeInHUD {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.vehicle-selection-final-loader-content {
+  text-align: center;
+  color: white;
+  font-family: "Orbitron", sans-serif;
+  width: 70%;
+  max-width: 600px;
+}
+
+.vehicle-selection-final-loader-title {
+  font-size: 1.4rem;
+  margin-bottom: 1.6rem;
+  color: #ff2a2a;
+  text-shadow: 0 0 10px #ff0000;
+  animation: flickerHUD 2s infinite;
+}
+
+@keyframes flickerHUD {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.75; }
+}
+
+.vehicle-selection-final-loader-bar {
+  width: 100%;
+  height: 14px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid #ff0000;
+  position: relative;
+  overflow: hidden;
+  border-radius: 2px;
+}
+
+.vehicle-selection-final-loader-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ff0000, #ff4d4d);
+  width: 0%;
+  transition: width 0.08s linear;
+  box-shadow: 0 0 12px #ff1c1c;
+}
+
+.vehicle-selection-final-loader-sub {
+  margin-top: 1.4rem;
+  font-size: 1rem;
+  opacity: 0.8;
+  color: #ccc;
+  letter-spacing: 2px;
+}
+/* =========================
+      FINAL LOADER - HUD
+========================= */
+.vehicle-selection-final-loader-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.88);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.vehicle-selection-final-loader-content {
+  width: 540px;
+  padding: 2.4rem;
+  background: rgba(12, 12, 12, 0.8);
+  border: 1px solid rgba(255, 40, 40, 0.25);
+  box-shadow: 0 0 28px rgba(255, 40, 40, 0.22);
+  border-radius: 12px;
+  text-align: center;
+  animation: popin 0.4s ease forwards;
+}
+
+@keyframes popin {
+  0% { opacity: 0; transform: scale(0.85); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.vehicle-selection-final-loader-title {
+  font-size: 1.2rem;
+  letter-spacing: 3px;
+  color: #ff3b3b;
+  margin-bottom: 1.5rem;
+}
+
+.vehicle-selection-final-loader-bar {
+  width: 100%;
+  height: 12px;
+  background: rgba(60, 60, 60, 0.4);
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 40, 40, 0.24);
+  margin-bottom: 1rem;
+}
+
+.vehicle-selection-final-loader-bar-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #ff2a2a, #ff4646, #ff2a2a);
+  box-shadow: 0 0 18px #ff3b3b;
+  transition: width 0.12s linear;
+}
+
+.vehicle-selection-final-loader-sub {
+  color: #ffffffcc;
+  font-size: 0.9rem;
+  letter-spacing: 2px;
+  margin-top: .4rem;
+}
+
+
+/* -------- ANIMACIONES -------- */
+
+@keyframes loadBar {
+  0% { width: 0%; }
+  20% { width: 25%; }
+  45% { width: 35%; }
+  60% { width: 50%; }
+  80% { width: 80%; }
+  100% { width: 100%; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* glitch leve tipo HUD Arkham */
+@keyframes glitch {
+  0%   { text-shadow: 0 0 10px #ff1b1b; }
+  20%  { text-shadow: 2px 0 #ff1b1b, -2px 0 #fff; }
+  40%  { text-shadow: -2px 0 #ff1b1b, 2px 0 #fff; }
+  60%  { text-shadow: 0 0 10px #ff1b1b; }
+  100% { text-shadow: 0 0 10px #ff1b1b; }
+}
+
 
 @keyframes hudPulse {
   0% { opacity: 0.2; }

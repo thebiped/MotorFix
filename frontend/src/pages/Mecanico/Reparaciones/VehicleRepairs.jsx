@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from "react";
+import { useOutletContext } from "react-router-dom";
 import axios from "axios";
 import "./VehicleRepairs.css";
 
 const PLACEHOLDER_CAR =
   "data:image/svg+xml;charset=UTF-8,<svg xmlns='http://www.w3.org/2000/svg' width='800' height='400'><rect fill='%23000' width='100%25' height='100%25'/><text x='50%25' y='50%25' font-size='18' fill='%23fff' alignment-baseline='middle' text-anchor='middle'>NO IMAGE</text></svg>";
 
-const VehicleRepairs = ({ mecanicoId }) => {
+const VehicleRepairs = () => {
+  // Obtenemos el ID del mecánico desde el Layout
+  const { mecanicoId } = useOutletContext();
+
   const [repairs, setRepairs] = useState([]);
   const [selected, setSelected] = useState(null);
 
@@ -17,8 +21,7 @@ const VehicleRepairs = ({ mecanicoId }) => {
       const { data } = await axios.get(
         `http://localhost:3001/api/turnos/mecanico/${mecanicoId}`
       );
-
-      console.log("Respuesta backend:", data);
+      console.log("Turnos del backend:", data);
       setRepairs(data);
     } catch (err) {
       console.error("Error fetching reparaciones:", err);
@@ -30,17 +33,20 @@ const VehicleRepairs = ({ mecanicoId }) => {
     fetchRepairs();
   }, [mecanicoId]);
 
+  // ----------------------- Seleccionar Turno -----------------------
   const selectRepair = (repair) => setSelected(repair);
   const closeDetail = () => setSelected(null);
 
+  // ----------------------- Renderizado -----------------------
   return (
     <div className="vehicle-repairs-container">
       <div className="repairs-list">
         {repairs.length === 0 && (
           <p style={{ color: "#aaa", padding: "20px" }}>
-            No hay reparaciones pendientes
+            No hay turnos asignados
           </p>
         )}
+
         {repairs.map((r) => (
           <div
             key={r.id}
@@ -54,9 +60,9 @@ const VehicleRepairs = ({ mecanicoId }) => {
             </h2>
             <span className="problem-subtitle">DE FORMA BREVE</span>
             <span className="priority-tag">{r.prioridad?.toUpperCase()}</span>
-            <div className="user-name">{r.user.name}</div>
+            <div className="user-name">{r.user?.name || "-"}</div>
             <div className="car-name">
-              {r.car.brand} {r.car.model}
+              {r.car?.brand} {r.car?.model}
             </div>
           </div>
         ))}
@@ -69,29 +75,29 @@ const VehicleRepairs = ({ mecanicoId }) => {
           </button>
 
           <div className="car-image-wrapper">
-            <img src={selected.car.image || PLACEHOLDER_CAR} alt="" />
+            <img src={selected.car?.image || PLACEHOLDER_CAR} alt="" />
           </div>
 
           <div className="car-stats">
-            <div>Vel: {selected.car.top_speed || "N/A"} km/h</div>
-            <div>Acel: {selected.car.acceleration || "N/A"} s</div>
-            <div>Man: {selected.car.handling || "N/A"}</div>
+            <div>Vel: {selected.car?.top_speed || "N/A"} km/h</div>
+            <div>Acel: {selected.car?.acceleration || "N/A"} s</div>
+            <div>Man: {selected.car?.handling || "N/A"}</div>
           </div>
 
           <div className="hud-panel">
             <h3>DETALLES DEL TURNO</h3>
             <p>
-              <strong>Problema:</strong> {selected.turno.descripcion || "-"}
+              <strong>Problema:</strong> {selected.turno?.descripcion || "-"}
             </p>
             <p>
               <strong>Tipo de reparación:</strong>{" "}
-              {selected.turno.tipo_reparacion || "-"}
+              {selected.turno?.tipo_reparacion || "-"}
             </p>
             <p>
-              <strong>Fecha / Hora:</strong> {selected.turno.fecha || "-"}
+              <strong>Fecha / Hora:</strong> {selected.turno?.fecha || "-"}
             </p>
             <p>
-              <strong>Estado:</strong> {selected.estado}
+              <strong>Estado:</strong> {selected.estado || "-"}
             </p>
             <p>
               <strong>Creación:</strong>{" "}

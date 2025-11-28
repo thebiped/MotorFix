@@ -22,6 +22,8 @@ import VehiculoCliente from "./pages/Cliente/Vehiculo/VehiculoCliente";
 import ForgotPasswordRequest from "./components/Authentication/ForgotPassword/ForgotPasswordRequest";
 import ForgotPasswordVerify from "./components/Authentication/ForgotPassword/ForgotPasswordVerify";
 import ForgotPasswordReset from "./components/Authentication/ForgotPassword/ForgotPasswordReset";
+import LoadingScreen from "./components/Loading/LoadingScreen";
+import VehicleFinalData from "./components/Authentication/VehicleSelection/VehicleFinalData";
 
 function App() {
   return (
@@ -31,7 +33,11 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/vehicle-selection" element={<VehicleSelection />} />
+        <Route path="/vehicle-final" element={<VehicleFinalData />} />
         <Route path="/forgot-password" element={<ForgotPasswordRequest />} />
+
+        <Route path="/loading" element={<LoadingScreen />} />
+
         <Route
           path="/forgot-password/verify"
           element={<ForgotPasswordVerify />}

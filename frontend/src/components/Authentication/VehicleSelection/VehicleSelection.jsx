@@ -152,6 +152,8 @@ const ModelSelector = ({ brand, onBack, onVehicleSelect }) => {
   const [selectedColor, setSelectedColor] = useState("white");
   const [plate, setPlate] = useState("");
   const navigate = useNavigate();
+  const [finalLoading, setFinalLoading] = useState(false);
+  const [finalProgress, setFinalProgress] = useState(0);
 
   useEffect(() => {
     if (!brandId) return;
@@ -164,7 +166,7 @@ const ModelSelector = ({ brand, onBack, onVehicleSelect }) => {
         setIndex(0);
       })
       .catch((err) => console.error("Error loading models", err))
-      .finally(() => setTimeout(() => mounted && setLoading(false), 800));
+      .finally(() => setTimeout(() => mounted && setLoading(false), 3000));
     return () => (mounted = false);
   }, [brandId]);
 
@@ -186,9 +188,22 @@ const ModelSelector = ({ brand, onBack, onVehicleSelect }) => {
 
   if (loading)
     return (
-      <div className="model-selector empty">
-        <h2>Cargando modelos...</h2>
-        <button onClick={onBack} className="nfs-btn secondary">
+      <div className="model-selector loading">
+        <div className="nfs-loading">
+          <div className="nfs-loading-title">CARGANDO MODELO</div>
+
+          <div className="nfs-loading-bar">
+            <div className="nfs-loading-bar-fill"></div>
+          </div>
+
+          <div className="nfs-loading-sub">ESPERE UN MOMENTO...</div>
+        </div>
+
+        <button
+          onClick={onBack}
+          className="nfs-btn secondary"
+          style={{ marginTop: "2rem" }}
+        >
           <ArrowLeft size={18} /> ATRÁS
         </button>
       </div>
@@ -371,8 +386,7 @@ const ModelSelector = ({ brand, onBack, onVehicleSelect }) => {
                 .then((data) => {
                   if (data.success) {
                     console.log("Vehículo guardado", data);
-                    alert("Vehículo registrado correctamente!");
-                    navigate("/"); // 🚀 Redirige al login
+                    navigate("/loading"); // 🚀 Redirige al login
                   } else {
                     alert("Error guardando vehículo: " + data.error);
                   }
