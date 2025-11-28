@@ -36,7 +36,6 @@ router.get("/user/:id", (req, res) => {
   });
 });
 
-
 // GET — Obtener todos los turnos (admin)
 router.get("/all", (req, res) => {
   const sql = `
@@ -85,7 +84,9 @@ router.post("/create", express.json(), (req, res) => {
   const { user_id, vehicle_id, problema, tipo_reparacion } = req.body;
 
   if (!user_id || !vehicle_id || !problema || !tipo_reparacion) {
-    return res.status(400).json({ success: false, error: "Faltan datos obligatorios" });
+    return res
+      .status(400)
+      .json({ success: false, error: "Faltan datos obligatorios" });
   }
 
   const sql = `
@@ -213,10 +214,13 @@ router.put("/asignar/:id", express.json(), (req, res) => {
 
 // POST — crear turno con mecanico asignado (opcional)
 router.post("/create-with-mecanico", express.json(), (req, res) => {
-  const { user_id, vehicle_id, problema, tipo_reparacion, mecanico_id } = req.body;
+  const { user_id, vehicle_id, problema, tipo_reparacion, mecanico_id } =
+    req.body;
 
   if (!user_id || !vehicle_id || !problema || !tipo_reparacion) {
-    return res.status(400).json({ success: false, error: "Faltan datos obligatorios" });
+    return res
+      .status(400)
+      .json({ success: false, error: "Faltan datos obligatorios" });
   }
 
   const sql = `
@@ -224,27 +228,31 @@ router.post("/create-with-mecanico", express.json(), (req, res) => {
     VALUES (?, ?, ?, ?, 'Pendiente', datetime('now'), ?)
   `;
 
-  db.run(sql, [user_id, vehicle_id, problema, tipo_reparacion, mecanico_id || null], function (err) {
-    if (err) {
-      console.error("SQL Error create-with-mecanico:", err.message);
-      return res.status(500).json({ success: false, error: err.message });
+  db.run(
+    sql,
+    [user_id, vehicle_id, problema, tipo_reparacion, mecanico_id || null],
+    function (err) {
+      if (err) {
+        console.error("SQL Error create-with-mecanico:", err.message);
+        return res.status(500).json({ success: false, error: err.message });
+      }
+      res.json({
+        success: true,
+        turno: {
+          id_turno: this.lastID,
+          user_id,
+          vehicle_id,
+          problema,
+          tipo_reparacion,
+          mecanico_id: mecanico_id || null,
+        },
+      });
     }
-    res.json({
-      success: true,
-      turno: { id_turno: this.lastID, user_id, vehicle_id, problema, tipo_reparacion, mecanico_id: mecanico_id || null }
-    });
-  });
+  );
 });
 
-
 router.put("/update", express.json(), (req, res) => {
-  const {
-    id_turno,
-    tipo_reparacion,
-    problema,
-    estado,
-    mecanico_id
-  } = req.body;
+  const { id_turno, tipo_reparacion, problema, estado, mecanico_id } = req.body;
 
   const sql = `
     UPDATE turnos
@@ -267,6 +275,73 @@ router.put("/update", express.json(), (req, res) => {
       return res.json({ success: true });
     }
   );
+});
+
+router.get("/mecanico/:id", (req, res) => {
+  const mecanicoId = req.params.id;
+
+  const sql = `
+    SELECT 
+      t.id_turno AS id,
+      t.problema,
+      t.tipo_reparacion,
+      t.estado,
+      t.fecha_creado AS fecha,
+      t.mecanico_id,
+      t.user_id,
+
+      v.id_vehiculo,
+      v.patente,
+      v.marca AS vehicle_brand_id,
+      v.modelo AS vehicle_model_id,
+
+      b.name AS car_brand,
+      m.name AS car_model,
+
+      u.username AS user_name,
+      mec.username AS mecanico_name,
+      mec.rol AS mecanico_rol
+    FROM turnos t
+    LEFT JOIN vehiculos v ON t.vehicle_id = v.id_vehiculo
+    LEFT JOIN brands b ON v.id_brand = b.id_brand
+    LEFT JOIN car_models m ON v.id_model = m.id_model
+    LEFT JOIN usuarios u ON t.user_id = u.id_usuario
+    LEFT JOIN usuarios mec ON t.mecanico_id = mec.id_usuario
+    WHERE t.mecanico_id = ? AND mec.rol = 'mecanico'
+    ORDER BY t.fecha_creado DESC
+  `;
+
+  db.all(sql, [mecanicoId], (err, rows) => {
+    if (err) return res.status(500).json({ error: err.message });
+
+    // Transformación para el frontend
+    const result = rows.map((t) => ({
+      id: t.id,
+      estado: t.estado,
+      prioridad: "normal", // opcional
+      user: { id: t.user_id, name: t.user_name },
+      car: {
+        id: t.id_vehiculo,
+        brand: t.car_brand,
+        model: t.car_model,
+        patente: t.patente,
+      },
+      turno: {
+        id: t.id,
+        descripcion: t.problema,
+        tipo_reparacion: t.tipo_reparacion,
+        fecha: t.fecha,
+      },
+      mecanico: {
+        id: t.mecanico_id,
+        name: t.mecanico_name,
+        rol: t.mecanico_rol,
+      },
+      created_at: t.fecha,
+    }));
+
+    res.json(result);
+  });
 });
 
 

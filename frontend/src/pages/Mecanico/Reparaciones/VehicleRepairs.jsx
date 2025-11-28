@@ -1,4 +1,3 @@
-// frontend/VehicleRepairs.jsx
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./VehicleRepairs.css";
@@ -16,16 +15,14 @@ const VehicleRepairs = ({ mecanicoId }) => {
 
     try {
       const { data } = await axios.get(
-        `http://localhost:3001/api/reparaciones?estado=pending&mecanico_id=${mecanicoId}`
+        `http://localhost:3001/api/turnos/mecanico/${mecanicoId}`
       );
 
-      console.log("Respuesta backend:", data); // Debug completo
+      console.log("Respuesta backend:", data);
       setRepairs(data);
     } catch (err) {
       console.error("Error fetching reparaciones:", err);
-      if (err.response) {
-        console.error("Detalle del error:", err.response.data);
-      }
+      if (err.response) console.error("Detalle del error:", err.response.data);
     }
   };
 
@@ -38,7 +35,6 @@ const VehicleRepairs = ({ mecanicoId }) => {
 
   return (
     <div className="vehicle-repairs-container">
-      {/* ----------------------- Lista de Reparaciones ----------------------- */}
       <div className="repairs-list">
         {repairs.length === 0 && (
           <p style={{ color: "#aaa", padding: "20px" }}>
@@ -48,7 +44,9 @@ const VehicleRepairs = ({ mecanicoId }) => {
         {repairs.map((r) => (
           <div
             key={r.id}
-            className={`repair-block ${r.prioridad === "alta" ? "high-priority" : ""}`}
+            className={`repair-block ${
+              r.prioridad === "alta" ? "high-priority" : ""
+            }`}
             onClick={() => selectRepair(r)}
           >
             <h2 className="problem-title">
@@ -57,15 +55,18 @@ const VehicleRepairs = ({ mecanicoId }) => {
             <span className="problem-subtitle">DE FORMA BREVE</span>
             <span className="priority-tag">{r.prioridad?.toUpperCase()}</span>
             <div className="user-name">{r.user.name}</div>
-            <div className="car-name">{r.car.brand} {r.car.model}</div>
+            <div className="car-name">
+              {r.car.brand} {r.car.model}
+            </div>
           </div>
         ))}
       </div>
 
-      {/* ----------------------- Panel de Detalle Lateral ----------------------- */}
       {selected && (
         <div className="repair-detail-panel">
-          <button className="close-btn" onClick={closeDetail}>X</button>
+          <button className="close-btn" onClick={closeDetail}>
+            X
+          </button>
 
           <div className="car-image-wrapper">
             <img src={selected.car.image || PLACEHOLDER_CAR} alt="" />
@@ -79,10 +80,23 @@ const VehicleRepairs = ({ mecanicoId }) => {
 
           <div className="hud-panel">
             <h3>DETALLES DEL TURNO</h3>
-            <p><strong>Problema:</strong> {selected.turno.descripcion || "-"}</p>
-            <p><strong>Fecha / Hora:</strong> {selected.turno.fecha} {selected.turno.hora}</p>
-            <p><strong>Estado:</strong> {selected.estado}</p>
-            <p><strong>Creación:</strong> {new Date(selected.created_at).toLocaleString()}</p>
+            <p>
+              <strong>Problema:</strong> {selected.turno.descripcion || "-"}
+            </p>
+            <p>
+              <strong>Tipo de reparación:</strong>{" "}
+              {selected.turno.tipo_reparacion || "-"}
+            </p>
+            <p>
+              <strong>Fecha / Hora:</strong> {selected.turno.fecha || "-"}
+            </p>
+            <p>
+              <strong>Estado:</strong> {selected.estado}
+            </p>
+            <p>
+              <strong>Creación:</strong>{" "}
+              {new Date(selected.created_at).toLocaleString()}
+            </p>
           </div>
         </div>
       )}

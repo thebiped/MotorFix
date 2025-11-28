@@ -29,24 +29,30 @@ router.get("/user/:id", (req, res) => {
 
 // POST guardar vehículo (espera que envíes id_brand e id_model)
 router.post("/guardar", express.json(), (req, res) => {
-  const { user_id, id_brand, id_model, patente, mileage } = req.body;
+  const { user_id, id_brand, id_model, patente, mileage, color } = req.body;
 
   if (!user_id || !id_brand || !id_model || !patente || mileage == null) {
-    return res.status(400).json({ success: false, error: "Faltan datos obligatorios" });
+    return res
+      .status(400)
+      .json({ success: false, error: "Faltan datos obligatorios" });
   }
 
   const sql = `
-    INSERT INTO vehiculos (user_id, id_brand, id_model, patente, mileage)
-    VALUES (?, ?, ?, ?, ?)
+    INSERT INTO vehiculos (user_id, id_brand, id_model, patente, mileage, color)
+    VALUES (?, ?, ?, ?, ?, ?)
   `;
 
-  db.run(sql, [user_id, id_brand, id_model, patente, mileage], function (err) {
-    if (err) {
-      console.error("SQL ERROR vehiculos/guardar:", err.message);
-      return res.status(500).json({ success: false, error: err.message });
+  db.run(
+    sql,
+    [user_id, id_brand, id_model, patente, mileage, color],
+    function (err) {
+      if (err) {
+        console.error("SQL ERROR vehiculos/guardar:", err.message);
+        return res.status(500).json({ success: false, error: err.message });
+      }
+      res.json({ success: true, new_id: this.lastID });
     }
-    res.json({ success: true, new_id: this.lastID });
-  });
+  );
 });
 
 module.exports = router;

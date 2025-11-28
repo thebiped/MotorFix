@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { getBrands, getModelsByBrand } from "../../../services/vehicleService";
 import "./vehicleSelection.css";
+import { useNavigate } from "react-router-dom";
 
 const PLACEHOLDER_LOGO =
   "data:image/svg+xml;charset=UTF-8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='60'><rect fill='%23222' width='100%25' height='100%25'/><text x='50%25' y='50%25' font-size='14' fill='%23fff' alignment-baseline='middle' text-anchor='middle'>NO LOGO</text></svg>";
@@ -31,13 +32,8 @@ const BrandSelector = ({ onBrandSelect }) => {
         setBrands(data || []);
         setActiveIndex(0);
       })
-      .catch((err) => {
-        console.error("Error fetching brands", err);
-      })
-      .finally(() => {
-        // Delay mínimo para loader más suave
-        setTimeout(() => mounted && setLoading(false), 800);
-      });
+      .catch((err) => console.error("Error fetching brands", err))
+      .finally(() => setTimeout(() => mounted && setLoading(false), 800));
     return () => (mounted = false);
   }, []);
 
@@ -69,7 +65,7 @@ const BrandSelector = ({ onBrandSelect }) => {
     setActiveIndex((i) => (i - 1 + visible.length) % visible.length);
   };
 
-  if (loading) {
+  if (loading)
     return (
       <div className="brand-selector loading">
         <div className="brand-header">
@@ -78,7 +74,6 @@ const BrandSelector = ({ onBrandSelect }) => {
         </div>
       </div>
     );
-  }
 
   return (
     <div className="brand-selector">
@@ -156,6 +151,7 @@ const ModelSelector = ({ brand, onBack, onVehicleSelect }) => {
   const brandId = brand?.id_brand;
   const [selectedColor, setSelectedColor] = useState("white");
   const [plate, setPlate] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!brandId) return;
@@ -168,10 +164,7 @@ const ModelSelector = ({ brand, onBack, onVehicleSelect }) => {
         setIndex(0);
       })
       .catch((err) => console.error("Error loading models", err))
-      .finally(() => {
-        // Delay mínimo para loader más suave
-        setTimeout(() => mounted && setLoading(false), 800);
-      });
+      .finally(() => setTimeout(() => mounted && setLoading(false), 800));
     return () => (mounted = false);
   }, [brandId]);
 
@@ -187,12 +180,11 @@ const ModelSelector = ({ brand, onBack, onVehicleSelect }) => {
           : (index - 1 + models.length) % models.length;
       setIndex(newIndex);
       setAnim(enter);
-      // Entrada más lenta
       setTimeout(() => setAnim("idle"), 300);
-    }, 500); // Salida más lenta
+    }, 500);
   };
 
-  if (loading) {
+  if (loading)
     return (
       <div className="model-selector empty">
         <h2>Cargando modelos...</h2>
@@ -201,9 +193,8 @@ const ModelSelector = ({ brand, onBack, onVehicleSelect }) => {
         </button>
       </div>
     );
-  }
 
-  if (!models.length) {
+  if (!models.length)
     return (
       <div className="model-selector empty">
         <h2>Sin modelos disponibles</h2>
@@ -212,7 +203,6 @@ const ModelSelector = ({ brand, onBack, onVehicleSelect }) => {
         </button>
       </div>
     );
-  }
 
   const current = models[index];
 
@@ -245,7 +235,9 @@ const ModelSelector = ({ brand, onBack, onVehicleSelect }) => {
           className="nfs-nav-btn left"
           onClick={() => changeSlide("prev")}
         >
-          <div className="icon"><ChevronLeft size={40} /></div>
+          <div className="icon">
+            <ChevronLeft size={40} />
+          </div>
         </button>
 
         <div className="car-showcase">
@@ -315,7 +307,9 @@ const ModelSelector = ({ brand, onBack, onVehicleSelect }) => {
           className="nfs-nav-btn right"
           onClick={() => changeSlide("next")}
         >
-          <div className="icon"><ChevronRight size={40} /></div>
+          <div className="icon">
+            <ChevronRight size={40} />
+          </div>
         </button>
       </div>
 
@@ -356,12 +350,34 @@ const ModelSelector = ({ brand, onBack, onVehicleSelect }) => {
             className="nfs-btn primary"
             onClick={() => {
               if (!plate) return alert("Ingresa una matrícula");
-              onVehicleSelect({
-                brand_id: brand.id_brand,
-                model_id: current.id_model,
-                color: selectedColor,
-                plate,
-              });
+
+              // 🚀 AQUÍ SE HACE EL FETCH DIRECTO
+              const user_id = 1; // si no existe, lo definimos acá
+              const mileage = 0;
+
+              fetch("http://localhost:3001/api/vehiculos/guardar", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  user_id,
+                  id_brand: brand.id_brand,
+                  id_model: current.id_model,
+                  patente: plate,
+                  color: selectedColor,
+                  mileage,
+                }),
+              })
+                .then((res) => res.json())
+                .then((data) => {
+                  if (data.success) {
+                    console.log("Vehículo guardado", data);
+                    alert("Vehículo registrado correctamente!");
+                    navigate("/"); // 🚀 Redirige al login
+                  } else {
+                    alert("Error guardando vehículo: " + data.error);
+                  }
+                })
+                .catch(console.error);
             }}
           >
             SELECCIONAR <Check size={18} />
@@ -373,7 +389,7 @@ const ModelSelector = ({ brand, onBack, onVehicleSelect }) => {
 };
 
 /* -------------------------- Main Component -------------------------- */
-const VehicleSelection = ({ onVehicleSelect }) => {
+const VehicleSelection = () => {
   const [selectedBrand, setSelectedBrand] = useState(null);
 
   return (
@@ -390,7 +406,6 @@ const VehicleSelection = ({ onVehicleSelect }) => {
             <ModelSelector
               brand={selectedBrand}
               onBack={() => setSelectedBrand(null)}
-              onVehicleSelect={onVehicleSelect}
             />
           )}
         </div>
