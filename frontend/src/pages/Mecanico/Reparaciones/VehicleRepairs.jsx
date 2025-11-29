@@ -12,162 +12,312 @@ const VehicleRepairs = () => {
   const [selected, setSelected] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // ... (Tus funciones fetchRepairs, selectRepair, etc. se mantienen igual)
+  // Estado local para determinar si la tarea SELECCIONADA está aceptada
+  const [isTaskAccepted, setIsTaskAccepted] = useState(false);
+
+  // ===================================
+  // 1. LÓGICA DE OBTENCIÓN DE DATOS (Fetch Real)
+  // ===================================
   const fetchRepairs = async () => {
     if (!mecanicoId) return;
     setLoading(true);
     try {
-      // Datos dummy para visualización
-      const dummyData = [
-        {
-          id: 1, prioridad: "ALTA",
-          cliente: { nombre: "Justin Mason" },
-          turno: { descripcion: "RUIDO EN EL MOTOR", tipo_reparacion: "Mecánica", fecha: "2025-11-29T09:30:00.000Z" },
-          car: { brand: "Audi", model: "Mustang GT", top_speed: "250", acceleration: "4.5", handling: "8.5", image: "https://i.imgur.com/uGzH2K4.png" },
-          estado: "Pendiente"
-        },
-        {
-          id: 2, prioridad: "Normal",
-          cliente: { nombre: "Selina Kyle" },
-          turno: { descripcion: "RUEDA DESALINEADA", tipo_reparacion: "Alineación", fecha: "2025-11-29T14:00:00.000Z" },
-          car: { brand: "Ford", model: "Focus RS", top_speed: "260", acceleration: "5.0", handling: "8.0", image: "" },
-          estado: "Pendiente"
-        },
-      ];
-      setRepairs(dummyData);
+      const { data } = await axios.get(
+        `http://localhost:3001/api/turnos/mecanico/${mecanicoId}`
+      );
+      // El backend devuelve una estructura diferente (mira routes/turnos.js),
+      // pero el array 'data' se asigna directamente a 'repairs'.
+      setRepairs(data);
+
+      // Si teníamos un turno seleccionado, lo actualizamos con los datos nuevos
+      if (selected) {
+        const updatedSelected = data.find((r) => r.id === selected.id);
+        setSelected(updatedSelected || null);
+        setIsTaskAccepted(
+          updatedSelected ? updatedSelected.estado === "en proceso" : false
+        );
+      }
     } catch (err) {
-      console.error(err);
+      console.error("Error fetching reparaciones:", err);
+      // Opcional: mostrar un mensaje de error en la UI
     } finally {
-      setTimeout(() => setLoading(false), 800);
+      setLoading(false);
     }
   };
 
-  useEffect(() => { fetchRepairs(); }, [mecanicoId]);
-  const selectRepair = (repair) => setSelected(repair);
-  const closeDetail = () => setSelected(null);
-  const runDiagnostics = () => alert("Diagnóstico iniciado...");
+  useEffect(() => {
+    fetchRepairs();
+  }, [mecanicoId]);
 
+  // ===================================
+  // 2. LÓGICA DE SELECCIÓN
+  // ===================================
+  const selectRepair = (repair) => {
+    // Usamos 'id' en lugar de 'id_turno' para el fetch real
+    setSelected(repair);
+    // Asumimos que "en proceso" significa aceptada. Si quieres usar otro campo, cámbialo aquí.
+    setIsTaskAccepted(repair.estado === "en proceso");
+  };
+
+  const closeDetail = () => setSelected(null);
+
+  const runDiagnostics = () => alert("Iniciando escaneo de diagnóstico...");
+
+  // ===================================
+  // 3. LÓGICA DE BOTONES (Aceptar/Rechazar)
+  // ===================================
+
+  const handleAcceptTask = async () => {
+    if (!selected) return;
+
+    try {
+      // Usamos selected.id ya que el fetch real lo mapea así
+      await axios.put(
+        `http://localhost:3001/api/turnos/asignar/${selected.id}`,
+        {
+          mecanico_id: mecanicoId,
+          estado: "en proceso",
+        }
+      );
+
+      // 2. Lógica de ÉXITO (Actualización de UI)
+      setIsTaskAccepted(true);
+      // Actualizamos el estado del item en la lista y el seleccionado
+      const updatedRepair = { ...selected, estado: "en proceso" };
+      setSelected(updatedRepair);
+
+      setRepairs((prev) =>
+        prev.map((r) => (r.id === selected.id ? updatedRepair : r))
+      );
+
+      alert(`✅ Tarea ${selected.id} CONFIRMADA. Estado: EN PROGRESO.`);
+    } catch (error) {
+      console.error(
+        "Error al confirmar la tarea:",
+        error.response?.data || error.message
+      );
+      alert("❌ Error al confirmar la tarea. Intente nuevamente.");
+    }
+  };
+
+  const handleRejectTask = async () => {
+    if (!selected) return;
+
+    const confirmReject = window.confirm(
+      "¿Estás seguro de rechazar esta asignación? Será devuelta al administrador."
+    );
+
+    if (confirmReject) {
+      try {
+        // 1. Llamada al backend para RECHAZAR (desasignar)
+        await axios.put(
+          `http://localhost:3001/api/turnos/asignar/${selected.id}`,
+          {
+            mecanico_id: null,
+            estado: "pendiente",
+          }
+        );
+
+        // 2. Lógica de ÉXITO (Actualización de UI)
+        // Removemos visualmente el turno de la lista.
+        setRepairs(repairs.filter((r) => r.id !== selected.id));
+        setSelected(null); // Cierra el detalle
+
+        alert("❌ Asignación rechazada y devuelta al pool de pendientes.");
+      } catch (error) {
+        console.error(
+          "Error al rechazar el turno:",
+          error.response?.data || error.message
+        );
+        alert(
+          "❌ Error al comunicar con el sistema central. Intente nuevamente."
+        );
+      }
+    }
+  };
+
+  // ===================================
+  // 4. RENDERIZADO (Usando la estructura de la versión 2 para la lista, y de la versión 1 para los botones)
+  // ===================================
   return (
-    <div className="hud-container">
-      {/* Loader Overlay */}
+    <div className="hud-container-reparacion">
+      {/* LOADER */}
       {loading && (
         <div className="hud-loader-overlay">
           <div className="hud-loader-box">
             <div className="hud-loader-title">SYSTEM ACTIVATING...</div>
-            <div className="hud-progress-bar"><div className="hud-progress-fill"></div></div>
+            <div className="hud-progress-bar">
+              <div className="hud-progress-fill"></div>
+            </div>
           </div>
         </div>
       )}
 
       {!loading && (
         <>
-          {/* PANEL IZQUIERDO: LISTAS */}
+          {/* PANEL IZQUIERDO (LISTA) */}
           <div className="hud-panel left-panel">
-            <div className="panel-decor top-left"></div>
-            <div className="panel-decor bottom-left"></div>
-
             <div className="repair-lists-wrapper">
-              {/* Sección Asignadas */}
               <div className="list-section">
                 <h2 className="panel-title">REPARACIONES ASIGNADAS</h2>
                 <div className="repair-list-scroll">
+                  {repairs.length === 0 && (
+                    <p className="empty-list-message">
+                      No hay turnos asignados a tu ID de mecánico.
+                    </p>
+                  )}
                   {repairs.map((r) => (
                     <div
-                      key={r.id}
-                      className={`repair-block ${selected?.id === r.id ? 'selected-block' : ''}`}
+                      key={r.id} // Usamos 'id' del fetch real
+                      className={`repair-block ${
+                        selected?.id === r.id ? "selected-block" : ""
+                      }`}
                       onClick={() => selectRepair(r)}
                     >
                       <div className="block-header">
-                        <span className="client-name">{r.cliente?.nombre || "CLIENTE"}</span>
-                        <span className={`priority-badge ${r.prioridad.toLowerCase()}`}>{r.prioridad}</span>
+                        {/* Usamos 'user' del fetch real, no 'cliente' */}
+                        <span className="client-name">
+                          {r.user?.name || "Cliente Desconocido"}
+                        </span>
+                        <span
+                          className={`priority-badge ${r.prioridad.toLowerCase()}`}
+                        >
+                          {r.prioridad}
+                        </span>
                       </div>
                       <div className="block-body">
-                        <p className="problem-text">{r.turno.descripcion?.toUpperCase()}</p>
-                        <p className="car-text">{r.car?.brand} {r.car?.model}</p>
+                        <p className="problem-text">
+                          {r.turno.descripcion?.toUpperCase()}
+                        </p>
+                        <p className="car-text">
+                          {r.car?.brand} {r.car?.model} ({r.car?.patente})
+                        </p>
                       </div>
                     </div>
                   ))}
                 </div>
               </div>
-
-              {/* Sección Completadas */}
-              <div className="list-section completed-section">
-                <h2 className="panel-title dimmed">REPARACIONES COMPLETADAS</h2>
-                <div className="repair-list-scroll">
-                  <div className="repair-block placeholder"><p>Historial vacío...</p></div>
-                  <div className="repair-block placeholder"><p>Sin registros recientes</p></div>
-                </div>
-              </div>
             </div>
           </div>
 
-          {/* PANEL DERECHO: TABLET DETALLE */}
-          <div className={`hud-panel right-panel ${selected ? 'active' : ''}`}>
+          {/* PANEL DERECHO (DETALLE) */}
+          <div className={`hud-panel right-panel ${selected ? "active" : ""}`}>
             <div className="panel-decor top-right"></div>
             <div className="panel-decor bottom-right"></div>
 
             {!selected ? (
-              <div className="empty-message">SELECCIONE UN TURNO PARA VER DETALLES</div>
+              <div className="empty-message">
+                SELECCIONE UN TURNO PARA GESTIONAR
+              </div>
             ) : (
               <div className="right-panel-content">
-                
-                {/* 1. HEADER: Marca y Modelo */}
                 <div className="rp-header">
                   <div className="brand-tag">{selected.car?.brand}</div>
                   <h1 className="model-title">{selected.car?.model}</h1>
                 </div>
 
-                {/* 2. BODY: Imagen Central + Panel Detalles Flotante */}
                 <div className="rp-body">
                   <div className="car-display-area">
-                    <img src={selected.car?.image || PLACEHOLDER_CAR} alt="Car" className="main-car-img" />
+                    {/* ✨ Cambio 1: Usar la image_url del backend */}
+                    <img
+                      src={
+                        selected.car?.image_url ||
+                        selected.car?.image_path ||
+                        PLACEHOLDER_CAR
+                      }
+                      alt="Car"
+                      className="main-car-img"
+                    />
                   </div>
-                  
-                  {/* Panel de detalles estilo 'Tarjeta' a la derecha */}
+
                   <div className="details-card">
                     <h3>DETALLES DEL TURNO</h3>
                     <div className="detail-row">
                       <span className="label">Problema:</span>
-                      <span className="value">{selected.turno?.descripcion}</span>
+                      <span className="value">
+                        {selected.turno?.descripcion}
+                      </span>
+                    </div>
+                    {/* Indicador de estado visual en el detalle */}
+                    <div className="detail-row">
+                      <span className="label">Estado Actual:</span>
+                      <span
+                        className={`value ${
+                          !isTaskAccepted ? "status-pending" : "status-active"
+                        }`}
+                      >
+                        {isTaskAccepted
+                          ? "EN PROGRESO"
+                          : "PENDIENTE DE CONFIRMACIÓN"}
+                      </span>
                     </div>
                     <div className="detail-row">
-                      <span className="label">Tipo:</span>
-                      <span className="value">{selected.turno?.tipo_reparacion}</span>
-                    </div>
-                    <div className="detail-row">
-                      <span className="label">Fecha:</span>
-                      <span className="value">{new Date(selected.turno?.fecha).toLocaleDateString()}</span>
-                    </div>
-                    <div className="detail-row">
-                      <span className="label">Estado:</span>
-                      <span className="value status-highlight">{selected.estado}</span>
+                      <span className="label">Patente:</span>
+                      <span className="value">{selected.car?.patente}</span>
                     </div>
                   </div>
                 </div>
 
-                {/* 3. FOOTER: Stats a la izquierda, Botones a la derecha */}
+                {/* --- FOOTER CON LÓGICA DE BOTONES --- */}
                 <div className="rp-footer">
+                  {/* ✨ Cambio 2: Mostrar las estadísticas del vehículo */}
                   <div className="stats-group">
+                    {/* Estadísticas principales */}
                     <div className="stat-box">
-                      <span className="stat-label">Velocidad Top</span>
-                      <span className="stat-num">{selected.car?.top_speed} <small>km/h</small></span>
+                      <span className="stat-label">Velocidad Máx.</span>
+                      <span className="stat-num">
+                        {selected.car?.top_speed
+                          ? selected.car.top_speed
+                          : "--"}
+                        <small> km/h</small>
+                      </span>
                     </div>
                     <div className="stat-box">
                       <span className="stat-label">Aceleración</span>
-                      <span className="stat-num">{selected.car?.acceleration} <small>s</small></span>
+                      <span className="stat-num">
+                        {selected.car?.acceleration
+                          ? selected.car.acceleration
+                          : "--"}
+                        <small> seg</small>
+                      </span>
                     </div>
                     <div className="stat-box">
                       <span className="stat-label">Manejo</span>
-                      <span className="stat-num">{selected.car?.handling}</span>
+                      <span className="stat-num">
+                        {selected.car?.handling ? selected.car.handling : "--"}
+                        <small> /100</small>
+                      </span>
                     </div>
                   </div>
-
                   <div className="buttons-group">
-                    <button className="hud-btn back" onClick={closeDetail}>ATRÁS</button>
-                    <button className="hud-btn diag" onClick={runDiagnostics}>DIAGNÓSTICO</button>
+                    <button className="hud-btn back" onClick={closeDetail}>
+                      ATRÁS
+                    </button>
+
+                    {/* CONDICIONAL: ¿Está aceptada la tarea? */}
+                    {/* Usamos isTaskAccepted para determinar qué botones mostrar */}
+                    {!isTaskAccepted ? (
+                      <>
+                        <button
+                          className="hud-btn reject"
+                          onClick={handleRejectTask}
+                        >
+                          RECHAZAR
+                        </button>
+                        <button
+                          className="hud-btn accept"
+                          onClick={handleAcceptTask}
+                        >
+                          CONFIRMAR TAREA
+                        </button>
+                      </>
+                    ) : (
+                      <button className="hud-btn diag" onClick={runDiagnostics}>
+                        DIAGNÓSTICO
+                      </button>
+                    )}
                   </div>
                 </div>
-
               </div>
             )}
           </div>
@@ -177,4 +327,4 @@ const VehicleRepairs = () => {
   );
 };
 
-export default VehicleRepairs;  
+export default VehicleRepairs;

@@ -193,20 +193,56 @@ router.put("/habilitado/:id", (req, res) => {
 });
 
 // PUT — asignar mecanico a un turno existente
+// backend/routes/turnos.js (Modificación)
+
+// PUT — asignar/desasignar mecanico a un turno existente y cambiar estado
 router.put("/asignar/:id", express.json(), (req, res) => {
   const { id } = req.params;
-  const { mecanico_id } = req.body;
+  // Recibir opcionalmente mecanico_id (puede ser null para desasignar) y estado
+  const { mecanico_id, estado } = req.body;
 
-  if (!mecanico_id) {
-    return res.status(400).json({ success: false, error: "Falta mecanico_id" });
+  // Una validación más permisiva: debe existir el ID del turno y al menos uno de los campos a actualizar
+  if (mecanico_id === undefined && estado === undefined) {
+    return res
+      .status(400)
+      .json({ success: false, error: "Faltan campos para asignar/desasignar" });
   }
 
-  const sql = `UPDATE turnos SET mecanico_id = ? WHERE id_turno = ?`;
+  // Lógica para construir la consulta de forma dinámica (solo si deseas cambiar también el estado)
+  let fields = [];
+  let values = [];
 
-  db.run(sql, [mecanico_id, id], function (err) {
+  if (mecanico_id !== undefined) {
+    fields.push("mecanico_id = ?");
+    values.push(mecanico_id);
+  }
+
+  if (estado !== undefined) {
+    fields.push("estado = ?");
+    values.push(estado);
+  }
+
+  // Si no hay campos que actualizar, salimos
+  if (fields.length === 0) {
+    return res
+      .status(200)
+      .json({ success: true, message: "No hay cambios solicitados." });
+  }
+
+  const sql = `UPDATE turnos SET ${fields.join(", ")} WHERE id_turno = ?`;
+  values.push(id); // Agregar el id del turno al final de los valores
+
+  db.run(sql, values, function (err) {
     if (err) {
-      console.error("SQL Error asignar mecanico:", err.message);
+      console.error("SQL Error asignar/desasignar mecanico:", err.message);
       return res.status(500).json({ success: false, error: err.message });
+    }
+    // Asegurarse de que el update ocurrió
+    if (this.changes === 0) {
+      return res.status(404).json({
+        success: false,
+        error: "Turno no encontrado o no hubo cambios.",
+      });
     }
     return res.json({ success: true, updated: this.changes });
   });
@@ -277,40 +313,61 @@ router.put("/update", express.json(), (req, res) => {
   );
 });
 
+// backend/routes/turnos.js (Ruta /mecanico/:id)
+
 router.get("/mecanico/:id", (req, res) => {
   const mecanicoId = req.params.id;
 
   const sql = `
-    SELECT 
-      t.id_turno AS id,
-      t.problema,
-      t.tipo_reparacion,
-      t.estado,
-      t.fecha_creado AS fecha,
-      t.mecanico_id,
-      t.user_id,
+  SELECT 
+    t.id_turno AS id,
+    t.problema,
+    t.tipo_reparacion,
+    t.estado,
+    t.fecha_creado AS fecha,
+    t.mecanico_id,
+    t.user_id,
 
-      v.id_vehiculo,
-      v.patente,
+    v.id_vehiculo,
+    v.patente,
 
-      b.name AS car_brand,
-      m.name AS car_model,
+    b.name AS car_brand,
+    m.name AS car_model,
+    
+    -- ✨ ¡NUEVOS CAMPOS DE car_models!
+    m.top_speed,
+    m.acceleration,
+    m.handling,
+    m.image_path, -- Usamos image_path
+    m.fuel_consumption,
+    m.fuel_capacity,
+    m.service_interval,
+    m.mileage AS car_mileage, -- Alias para evitar conflicto con v.mileage (si existe)
+    m.POWER,
+    m.transmission,
+    m.base_color,
 
-      u.username AS user_name,
-      mec.username AS mecanico_name,
-      mec.rol AS mecanico_rol
-    FROM turnos t
-    LEFT JOIN vehiculos v ON t.vehicle_id = v.id_vehiculo
-    LEFT JOIN brands b ON v.id_brand = b.id_brand
-    LEFT JOIN car_models m ON v.id_model = m.id_model
-    LEFT JOIN usuarios u ON t.user_id = u.id_usuario
-    LEFT JOIN usuarios mec ON t.mecanico_id = mec.id_usuario
-    WHERE t.mecanico_id = ? AND mec.rol = 'mecanico'
-    ORDER BY t.fecha_creado DESC
+    u.username AS user_name,
+    mec.username AS mecanico_name,
+    mec.rol AS mecanico_rol
+  FROM turnos t
+  LEFT JOIN vehiculos v ON t.vehicle_id = v.id_vehiculo
+  LEFT JOIN brands b ON v.id_brand = b.id_brand
+  LEFT JOIN car_models m ON v.id_model = m.id_model
+  LEFT JOIN usuarios u ON t.user_id = u.id_usuario
+  LEFT JOIN usuarios mec ON t.mecanico_id = mec.id_usuario
+  WHERE t.mecanico_id = ? 
+  ORDER BY t.fecha_creado DESC
   `;
+  // ... (continúa el código con el mapeo)
+
+  // backend/routes/turnos.js (Mapeo de rows.map)
 
   db.all(sql, [mecanicoId], (err, rows) => {
-    if (err) return res.status(500).json({ error: err.message });
+    if (err) {
+      console.error("SQL Error en /mecanico/:id:", err.message); // Añadido para mejor debug
+      return res.status(500).json({ error: err.message });
+    }
 
     const result = rows.map((t) => ({
       id: t.id,
@@ -321,7 +378,18 @@ router.get("/mecanico/:id", (req, res) => {
         id: t.id_vehiculo,
         brand: t.car_brand,
         model: t.car_model,
-        patente: t.patente,
+        patente: t.patente, // ✨ ¡Mapeo de los nuevos campos de car_models!
+        top_speed: t.top_speed,
+        acceleration: t.acceleration,
+        handling: t.handling,
+        image_url: t.image_path, // Cambiado a image_path según tu BD
+        fuel_consumption: t.fuel_consumption,
+        fuel_capacity: t.fuel_capacity,
+        service_interval: t.service_interval,
+        mileage: t.car_mileage,
+        power: t.POWER,
+        transmission: t.transmission,
+        base_color: t.base_color,
       },
       turno: {
         id: t.id,
@@ -340,6 +408,5 @@ router.get("/mecanico/:id", (req, res) => {
     res.json(result);
   });
 });
-
 
 module.exports = router;

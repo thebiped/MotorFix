@@ -1,22 +1,16 @@
 /* RESET BÁSICO */
-body {
-  background-color: #050505;
-  margin: 0;
-  padding: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Fuente segura */
-  color: #e0e0e0;
-  overflow: hidden; /* Evita scroll de la ventana entera */
-}
-
 /* LAYOUT PRINCIPAL */
-.hud-container {
+.hud-container-reparacion {
   display: grid;
   grid-template-columns: 350px 1fr; /* Panel izquierdo fijo, derecho flexible */
   gap: 20px;
   height: 100vh;
   padding: 20px;
-  box-sizing: border-box;
   background: radial-gradient(circle at center, #1a1a1a 0%, #000000 100%);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Fuente segura */
+  color: #e0e0e0;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 /* --- LOADER --- */
@@ -223,9 +217,135 @@ body {
   box-shadow: 0 0 15px rgba(255, 42, 42, 0.4);
 }
 
+/* ======================================= */
+/* ESTILOS DEL PANEL DE DIAGNÓSTICO */
+/* ======================================= */
+
+.diagnostics-panel {
+    /* Posicionamiento y tamaño inicial (Oculto) */
+    position: fixed;
+    top: 0;
+    right: 0; /* Oculto fuera de la pantalla */
+    width: 50%; /* Ocupa la mitad de la pantalla */
+    height: 100%;
+    z-index: 100; /* Asegura que esté por encima de otros paneles */
+    transform: translateX(100%); /* Desplazamiento inicial fuera de vista */
+    transition: transform 0.4s ease-out; /* Animación de deslizamiento */
+    
+    /* Estilo HUD */
+    background-color: rgba(0, 10, 20, 0.95);
+    border-left: 2px solid #00ffff;
+    box-shadow: -5px 0 15px rgba(0, 255, 255, 0.3);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Estado abierto */
+.diagnostics-panel.open {
+    transform: translateX(0); /* Se desliza para mostrarse */
+}
+
+.dp-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #00ffff55;
+    padding-bottom: 10px;
+}
+
+.dp-header h2 {
+    color: #00ffff;
+    font-size: 1.5em;
+    text-transform: uppercase;
+}
+
+.dp-body {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding-right: 10px; /* Espacio para la barra de scroll */
+}
+
+.dp-body h3 {
+    color: #ffffff;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    border-left: 3px solid #00ff00;
+    padding-left: 10px;
+}
+
+.dp-body h4 {
+    color: #00ff00;
+    margin-top: 15px;
+    margin-bottom: 5px;
+    font-size: 1em;
+}
+
+.detail-info {
+    font-size: 0.9em;
+    margin-bottom: 5px;
+}
+
+.dp-divider {
+    border: none;
+    height: 1px;
+    background-color: #00ffff33;
+    margin: 20px 0;
+}
+
+.diagnostic-input {
+    width: 100%;
+    background-color: #1a2b3c;
+    border: 1px solid #00ffff55;
+    color: #ffffff;
+    padding: 10px;
+    font-family: 'Consolas', monospace;
+    font-size: 0.9em;
+    resize: vertical;
+    margin-bottom: 10px;
+}
+
+.hud-btn.close-diag {
+    background-color: transparent;
+    border: 1px solid #ff0000;
+    color: #ff0000;
+    padding: 5px 10px;
+    font-size: 0.8em;
+}
+
+.hud-btn.close-diag:hover {
+    background-color: #ff000033;
+}
+
+.hud-btn.save-diag {
+    width: 100%;
+    margin-top: 20px;
+    background-color: #00ff00;
+    color: #000;
+    border: none;
+}
+
+.hud-btn.save-diag:hover {
+    background-color: #00cc00;
+}
+
+/* Asegurar que el panel derecho no choque con el de diagnóstico */
+.hud-panel.right-panel {
+    /* Necesitas que el panel derecho pueda ser superpuesto por el de diagnóstico, 
+       pero que no tape el left-panel, usa un z-index menor al de diagnostics-panel (100) */
+    z-index: 50; 
+}
+
+/* Modificación si es necesario para que se vea el deslizamiento parcial, 
+   aunque con z-index ya logramos la superposición. */
+.hud-container-reparacion {
+    position: relative; /* Para que el panel fixed se posicione respecto al contenedor principal si es necesario */
+}
+
 /* MEDIA QUERIES PARA PANTALLAS PEQUEÑAS */
 @media (max-width: 1000px) {
-  .hud-container { grid-template-columns: 1fr; grid-template-rows: 1fr 1fr; height: auto; overflow: auto; }
+  .hud-container-reparacion { grid-template-columns: 1fr; grid-template-rows: 1fr 1fr; height: auto; overflow: auto; }
   .rp-body { flex-direction: column; }
   .details-card { width: 90%; margin: 20px 0 0 0; border-right: 1px solid #444; border-bottom: 2px solid #ff2a2a; }
   .rp-footer { flex-direction: column; gap: 20px; align-items: flex-start; }

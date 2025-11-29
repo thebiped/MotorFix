@@ -231,8 +231,6 @@
   width: 100%;
 }
 
-
-
 /* ======= LOADER INICIAL GLITCH ======= */
 /* This overlay is intentionally very high z-index so it never gets overlapped */
 .initial-loader-overlay {
