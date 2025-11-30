@@ -1,46 +1,34 @@
-/* vehicleFinalData.css
-   Estética: Arkham Knight + NFS
-   Contiene animaciones HUD, scanlines, glow, bordes energéticos y layout responsivo.
-*/
-
-/* ---------- Reset / base ---------- */
-* { box-sizing: border-box; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
-html, body, #root { height: 100%; }
-body {
-  margin: 0;
-  background: #050505;
-  font-family: "Orbitron", "Russo One", Arial, sans-serif;
-  color: #eee;
-  -webkit-font-smoothing: antialiased;
-}
-
 /* ---------- Container general ---------- */
 .final-container {
+  position: relative;
   width: 100vw;
   height: 100vh;
-  padding: 3.2rem;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
   align-items: stretch;
-  justify-content: space-between;
+  /* 🚀 AJUSTE CLAVE: Centra el contenido para eliminar el vacío inferior */
+  justify-content: center;
+  gap: 1.8rem;
+  padding: 1rem;
   background: radial-gradient(circle at 45% 10%, #0e0e0e 0%, #000 60%);
-  position: relative;
   overflow: hidden;
 }
 
 /* Subtle outer frame, like a HUD panel */
 .final-wrapper-border {
-  flex: 1;
+  position: relative;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 3.2rem;
-  padding: 2.2rem;
+  gap: 2.5rem;
+  flex: 1;
+  padding: 1.8rem;
   border-radius: 12px;
   border: 1px solid rgba(255, 40, 40, 0.18);
-  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.25));
-  box-shadow: 0 8px 48px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.02);
-  position: relative;
+  background: linear-gradient(180deg,
+      rgba(255, 255, 255, 0.02),
+      rgba(0, 0, 0, 0.25));
+  box-shadow: 0 8px 48px rgba(0, 0, 0, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.02);
 }
 
 /* faint neon frame */
@@ -50,20 +38,21 @@ body {
   inset: 0;
   border-radius: 12px;
   pointer-events: none;
-  box-shadow:
-    0 0 28px rgba(255, 40, 40, 0.06),
+  box-shadow: 0 0 28px rgba(255, 40, 40, 0.06),
     inset 0 0 18px rgba(255, 40, 40, 0.02);
 }
 
 /* ---------- Left panel (form) ---------- */
 .final-left-panel {
-  padding: 2rem;
+  padding: 1.6rem;
   border-radius: 8px;
-  background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.45));
-  border: 1px solid rgba(255,40,40,0.06);
+  background: linear-gradient(180deg,
+      rgba(255, 255, 255, 0.01),
+      rgba(0, 0, 0, 0.45));
+  border: 1px solid rgba(255, 40, 40, 0.06);
   display: flex;
   flex-direction: column;
-  gap: 1.6rem;
+  gap: 1.4rem;
   min-height: 420px;
   z-index: 4;
   position: relative;
@@ -72,25 +61,25 @@ body {
 /* Title */
 .final-title {
   margin: 0;
-  font-size: 1.6rem;
+  font-size: 1.4rem;
   letter-spacing: 2px;
   color: #fff;
   text-transform: uppercase;
   text-align: left;
   font-weight: 800;
-  text-shadow: 0 0 10px rgba(255,40,40,0.08);
+  text-shadow: 0 0 10px rgba(255, 40, 40, 0.08);
 }
 
 /* Group */
 .final-group {
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
+  gap: 0.5rem;
 }
 
 /* Labels */
 .final-group label {
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   color: #bfbfbf;
   letter-spacing: 1px;
   font-weight: 700;
@@ -100,22 +89,22 @@ body {
 .final-group input[type="text"],
 .final-group input[type="number"] {
   width: 100%;
-  padding: 0.9rem 0.9rem;
-  border-radius: 6px;
-  border: 1px solid rgba(255,255,255,0.06);
-  background: rgba(0,0,0,0.62);
+  padding: 0.8rem 0.8rem;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(0, 0, 0, 0.62);
   color: #fff;
   font-weight: 600;
   outline: none;
-  transition: box-shadow 0.18s ease, transform 0.08s ease, border-color 0.14s;
-  box-shadow: inset 0 -1px 0 rgba(255,255,255,0.02);
+  transition: box-shadow 0.18s ease, border-color 0.14s;
+  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.02);
 }
 
-/* Input focus */
+/* ⚙️ Input focus (Estilo HUD/Diagnóstico) */
 .final-group input:focus {
-  border-color: rgba(255,40,40,0.6);
-  box-shadow: 0 8px 28px rgba(255,40,40,0.06);
-  transform: translateY(-1px);
+  border-color: #ff2a2a;
+  box-shadow: 0 0 14px rgba(255, 40, 40, 0.2), inset 0 1px 4px rgba(0, 0, 0, 0.8);
+  transform: none;
 }
 
 /* Color picker row */
@@ -128,24 +117,43 @@ body {
 
 /* Color dots */
 .final-color-dot {
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  border: 2px solid rgba(255,255,255,0.06);
+  border: 2px solid rgba(255, 255, 255, 0.06);
   cursor: pointer;
   transition: transform 0.14s, box-shadow 0.14s, border-color 0.12s;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.6);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.6);
 }
-.final-color-dot.white { background: #fff; }
-.final-color-dot.black { background: #000; }
-.final-color-dot.red   { background: #d32; }
-.final-color-dot.blue  { background: #06f; }
-.final-color-dot.gray  { background: #666; }
 
-.final-color-dot:hover { transform: translateY(-4px) scale(1.06); }
+.final-color-dot.white {
+  background: #fff;
+}
+
+.final-color-dot.black {
+  background: #000;
+}
+
+.final-color-dot.red {
+  background: #d32;
+}
+
+.final-color-dot.blue {
+  background: #06f;
+}
+
+.final-color-dot.gray {
+  background: #666;
+}
+
+.final-color-dot:hover {
+  transform: translateY(-3px) scale(1.06);
+}
+
 .final-color-dot.active {
-  transform: scale(1.18);
-  box-shadow: 0 8px 30px rgba(255,40,40,0.12), 0 0 12px rgba(255,40,40,0.12);
+  transform: scale(1.15);
+  box-shadow: 0 8px 30px rgba(255, 40, 40, 0.12),
+    0 0 12px rgba(255, 40, 40, 0.12);
   border-color: #ff2a2a;
 }
 
@@ -153,8 +161,8 @@ body {
 .final-error {
   margin-top: 0.6rem;
   color: #ff9b9b;
-  background: rgba(255,40,40,0.03);
-  border: 1px solid rgba(255,40,40,0.12);
+  background: rgba(255, 40, 40, 0.03);
+  border: 1px solid rgba(255, 40, 40, 0.12);
   padding: 0.6rem 0.8rem;
   border-radius: 6px;
   font-weight: 700;
@@ -163,34 +171,42 @@ body {
 
 /* ---------- Right panel (vehicle image) ---------- */
 .final-right-panel {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 420px;
   position: relative;
+  min-height: 420px;
+
+  /* AJUSTE: Flexbox para apilar imagen y botones */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+
+  padding-bottom: 0;
   z-index: 3;
 }
 
 /* Car preview box */
 .final-car-box {
   width: 100%;
-  max-width: 520px;
-  height: 360px;
+  max-width: 480px;
+  height: 320px;
   border-radius: 10px;
-  border: 1px solid rgba(255,255,255,0.04);
-  background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.6));
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  background: linear-gradient(180deg,
+      rgba(255, 255, 255, 0.01),
+      rgba(0, 0, 0, 0.6));
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 24px 48px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.02);
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.02);
 }
 
 /* Placeholder text when no image */
 .final-car-box:empty::before {
   content: "IMAGEN DEL VEHÍCULO";
-  color: rgba(255,255,255,0.65);
+  color: rgba(255, 255, 255, 0.65);
   letter-spacing: 2px;
   font-weight: 700;
 }
@@ -199,11 +215,11 @@ body {
 .final-car-img {
   width: 92%;
   height: auto;
-  max-height: 340px;
+  max-height: 300px;
   object-fit: contain;
-  filter: drop-shadow(0 30px 44px rgba(0,0,0,0.7));
+  filter: drop-shadow(0 30px 44px rgba(0, 0, 0, 0.7));
   transform-origin: center center;
-  transition: transform 0.6s cubic-bezier(.2,.9,.3,1), opacity 0.5s;
+  transition: transform 0.6s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.5s;
 }
 
 /* small hover parallax */
@@ -211,40 +227,45 @@ body {
   transform: scale(1.02) translateY(-6px);
 }
 
-/* ---------- Actions (footer) ---------- */
+/* ---------- Actions (buttons inside panel) ---------- */
 .final-actions {
+  width: 100%;
   display: flex;
   justify-content: flex-end;
-  gap: 1rem;
-  margin-top: 1.4rem;
+  /* Mantener los botones a la derecha del panel */
+  gap: 0.8rem;
+  margin-top: 1.2rem;
+  padding-top: 0.5rem;
 }
 
-/* Buttons */
+/* ⏹️ Buttons (Cuadrados) */
 .final-btn {
-  padding: 0.9rem 1.4rem;
-  border-radius: 10px;
-  font-weight: 900;
-  letter-spacing: 1px;
-  border: 1px solid rgba(255,255,255,0.06);
+  padding: 0.8rem 1.2rem;
+  border-radius: 4px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  font-size: 0.95rem;
+  border: 1px solid rgba(255, 255, 255, 0.06);
   background: transparent;
   color: #fff;
   cursor: pointer;
-  transform: skewX(-8deg);
+  transform: none;
   transition: all 0.18s ease;
   display: inline-flex;
   align-items: center;
-  gap: 0.8rem;
+  gap: 0.6rem;
 }
 
 /* Secondary */
 .final-btn.secondary {
-  background: rgba(255,255,255,0.03);
+  background: rgba(255, 255, 255, 0.03);
   color: #dcdcdc;
-  border-color: rgba(255,255,255,0.06);
+  border-color: rgba(255, 255, 255, 0.06);
 }
+
 .final-btn.secondary:hover {
-  transform: skewX(-8deg) scale(1.02);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+  transform: scale(1.02);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
 }
 
 /* Primary (red) */
@@ -252,18 +273,20 @@ body {
   background: linear-gradient(90deg, #ff2a2a, #ff4646);
   border-color: #ff2a2a;
   color: #000;
-  box-shadow: 0 10px 38px rgba(255,40,40,0.12), 0 0 18px rgba(255,40,40,0.06);
+  box-shadow: 0 10px 38px rgba(255, 40, 40, 0.12),
+    0 0 18px rgba(255, 40, 40, 0.06);
 }
+
 .final-btn.primary:hover {
-  transform: skewX(-8deg) scale(1.03);
-  box-shadow: 0 12px 46px rgba(255,40,40,0.18);
+  transform: scale(1.03);
+  box-shadow: 0 12px 46px rgba(255, 40, 40, 0.18);
 }
 
 /* ---------- Loading overlay (HUD) ---------- */
 .final-loader-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.92);
+  background: rgba(0, 0, 0, 0.92);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -275,11 +298,11 @@ body {
 .final-loader-box {
   width: 560px;
   max-width: 90%;
-  background: rgba(10,10,10,0.88);
+  background: rgba(10, 10, 10, 0.88);
   padding: 2.2rem;
   border-radius: 10px;
-  border: 1px solid rgba(255,40,40,0.16);
-  box-shadow: 0 0 40px rgba(255,20,20,0.06);
+  border: 1px solid rgba(255, 40, 40, 0.16);
+  box-shadow: 0 0 40px rgba(255, 20, 20, 0.06);
   text-align: center;
   animation: popIn 360ms ease forwards;
 }
@@ -291,7 +314,7 @@ body {
   letter-spacing: 2px;
   margin-bottom: 1rem;
   font-size: 1.05rem;
-  text-shadow: 0 0 12px rgba(255,50,50,0.2);
+  text-shadow: 0 0 12px rgba(255, 50, 50, 0.2);
   animation: flicker 2s infinite;
 }
 
@@ -299,10 +322,10 @@ body {
 .final-loader-bar {
   width: 100%;
   height: 12px;
-  background: rgba(255,255,255,0.06);
+  background: rgba(255, 255, 255, 0.06);
   border-radius: 6px;
   overflow: hidden;
-  border: 1px solid rgba(255,40,40,0.08);
+  border: 1px solid rgba(255, 40, 40, 0.08);
 }
 
 /* Loader fill (progress) */
@@ -310,7 +333,7 @@ body {
   width: 0%;
   height: 100%;
   background: linear-gradient(90deg, #ff2a2a, #ff6b6b);
-  box-shadow: 0 0 20px rgba(255,40,40,0.12);
+  box-shadow: 0 0 20px rgba(255, 40, 40, 0.12);
   transition: width 120ms linear;
 }
 
@@ -330,7 +353,8 @@ body {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background-image: linear-gradient(rgba(255,255,255,0.01) 1px, transparent 1px);
+  background-image: linear-gradient(rgba(255, 255, 255, 0.01) 1px,
+      transparent 1px);
   background-size: 100% 3px;
   opacity: 0.06;
 }
@@ -350,15 +374,34 @@ body {
 
 /* HUD flicker / subtle */
 @keyframes flicker {
-  0% { opacity: 1; text-shadow: 0 0 12px rgba(255,50,50,0.28); }
-  50% { opacity: 0.82; text-shadow: 0 0 6px rgba(255,30,30,0.12); transform: translateY(-1px); }
-  100% { opacity: 1; text-shadow: 0 0 12px rgba(255,50,50,0.28); }
+  0% {
+    opacity: 1;
+    text-shadow: 0 0 12px rgba(255, 50, 50, 0.28);
+  }
+
+  50% {
+    opacity: 0.82;
+    text-shadow: 0 0 6px rgba(255, 30, 30, 0.12);
+    transform: translateY(-1px);
+  }
+
+  100% {
+    opacity: 1;
+    text-shadow: 0 0 12px rgba(255, 50, 50, 0.28);
+  }
 }
 
 /* popIn */
 @keyframes popIn {
-  from { opacity: 0; transform: scale(0.96); }
-  to   { opacity: 1; transform: scale(1); }
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 /* ---------- Decorative animated borders ---------- */
@@ -375,62 +418,175 @@ body {
 /* left */
 .final-wrapper-border .decor-left {
   left: 8px;
-  background: linear-gradient(180deg, rgba(255,40,40,0.08), transparent 40%);
+  background: linear-gradient(180deg, rgba(255, 40, 40, 0.08), transparent 40%);
   border-radius: 6px;
-  box-shadow: 0 0 30px rgba(255,40,40,0.04);
+  box-shadow: 0 0 30px rgba(255, 40, 40, 0.04);
 }
 
 /* right */
 .final-wrapper-border .decor-right {
   right: 8px;
-  background: linear-gradient(180deg, transparent 60%, rgba(255,40,40,0.06));
+  background: linear-gradient(180deg, transparent 60%, rgba(255, 40, 40, 0.06));
   border-radius: 6px;
-  box-shadow: 0 0 30px rgba(255,40,40,0.04);
+  box-shadow: 0 0 30px rgba(255, 40, 40, 0.04);
 }
 
 /* ---------- Entry animations for individual pieces ---------- */
 .final-left-panel,
-.final-right-panel,
-.final-actions {
+.final-right-panel {
   opacity: 0;
   transform: translateY(10px) rotateX(0.01deg);
-  animation: fadeUp .7s forwards ease;
+  animation: fadeUp 0.7s forwards ease;
 }
-.final-left-panel { animation-delay: 0.12s; }
-.final-right-panel { animation-delay: 0.24s; }
-.final-actions { animation-delay: 0.36s; }
+
+.final-left-panel {
+  animation-delay: 0.12s;
+}
+
+.final-right-panel {
+  animation-delay: 0.24s;
+}
+
+/* RE-APLICAR ANIMACIÓN a los botones dentro del panel */
+.final-right-panel .final-actions {
+  animation-delay: 0.36s;
+}
 
 @keyframes fadeUp {
-  0% { opacity: 0; transform: translateY(14px); }
-  100% { opacity: 1; transform: translateY(0); }
+  0% {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* ---------- Stats bars animation inside card (if used) ---------- */
-.stat-row .fill { transition: width 1s cubic-bezier(.2,.9,.3,1); }
-
-/* ---------- Accessibility ---------- */
-button:focus, input:focus, .final-color-dot:focus { outline: 2px solid rgba(255,40,40,0.18); outline-offset: 2px; }
-
-/* ---------- Responsiveness ---------- */
-@media (max-width: 1100px) {
-  .final-wrapper-border { grid-template-columns: 1fr; padding: 1.6rem; gap: 1.4rem; }
-  .final-car-box { max-width: 100%; height: 320px; }
-  .final-left-panel { min-height: auto; }
+.stat-row .fill {
+  transition: width 1s cubic-bezier(0.2, 0.9, 0.3, 1);
 }
 
+/* ---------- Accessibility ---------- */
+button:focus,
+input:focus,
+.final-color-dot:focus {
+  outline: 2px solid rgba(255, 40, 40, 0.18);
+  outline-offset: 2px;
+}
+
+/* -------------------------------------------------------------------------------------- */
+/* ---------------------------------- Responsiveness ------------------------------------ */
+/* -------------------------------------------------------------------------------------- */
+
+/* Ajuste para pantallas 4K o grandes (más de 2000px) */
+@media (min-width: 2000px) {
+  .final-container {
+    /* Centra el contenido en pantallas ultra grandes */
+    justify-content: center;
+    padding: 3rem;
+  }
+
+  .final-wrapper-border {
+    max-width: 1800px;
+    /* Limita el ancho máximo del contenedor principal */
+    gap: 3.5rem;
+    /* Aumenta la separación entre columnas */
+    padding: 2.5rem;
+  }
+
+  /* Escalado de fuentes y elementos para no parecer demasiado pequeños */
+  .final-title {
+    font-size: 1.8rem;
+  }
+
+  .final-group label {
+    font-size: 0.95rem;
+  }
+
+  .final-group input[type="text"],
+  .final-group input[type="number"] {
+    padding: 1rem 1rem;
+    font-size: 1.1rem;
+  }
+
+  .final-btn {
+    padding: 1rem 1.6rem;
+    font-size: 1.1rem;
+  }
+
+  .final-car-box {
+    max-width: 600px;
+    height: 400px;
+  }
+}
+
+/* Tablets / Vertical Layout (max-width: 1100px) */
+@media (max-width: 1100px) {
+  .final-wrapper-border {
+    grid-template-columns: 1fr;
+    padding: 1.4rem;
+    gap: 1.2rem;
+  }
+
+  .final-car-box {
+    max-width: 100%;
+    height: 300px;
+  }
+
+  .final-left-panel {
+    min-height: auto;
+  }
+
+  .final-right-panel {
+    min-height: auto;
+  }
+}
+
+/* Móviles (max-width: 700px) */
 @media (max-width: 700px) {
-  .final-container { padding: 1.2rem; }
-  .final-title { font-size: 1.2rem; }
-  .final-actions { justify-content: center; gap: 0.6rem; }
-  .final-btn { padding: 0.7rem 1rem; font-size: 0.9rem; }
+  .final-container {
+    padding: 0.8rem;
+  }
+
+  .final-title {
+    font-size: 1.1rem;
+  }
+
+  /* Ajuste de botones para móvil: centrar */
+  .final-actions {
+    justify-content: center;
+    gap: 0.6rem;
+  }
+
+  .final-btn {
+    padding: 0.6rem 0.9rem;
+    font-size: 0.85rem;
+  }
 }
 
 /* ---------- Extra polish: micro interactions ---------- */
-.final-group input::placeholder { color: rgba(255,255,255,0.28); font-weight: 600; letter-spacing: .6px; }
-.final-btn svg { transform: translateY(1px); }
+.final-group input::placeholder {
+  color: rgba(255, 255, 255, 0.28);
+  font-weight: 600;
+  letter-spacing: 0.6px;
+}
+
+.final-btn svg {
+  transform: translateY(1px);
+}
 
 /* ---------- Utility classes for dev ---------- */
-.hidden { display: none !important; }
-.center { display: flex; align-items: center; justify-content: center; }
+.hidden {
+  display: none !important;
+}
+
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
 /* ---------- End of file - vehicleFinalData.css ---------- */

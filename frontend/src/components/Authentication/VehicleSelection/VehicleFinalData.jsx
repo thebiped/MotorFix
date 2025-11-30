@@ -91,16 +91,16 @@ const VehicleFinalData = () => {
 
   // Guardar vehículo con el nuevo flujo
   const saveVehicle = () => {
-    const storedUserId = localStorage.getItem("temp_user_id");
-    const user_id = storedUserId ? parseInt(storedUserId, 10) : 1; 
+    const storedUserId = localStorage.getItem("temp_user_id");
+    const user_id = storedUserId ? parseInt(storedUserId, 10) : 1;
 
-    fetch("http://localhost:3001/api/vehiculos/guardar", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        user_id, 
-        id_brand: brand.id_brand,
-        id_model: model.id_model,
+    fetch("http://localhost:3001/api/vehiculos/guardar", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        user_id,
+        id_brand: brand.id_brand,
+        id_model: model.id_model,
         patente: form.patente,
         mileage: form.kilometraje,
         service_interval: form.serviceInterval,
@@ -127,7 +127,7 @@ const VehicleFinalData = () => {
   };
 
   // ============================================================
-  //  HTML (estructura original restaurada)
+  //  HTML (estructura con botones movidos)
   // ============================================================
   return (
     <div className="final-container">
@@ -214,7 +214,7 @@ const VehicleFinalData = () => {
           {error && <div className="final-error">{error}</div>}
         </div>
 
-        {/* PANEL DERECHO — Imagen */}
+        {/* PANEL DERECHO — Imagen + Botones */}
         <div className="final-right-panel">
           <div className="final-car-box">
             <img
@@ -223,19 +223,21 @@ const VehicleFinalData = () => {
               className="final-car-img"
             />
           </div>
+
+          {/* ACCIONES MOVILIZADAS AQUÍ */}
+          <div className="final-actions in-panel">
+            <button className="final-btn secondary" onClick={() => navigate(-1)}>
+              <ArrowLeft size={20} /> ATRÁS
+            </button>
+
+            <button className="final-btn primary" onClick={handleSubmit}>
+              SELECCIONAR <Check size={20} />
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* ACCIONES */}
-      <div className="final-actions">
-        <button className="final-btn secondary" onClick={() => navigate(-1)}>
-          <ArrowLeft size={20} /> ATRÁS
-        </button>
-
-        <button className="final-btn primary" onClick={handleSubmit}>
-          SELECCIONAR <Check size={20} />
-        </button>
-      </div>
+      {/* Se eliminó el footer final */}
     </div>
   );
 };
