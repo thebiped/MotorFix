@@ -264,58 +264,6 @@ const ModelSelector = ({ brand, onBack, onVehicleSelect }) => {
             />
             <div className="car-shadow" />
           </div>
-
-          <div className="car-stats">
-            <div className="stat-row">
-              <span className="label">VEL</span>
-              <div className="bar">
-                <div
-                  className="fill"
-                  style={{
-                    width: `${Math.min(current.top_speed || 0, 300) / 3}%`,
-                  }}
-                />
-              </div>
-              <div className="stat-value">
-                {current.top_speed ? `${current.top_speed} km/h` : "--"}
-              </div>
-            </div>
-
-            <div className="stat-row">
-              <span className="label">ACEL</span>
-              <div className="bar">
-                <div
-                  className="fill"
-                  style={{
-                    width: `${
-                      current.acceleration
-                        ? Math.max(
-                            0,
-                            Math.min(1, (7 - current.acceleration) / 7)
-                          ) * 100
-                        : 0
-                    }%`,
-                  }}
-                />
-              </div>
-              <div className="stat-value">
-                {current.acceleration ? `${current.acceleration}s` : "--"}
-              </div>
-            </div>
-
-            <div className="stat-row">
-              <span className="label">MAN</span>
-              <div className="bar">
-                <div
-                  className="fill"
-                  style={{ width: `${current.handling || 0}%` }}
-                />
-              </div>
-              <div className="stat-value">
-                {current.handling ? `${current.handling}/100` : "--"}
-              </div>
-            </div>
-          </div>
         </div>
 
         <button
@@ -329,30 +277,55 @@ const ModelSelector = ({ brand, onBack, onVehicleSelect }) => {
       </div>
 
       <footer className="model-footer">
-        <div className="config-panel">
-          <div className="config-group">
-            <label>COLOR</label>
-            <div className="color-picker">
-              {["white", "black", "red", "blue"].map((c) => (
-                <div
-                  key={c}
-                  className={`color-dot ${c} ${
-                    selectedColor === c ? "active" : ""
-                  }`}
-                  onClick={() => setSelectedColor(c)}
-                />
-              ))}
+        <div className="car-stats">
+          <div className="stat-row">
+            <span className="label">VEL</span>
+            <div className="bar">
+              <div
+                className="fill"
+                style={{
+                  width: `${Math.min(current.top_speed || 0, 300) / 3}%`,
+                }}
+              />
+            </div>
+            <div className="stat-value">
+              {current.top_speed ? `${current.top_speed} km/h` : "--"}
             </div>
           </div>
 
-          <div className="config-group">
-            <label>MATRÍCULA</label>
-            <input
-              type="text"
-              placeholder="Ej: NFS-2024"
-              value={plate}
-              onChange={(e) => setPlate(e.target.value)}
-            />
+          <div className="stat-row">
+            <span className="label">ACEL</span>
+            <div className="bar">
+              <div
+                className="fill"
+                style={{
+                  width: `${
+                    current.acceleration
+                      ? Math.max(
+                          0,
+                          Math.min(1, (7 - current.acceleration) / 7)
+                        ) * 100
+                      : 0
+                  }%`,
+                }}
+              />
+            </div>
+            <div className="stat-value">
+              {current.acceleration ? `${current.acceleration}s` : "--"}
+            </div>
+          </div>
+
+          <div className="stat-row">
+            <span className="label">MAN</span>
+            <div className="bar">
+              <div
+                className="fill"
+                style={{ width: `${current.handling || 0}%` }}
+              />
+            </div>
+            <div className="stat-value">
+              {current.handling ? `${current.handling}/100` : "--"}
+            </div>
           </div>
         </div>
 
@@ -364,37 +337,20 @@ const ModelSelector = ({ brand, onBack, onVehicleSelect }) => {
           <button
             className="nfs-btn primary"
             onClick={() => {
-              if (!plate) return alert("Ingresa una matrícula");
+              const vehicleData = {
+                brand: brand,
+                model: current,
+              };
 
-              // 🚀 AQUÍ SE HACE EL FETCH DIRECTO
-              const user_id = 1; // si no existe, lo definimos acá
-              const mileage = 0;
+              localStorage.setItem(
+                "vehicle_selection",
+                JSON.stringify(vehicleData)
+              );
 
-              fetch("http://localhost:3001/api/vehiculos/guardar", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                  user_id,
-                  id_brand: brand.id_brand,
-                  id_model: current.id_model,
-                  patente: plate,
-                  color: selectedColor,
-                  mileage,
-                }),
-              })
-                .then((res) => res.json())
-                .then((data) => {
-                  if (data.success) {
-                    console.log("Vehículo guardado", data);
-                    navigate("/loading"); // 🚀 Redirige al login
-                  } else {
-                    alert("Error guardando vehículo: " + data.error);
-                  }
-                })
-                .catch(console.error);
+              navigate("/vehicle-final");
             }}
           >
-            SELECCIONAR <Check size={18} />
+            SELECCIONAR <Check size={18} /> 
           </button>
         </div>
       </footer>

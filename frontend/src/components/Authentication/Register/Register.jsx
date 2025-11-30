@@ -106,11 +106,9 @@ const Register = () => {
     if (progress >= 70 && progress < 100)
       dynamicMessage = "Conectando con el servidor…";
 
-    if (progress >= 100)
-      dynamicMessage = "";
+    if (progress >= 100) dynamicMessage = "";
 
     setLoaderMessage(dynamicMessage);
-
   }, [loading, progress, rotTextIndex]);
 
   /* On Submit */
@@ -130,8 +128,14 @@ const Register = () => {
     }
 
     try {
-      await api.post("/auth/register", { username, email, password });
-
+      // 1. Realizar el post
+      const response = await api.post("/auth/register", {
+        username,
+        email,
+        password,
+      }); // 2. CAPTURAR EL ID DEVUELTO
+      const newUserId = response.data.user.id; // 3. ALMACENAR EL ID PARA EL SIGUIENTE PASO
+      localStorage.setItem("temp_user_id", newUserId);
       setLoading(true);
       setSuccessMessage("");
       setErrorMessage("");
@@ -144,12 +148,10 @@ const Register = () => {
         setSuccessMessage("Registro completado — Bienvenido al sistema.");
 
         setTimeout(() => {
-          setLoading(false);
+          setLoading(false); // Navegamos al siguiente paso
           navigate("/vehicle-selection");
         }, SUCCESS_HOLD);
-
       }, LOADING_DURATION + 120);
-
     } catch (err) {
       triggerError(err.response?.data?.message || "Error en el registro.");
     }
@@ -172,7 +174,6 @@ const Register = () => {
         setLoading(false);
         setErrorMessage("");
       }, ERROR_HOLD);
-
     }, LOADING_DURATION - 120);
   };
 
@@ -187,7 +188,6 @@ const Register = () => {
       {loading && (
         <div className="initial-register-overlay">
           <div className="initial-register-content arkham">
-
             {/* TEXTO PRINCIPAL */}
             {loaderMessage && (
               <div className="register-glitch-title" data-text={loaderMessage}>

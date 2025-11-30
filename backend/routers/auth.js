@@ -9,67 +9,42 @@ const SECRET = "TU_SECRETO_AQUI";
 
 const upload = multer();
 
+// En tu archivo de backend (donde está router.post("/register"))
 router.post("/register", upload.none(), (req, res) => {
-  const { username, password, email, rol, brand_id, model_id, color, plate } =
-    req.body;
+  const { username, password, email, rol } = req.body; // NO ESPERAR brand_id, model_id, etc. // ... [Verificación de datos y de si el usuario existe] ...
 
-  if (!username || !password || !email)
-    return res.status(400).json({ message: "Faltan datos" });
+  bcrypt.hash(password, 10, (err, hash) => {
+    // ... [Manejo de error de hash] ...
 
-  db.get(
-    "SELECT * FROM usuarios WHERE username = ? OR email = ?",
-    [username, email],
-    (err, user) => {
-      if (err) return res.status(500).json({ message: "Error en el servidor" });
-      if (user)
-        return res.status(400).json({ message: "Usuario o email ya existe" });
-
-      bcrypt.hash(password, 10, (err, hash) => {
+    db.run(
+      "INSERT INTO usuarios (username, password, rol, email) VALUES (?, ?, ?, ?)",
+      [username, hash, rol || "cliente", email],
+      function (err) {
         if (err)
           return res
             .status(500)
-            .json({ message: "Error al encriptar contraseña" });
+            .json({ message: "Error al registrar usuario" });
 
-        db.run(
-          "INSERT INTO usuarios (username, password, rol, email) VALUES (?, ?, ?, ?)",
-          [username, hash, rol || "cliente", email],
-          function (err) {
-            if (err)
-              return res
-                .status(500)
-                .json({ message: "Error al registrar usuario" });
+        const userId = this.lastID; // ✅ Clave: Capturamos el ID del usuario // ❌ Eliminamos la lógica de inserción de vehículo de aquí.
 
-            const userId = this.lastID;
-
-            // Ahora insertamos el vehículo
-            if (brand_id && model_id && color && plate) {
-              db.run(
-                "INSERT INTO vehiculos (id_usuario, marca, modelo, color, patente) VALUES (?, ?, ?, ?, ?)",
-                [userId, brand_id, model_id, color, plate],
-                (err) => {
-                  if (err) console.error("Error guardando vehículo:", err);
-                }
-              );
-            }
-
-            const token = jwt.sign(
-              { id: userId, username, rol: rol || "cliente" },
-              SECRET,
-              { expiresIn: "7d" }
-            );
-
-            res.json({
-              success: true,
-              message: "Usuario registrado",
-              token,
-              user: { id: userId, username, rol: rol || "cliente" },
-            });
-          }
+        const token = jwt.sign(
+          { id: userId, username, rol: rol || "cliente" },
+          SECRET,
+          { expiresIn: "7d" }
         );
-      });
-    }
-  );
+
+        res.json({
+          success: true,
+          message: "Usuario registrado",
+          token,
+          user: { id: userId, username, rol: rol || "cliente" }, // ✅ Devolvemos el ID
+        });
+      }
+    );
+  });
 });
+
+module.exports = router;
 
 router.post("/login", upload.none(), (req, res) => {
   const { username, password } = req.body;

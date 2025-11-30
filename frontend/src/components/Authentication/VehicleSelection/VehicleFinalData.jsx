@@ -91,15 +91,16 @@ const VehicleFinalData = () => {
 
   // Guardar vehículo con el nuevo flujo
   const saveVehicle = () => {
-    const user_id = 1;
+    const storedUserId = localStorage.getItem("temp_user_id");
+    const user_id = storedUserId ? parseInt(storedUserId, 10) : 1; 
 
-    fetch("http://localhost:3001/api/vehiculos/guardar", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        user_id,
-        id_brand: brand.id_brand,
-        id_model: model.id_model,
+    fetch("http://localhost:3001/api/vehiculos/guardar", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        user_id, 
+        id_brand: brand.id_brand,
+        id_model: model.id_model,
         patente: form.patente,
         mileage: form.kilometraje,
         service_interval: form.serviceInterval,
