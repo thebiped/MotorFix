@@ -89,7 +89,7 @@ router.get("/all", (req, res) => {
     const formattedData = rows.map((t) => ({
       id_turno: t.id,
       estado: t.estado,
-      prioridad: "normal", 
+      prioridad: "normal",
       tipo_reparacion: t.tipo_reparacion,
 
       user: {
@@ -485,17 +485,15 @@ router.put("/completar/:id", (req, res) => {
 router.put("/diagnostico/:id", (req, res) => {
   const id_turno = req.params.id;
   const { initialObservation, scannerResults, recommendedActions } = req.body;
-
-  // 🛑 Se asume que estos campos están en la tabla `turnos` como en tu ruta `turnos/update`
+  // ✅ CORRECCIÓN ROBUSTA: Se usan comillas dobles para los nombres de las columnas
   const sql = `
-    UPDATE turnos
-    SET 
-        diagnostico_observacion_inicial = ?,
-        diagnostico_resultados_scanner = ?,
-        diagnostico_acciones_recomendadas = ?
-    WHERE id_turno = ?
-  `;
-
+UPDATE reparaciones
+SET 
+"diagnostico_observacion_inicial" = ?,
+"diagnostico_resultados_scanner" = ?,
+"diagnostico_acciones_recomendadas" = ?
+WHERE "turno_id" = ?
+`;
   db.run(
     sql,
     [initialObservation, scannerResults, recommendedActions, id_turno],
@@ -504,11 +502,14 @@ router.put("/diagnostico/:id", (req, res) => {
         console.error("Error al guardar el diagnóstico:", err.message);
         return res.status(500).json({ error: err.message });
       }
-
       if (this.changes === 0) {
-        return res.status(404).json({ message: "Turno no encontrado." });
+        return res
+          .status(404)
+          .json({
+            message:
+              "Registro de reparación no encontrado. Asegúrese de que el turno esté 'en proceso'.",
+          });
       }
-
       res.json({
         message: "Diagnóstico guardado exitosamente.",
         changes: this.changes,
