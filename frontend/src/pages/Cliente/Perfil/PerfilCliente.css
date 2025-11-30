@@ -1,19 +1,19 @@
-/* --- Contenedor Principal --- */
+/* --- Contenedor Principal HUD/NFS --- */
 .perfil-cliente-container {
   color: #fff;
-  background: linear-gradient(to bottom, #5d0000 0%, #1e0000 100%);
+  background: linear-gradient(to bottom, #1e0000 0%, #000000 100%);
   min-height: 100vh;
-  font-family: Arial, sans-serif; /* Puedes usar la fuente que usa tu proyecto */
+  font-family: "Arial", sans-serif;
 }
 
-/* --- Encabezado de Perfil (Header) --- */
+/* --- Encabezado de Perfil (Mantenido) --- */
 .profile-header {
   position: relative;
   margin-bottom: 20px;
 }
 
 .profile-banner {
-  height: 250px; /* Aumentado para mejor visualización */
+  height: 250px;
   overflow: hidden;
 }
 
@@ -27,38 +27,37 @@
 /* Contenedor para alinear la foto y la info */
 .profile-info-and-picture {
   position: absolute;
-  bottom: -150px; /* Posicionado para que la foto sobresalga del banner */
+  bottom: -150px;
   left: 50%;
   transform: translateX(-50%);
-  width: 80%; /* Ancho para contener la foto y la info */
+  width: 80%;
   display: flex;
-  align-items: flex-end; /* Alinea los elementos a la parte inferior del contenedor */
+  align-items: flex-end;
   gap: 30px;
 }
 
 .profile-picture-container {
   background-color: #2a2a2a;
   border-radius: 50%;
-  padding: 7px; /* Borde más grueso */
-  border: 3px solid #b20000; /* Borde rojo destacado */
+  padding: 7px;
+  /* Borde rojo brillante para el efecto HUD */
+  border: 3px solid #b20000;
+  box-shadow: 0 0 15px rgba(178, 0, 0, 0.7); /* Glow */
   position: relative;
-  top: -20px; /* Ajuste fino */
+  top: -20px;
 }
 
 .profile-picture {
   background-color: #fff;
-  width: 180px; /* Foto más grande */
+  width: 180px;
   height: 180px;
   border-radius: 50%;
-  /* Estilos para el placeholder (si no hay imagen) */
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  /* (Mantiene el placeholder si no hay imagen) */
 }
 
 .profile-header-info {
-  flex-grow: 1; /* Ocupa el espacio restante */
-  padding-bottom: 20px; /* Espaciado con el borde inferior del contenedor */
+  flex-grow: 1;
+  padding-bottom: 20px;
 }
 
 .header-info {
@@ -70,7 +69,7 @@
 
 .info h2 {
   margin: 0;
-  font-size: 2.2rem; /* Fuente de título más grande */
+  font-size: 2.2rem;
   font-weight: 700;
 }
 
@@ -86,52 +85,59 @@
   font-size: 0.9rem;
   color: #aaa;
   line-height: 1.4;
-  max-width: 600px; /* Limita el ancho del texto */
+  max-width: 600px;
 }
 
 .edit-profile-btn {
   height: 40px;
   padding: 8px 15px;
   font-weight: bold;
-  color: #000;
+  color: #fff;
   background-color: #fff;
   border: none;
-  border-radius: 6px; /* Botón redondeado como en la imagen */
+  border-radius: 4px;
   transition: background-color 0.2s;
   cursor: pointer;
 }
 
 .edit-profile-btn:hover {
-  background-color: #eee;
+  background-color: #ff000057;
 }
 
-/* --- Sección de Contenido (Estadísticas, Navegación, Contenido) --- */
+/* --- Sección de Contenido (Estadísticas y Panel) --- */
 .profile-content-section {
-  padding-top: 200px; /* Empuja el contenido hacia abajo para dejar espacio al header */
+  padding-top: 200px;
 }
 
-/* --- Estadísticas --- */
+/* --- Estadísticas (Con iconos) --- */
 .profile-stats-container {
   display: flex;
   justify-content: center;
-  margin-bottom: 30px;
+  margin-bottom: 50px; /* Aumentado para separación */
 }
 
 .profile-stats {
-  width: 80%; /* Mismo ancho que el contenido principal */
+  width: 80%;
   display: flex;
   justify-content: space-around;
   gap: 50px;
   padding: 20px 40px;
+  /* Estilo de panel de estadísticas (líneas divisorias) */
+  border-bottom: 2px solid rgba(178, 0, 0, 0.5);
+  border-top: 2px solid rgba(178, 0, 0, 0.5);
+  box-shadow: 0 0 10px rgba(178, 0, 0, 0.3);
 }
 
 .stat-item {
   text-align: center;
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .stat-item h3 {
-  margin: 0;
+  margin: 5px 0 0;
   font-size: 1.8rem;
   font-weight: bold;
   color: #fff;
@@ -143,41 +149,7 @@
   font-size: 0.9rem;
 }
 
-/* --- Navegación de Pestañas --- */
-.profile-nav {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  margin: 24px 0;
-  padding: 0 68px;
-}
-
-.profile-nav button {
-  width: 100%;
-  margin: 0 5px;
-  padding: 10px 20px;
-  font-size: 1rem;
-  font-weight: 600;
-  color: #fff;
-  background-color: transparent;
-  border-radius: 5px;
-  border: none;
-  transition: background-color 0.2s, color 0.2s;
-  cursor: pointer;
-}
-
-.profile-nav button:hover:not(.active) {
-  background-color: rgba(255, 255, 255, 0.1);
-}
-
-.profile-nav button.active {
-  background-color: #b20000;
-  border: none;
-  outline: none;
-  box-shadow: 0 0 10px rgba(178, 0, 0, 0.5); /* Sombra para el activo */
-}
-
-/* --- Contenido de Pestañas --- */
+/* --- Contenedor del Panel de Contenido --- */
 .profile-content {
   display: flex;
   justify-content: center;
@@ -185,444 +157,167 @@
 }
 
 .profile-content-cont {
-  width: 80%; /* Ajustado al ancho de 80% */
-  max-width: 1000px; /* Límite para pantallas grandes */
+  width: 80%;
+  max-width: 1000px;
   padding: 30px;
-  background: #5d0000;
-  border-radius: 8px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+  /* Estilo de Panel de HUD */
+  background: rgba(4, 0, 0, 0.75);
+  border: 1px solid rgba(178, 0, 0, 0.3);
+  border-radius: 4px;
+  box-shadow: 0 0 20px rgba(178, 0, 0, 0.4);
+  backdrop-filter: blur(2px);
   animation: fadeIn 0.4s ease-out;
 }
 
-/* === 1. Información Personal === */
-.profile-personal-info-content {
+/* Título de la sección de Panel */
+.content-title {
+  display: flex;
+  align-items: center;
+  margin-bottom: 25px;
+  padding-bottom: 10px;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.3);
+}
+
+.content-title h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #b20000;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* === Panel de Seguridad === */
+.profile-security-panel {
   display: grid;
+  gap: 30px;
+}
+
+.profile-security-panel .security-item {
+  padding: 25px;
+  background-color: rgba(178, 0, 0, 0.1); /* Fondo sutil rojo oscuro */
+  border-radius: 4px;
+  border-left: 5px solid #b20000; /* Borde rojo fuerte */
+  box-shadow: 0 0 8px rgba(178, 0, 0, 0.3); /* Sombra HUD sutil */
+  transition: all 0.2s ease-in-out;
+  display: flex;
+  align-items: center;
   gap: 20px;
 }
 
-.profile-personal-info-content .profile-info-item {
-  display: flex;
-  align-items: center;
-  padding: 15px;
-  background-color: rgba(0, 0, 0, 0.1);
-  border-radius: 6px;
-  border-left: 3px solid transparent; /* Base para el efecto */
-  transition: all 0.3s ease;
+.profile-security-panel .security-item:hover {
+  background-color: rgba(178, 0, 0, 0.25);
+  transform: translateY(-2px);
+  border-left-color: #fff; /* Cambio de color al hacer hover */
 }
 
-.profile-personal-info-content .profile-info-item:hover {
-  border-left-color: #b20000; /* Muestra el color rojo al hacer hover */
-  background-color: rgba(0, 0, 0, 0.2);
-  transform: translateX(5px); /* Pequeño desplazamiento de HUD */
-  box-shadow: 0 0 5px rgba(178, 0, 0, 0.3);
+.security-icon {
+  min-width: 20px;
+  color: #b20000;
 }
 
-.info-icon-container {
-  background-color: #b20000;
-  padding: 8px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: 15px;
+.danger-icon {
+  color: #ff0000 !important; /* Ícono de peligro */
 }
 
-.profile-personal-info-content .info-icon {
-  color: #fff;
-}
-
-.info-details {
+.security-details {
   flex-grow: 1;
 }
 
-.info-value {
-  margin: 0;
-  font-size: 1rem;
-  font-weight: 600;
-}
-
-.info-label {
-  margin: 0;
-  font-size: 0.8rem;
-  color: #aaa;
-}
-
-.profile-personal-info-content .edit-info-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px;
-  background-color: #2a2a2a;
+.profile-security-panel h4 {
   color: #fff;
-  border: none;
-  border-radius: 50%;
-  transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
-  cursor: pointer;
+  margin: 0;
+  font-size: 1.2rem;
 }
 
-.profile-personal-info-content .edit-info-btn:hover {
-  background-color: #b20000;
-  transform: scale(1.1); /* Efecto pop */
-  box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
-}
-
-/* === 2. Seguridad === */
-.profile-security-content {
-  display: grid;
-  gap: 30px; /* Más espacio entre los módulos */
-}
-
-.profile-security-content .security-item {
-  padding: 25px; /* Más padding */
-  background-color: #5d0000;
-  border-radius: 4px; /* Bordes más cuadrados, menos redondeados */
-  border: 1px solid rgba(178, 0, 0, 0.6); /* Borde HUD */
-  box-shadow: 0 0 10px rgba(178, 0, 0, 0.3); /* Sombra HUD */
-  transition: all 0.2s ease-in-out;
-}
-
-.profile-security-content .security-item:hover {
-  background-color: #380808;
-  border-color: #fff; /* Borde blanco brillante al pasar el ratón */
-  box-shadow: 0 0 15px rgba(255, 255, 255, 0.2); /* Sutil glow blanco */
-  transform: translateY(-2px);
-}
-
-.profile-security-content h4 {
-  color: #fff;
-  margin-top: 0;
-  margin-bottom: 8px;
-  font-size: 1.2rem; /* Título más prominente */
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.profile-security-content p {
+.profile-security-panel p {
   font-size: 0.95rem;
   color: #aaa;
-  margin-bottom: 20px;
-  border-left: 3px solid #b20000; /* Línea lateral para el texto */
-  padding-left: 10px;
+  margin-top: 5px;
+  margin-bottom: 0;
 }
 
+/* Botones de acción */
 .security-actions-container {
-  margin-top: 15px;
   display: flex;
-  gap: 15px;
+  gap: 10px;
 }
 
-/* Botones: Negro para contraste, Rojo para acción destructiva */
 .change-password-btn,
 .deactivate-account-btn,
 .delete-account-btn {
-  padding: 10px 18px;
-  font-weight: 700;
+  padding: 8px 15px;
+  font-weight: 600;
   text-transform: uppercase;
   font-size: 0.8rem;
-  letter-spacing: 1px;
-  border-radius: 2px; /* Aún más cuadrado */
-  transform: scale(0.98);
+  border-radius: 3px;
   transition: background-color 0.2s, color 0.2s;
-  opacity: 0.9;
+  cursor: pointer;
 }
 
 .change-password-btn {
-  background-color: #fff; /* Botón de acción principal en blanco */
+  background-color: #fff;
   color: #000;
-  border: 2px solid #fff;
+  border: none;
 }
 
 .change-password-btn:hover {
-  color: #fff;
   background-color: #b20000;
-  border: 2px solid #fff;
-  border-color: #fff;
+  color: #fff;
 }
 
 .deactivate-account-btn {
-  background-color: #860000; /* Acción secundaria en oscuro */
-  color: #fff;
-  border: 2px solid #aaa;
-}
-
-.deactivate-account-btn:hover {
-  background-color: #360101;
-  border-color: #b20000;
-}
-
-.delete-account-btn {
-  background-color: #000;
-  color: #ff5555;
-  border: 2px solid #ff5555;
-}
-
-.delete-account-btn:hover {
-  background-color: #4d0000;
-  color: #fff;
-}
-
-/* Media Query para Seguridad en móvil */
-@media (max-width: 600px) {
-  .security-actions-container {
-    flex-direction: column;
-    gap: 10px;
-  }
-  .change-password-btn,
-  .deactivate-account-btn,
-  .delete-account-btn {
-    width: 100%;
-    margin-right: 0;
-  }
-}
-/* === 3. Contactos de Taller === */
-
-.profile-workshop-contacts-content h4 {
-  color: #b20000; /* Título en Rojo para destacarse */
-  margin-top: 0;
-  margin-bottom: 25px;
-  font-size: 1.5rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  border-bottom: 2px solid #b20000;
-  padding-bottom: 5px;
-}
-
-.favorites-separator {
-  margin-top: 50px !important;
-  margin-bottom: 25px !important;
-  border-top: 2px solid #b20000;
-  padding-top: 5px;
-}
-
-.profile-workshop-contacts-content .mechanic-item {
-  display: flex;
-  justify-content: space-between; 
-  align-items: center;
-  margin-bottom: 12px;
-  padding: 18px 25px;
-  background-color: rgba(0, 0, 0, 0.2);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  border-radius: 2px;
-  border-bottom: 1px solid rgba(178, 0, 0, 0.6);
-  border-left: 3px solid transparent;
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-}
-
-.profile-workshop-contacts-content .mechanic-item:hover {
-  background-color: rgba(0, 0, 0, 0.5);
-  border-left-color: #b20000;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5), 0 0 10px rgba(255, 255, 255, 0.1);
-  transform: translateX(10px);
-}
-
-.mechanic-info {
-  flex-grow: 1;
-  display: flex;
-  align-items: center;
-}
-
-.mechanic-avatar {
-  width: 60px;
-  height: 60px;
-  min-width: 60px;
-  background-color: #000; /* Fondo del avatar en negro */
-  border-radius: 50%;
-  margin-right: 20px;
-  border: 2px solid #b20000; /* Borde rojo destacado */
-}
-
-.mechanic-avatar svg {
-  color: #b20000 !important; /* Ícono de usuario en rojo */
-}
-
-.mechanic-name {
-  font-weight: 700;
-  font-size: 1.15rem;
-  color: #fff;
-  text-transform: uppercase;
-}
-
-.mechanic-specialty,
-.mechanic-last-service {
-  font-size: 0.9rem;
-  color: #aaa;
-  margin: 2px 0;
-}
-
-.mechanic-rating {
-  margin-top: 5px;
-}
-
-.mechanic-actions {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  margin-left: 20px;
-  padding-right: 20px;
-  border-right: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.action-icon,
-.favorite-icon,
-.favorite-icon-active {
-  font-size: 1.3rem; /* Más grandes */
-  cursor: pointer;
-  color: #aaa;
-  transition: color 0.2s, transform 0.2s, filter 0.2s;
-}
-
-.action-icon:hover {
-  color: #fff;
-  filter: drop-shadow(0 0 4px #fff);
-  transform: scale(1.3);
-}
-
-.favorite-icon {
-  color: #aaa;
-  fill: none;
-  stroke: #aaa;
-}
-
-.favorite-icon:hover {
-  color: #b20000;
-  stroke: #b20000;
-  filter: drop-shadow(0 0 4px #b20000);
-  transform: scale(1.3);
-}
-
-.favorite-icon-active {
-  color: #b20000;
-  fill: #b20000;
-  stroke: #b20000;
-  animation: favoritePulse 1.5s infinite alternate;
-}
-
-/* Botones de Acción (Ver perfil/Consultar) - Negro y Blanco para HUD */
-.mechanic-buttons {
-  display: flex;
-  gap: 10px;
-  margin-left: 20px;
-}
-
-.view-profile-btn,
-.consult-btn {
-  padding: 10px 15px;
-  font-weight: 600;
-  font-size: 0.9rem;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  border: none;
-  border-radius: 2px;
-  transition: all 0.2s ease-out;
-}
-
-.view-profile-btn {
-  background-color: #000;
+  background-color: #333;
   color: #fff;
   border: 1px solid #aaa;
 }
 
-.view-profile-btn:hover {
-  background-color: #424242;
-  border-color: #b20000;
-  color: #b20000;
-  transform: translateY(-1px);
+.deactivate-account-btn:hover {
+  background-color: #555;
+  border-color: #fff;
 }
 
-.interactive-rating-container {
-  display: flex;
-  align-items: center;
-  gap: 3px; /* Espacio entre estrellas */
-}
-
-.rating-star {
-  cursor: pointer; /* Cambia el cursor para indicar interactividad */
-  color: #ffd700; /* Color base (stroke) */
-  transition: transform 0.15s ease-out, filter 0.15s ease-out;
-}
-
-/* Efecto de HUD al pasar el ratón sobre una estrella */
-.rating-star:hover {
-  transform: scale(1.15); /* Efecto de zoom */
-  filter: drop-shadow(0 0 5px #ffd700); /* Brillo dorado */
-}
-
-/* Aseguramos que el rating estático ya no se renderice si se usó InteractiveRating */
-.mechanic-rating:not(.interactive-rating-container) {
-  display: none; /* Oculta el viejo bloque de rating si lo hubiera */
-}
-
-.consult-btn {
-  background-color: #fff; /* Botón principal en blanco */
-  color: #000;
-}
-
-.consult-btn:hover {
+.delete-account-btn {
   background-color: #b20000;
   color: #fff;
-  transform: translateY(-1px);
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+  border: none;
 }
 
-@keyframes fadeInUp {
- from {
- opacity: 0;  transform: translateY(10px);}
- to {
-  opacity: 1;  transform: translateY(0);
- }
+.delete-account-btn:hover {
+  background-color: #ff0000;
 }
 
-/* Aplicación de la animación a los elementos de lista */
-.profile-personal-info-content .profile-info-item,
-.profile-workshop-contacts-content .mechanic-item,
-.security-item,
-.profile-stats {
- opacity: 0; /* Inicialmente oculto */
- animation: fadeInUp 0.4s ease-out forwards;
+/* --- Estilos del Modal HUD --- */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8); /* Fondo oscuro con transparencia */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Asegura que esté por encima de todo */
+  backdrop-filter: blur(5px);
 }
 
-
-/* --- Estilos para el indicador de carga (Spinner) --- */
-
-@keyframes spin {
- from {
-  transform: rotate(0deg);
- }
- to {
-  transform: rotate(360deg);
- }
+.confirmation-modal {
+  background-color: #1a1a1a; /* Fondo oscuro casi negro */
+  border: 1px solid #444; /* Borde sutil */
+  border-radius: 12px;
+  padding: 30px;
+  width: 90%;
+  max-width: 450px;
+  box-shadow: 0 0 40px rgba(0, 255, 255, 0.1); /* Sombra futurista */
+  color: #fff;
+  animation: fadeIn 0.3s ease-out;
 }
 
-.loading-spinner {
- display: flex;
- justify-content: center;
- align-items: center;
- min-height: 200px; /* Para que el spinner se vea centrado */
-}
-
-.loading-star-spin {
- animation: spin 1s linear infinite; /* Aplica la animación de giro */
- color: #b20000;
-}
-.consult-btn:active {
-  transform: scale(0.95);
-}
-
-@keyframes favoritePulse {
-  from {
-    transform: scale(1);
-    filter: drop-shadow(0 0 1px #b20000);
-  }
-  to {
-    transform: scale(1.05);
-    filter: drop-shadow(0 0 8px #b20000);
-  }
-}
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(-20px);
   }
   to {
     opacity: 1;
@@ -630,56 +325,87 @@
   }
 }
 
-
-/* Media Query para móvil en Contactos (Asegurar que se vea bien) */
-@media (max-width: 700px) {
-  .profile-workshop-contacts-content .mechanic-item {
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 15px;
-  }
-
-  .mechanic-buttons {
-    width: 100%;
-    flex-direction: row;
-    margin-left: 0;
-    margin-top: 10px;
-    justify-content: space-between;
-  }
-  .view-profile-btn,
-  .consult-btn {
-    flex: 1;
-  }
+.modal-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #333;
+  padding-bottom: 10px;
 }
 
-/* Media Query para móvil en Contactos */
-@media (max-width: 700px) {
-  .profile-workshop-contacts-content .mechanic-item {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  .mechanic-info {
-    width: 100%;
-    margin-bottom: 10px;
-  }
-  .mechanic-actions {
-    border-right: none;
-    padding-right: 0;
-    margin-left: 65px; /* Alinea los iconos debajo de la info de texto */
-  }
-  .mechanic-buttons {
-    width: 100%;
-    justify-content: flex-end;
-    margin-left: 0;
-    margin-top: 10px;
-  }
+.confirmation-modal h3 {
+  color: #00ffff; /* Color de encabezado cian */
+  font-weight: 600;
+  margin: 0;
 }
-/* --- Media Queries (Para mejor ajuste en diferentes tamaños) --- */
+
+.modal-body {
+  margin-bottom: 25px;
+  line-height: 1.6;
+}
+
+.modal-body p {
+  color: #aaa;
+}
+
+.modal-body strong {
+  color: #f00; /* Resaltar la advertencia en rojo */
+}
+
+/* Estilos específicos por tipo de Modal */
+.confirmation-modal.delete-style .modal-header h3 {
+  color: #ff5555; /* Rojo para eliminar */
+}
+
+.confirmation-modal.deactivate-style .modal-header h3 {
+  color: #ffc107; /* Amarillo para desactivar */
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.modal-actions button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s;
+}
+
+.btn-cancel {
+  background-color: #444;
+  color: #fff;
+}
+.btn-cancel:hover {
+  background-color: #555;
+}
+
+.btn-warning-confirm {
+  background-color: #ffc107;
+  color: #1a1a1a;
+}
+.btn-warning-confirm:hover {
+  background-color: #e0a800;
+}
+
+.btn-danger-confirm {
+  background-color: #dc3545;
+  color: #fff;
+}
+.btn-danger-confirm:hover {
+  background-color: #c82333;
+}
+
+/* Media Queries (Ajuste para móviles) */
 @media (max-width: 900px) {
+  /* Mantenemos los ajustes de header responsive */
   .profile-info-and-picture {
     flex-direction: column;
     align-items: center;
-    text-align: center;
     position: relative;
     bottom: auto;
     transform: none;
@@ -687,63 +413,33 @@
     width: 90%;
     margin: 0 auto;
   }
-
   .profile-picture-container {
-    top: -100px; /* Mueve la foto más arriba */
+    top: -100px;
     margin-bottom: -50px;
   }
-
   .profile-content-section {
-    padding-top: 50px; /* Reduce el padding superior */
+    padding-top: 50px;
   }
-
-  .profile-header-info {
-    padding-top: 0;
-    text-align: center;
-  }
-
   .header-info {
     flex-direction: column;
     gap: 10px;
   }
-
-  .profile-description {
-    margin-top: 15px;
-  }
-
   .profile-stats {
     flex-direction: column;
     gap: 20px;
   }
-
-  .profile-nav button {
-    flex: 1 1 auto;
-  }
-
   .profile-content-cont {
     width: 90%;
   }
 
-  .mechanic-item {
+  /* Ajuste específico para el panel de seguridad en móvil */
+  .profile-security-panel .security-item {
     flex-direction: column;
     align-items: flex-start;
-    gap: 10px;
   }
-
-  .mechanic-buttons {
-    margin-left: auto;
-  }
-}
-
-@media (max-width: 600px) {
   .security-actions-container {
-    flex-direction: column;
-    gap: 10px;
-  }
-  .change-password-btn,
-  .deactivate-account-btn,
-  .delete-account-btn {
     width: 100%;
-    margin-right: 0;
+    margin-top: 15px;
+    justify-content: space-between;
   }
 }

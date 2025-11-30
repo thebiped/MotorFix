@@ -14,7 +14,6 @@ import PerfilMecanico from "./pages/Mecanico/Perfil/PerfilMecanico";
 import ReparacionesMecanico from "./pages/Mecanico/Reparaciones/VehicleRepairs";
 import ClienteLayout from "./pages/Cliente/ClienteLayout";
 import DashboardCliente from "./pages/Cliente/Dashboard/DashboardCliente";
-import HistorialCliente from "./pages/Cliente/Historial/HistorialCliente";
 import TurnosCliente from "./pages/Cliente/Turnos/TurnosCliente";
 import PerfilCliente from "./pages/Cliente/Perfil/PerfilCliente";
 import VehiculoCliente from "./pages/Cliente/Vehiculo/VehiculoCliente";
@@ -74,7 +73,6 @@ function App() {
           <Route path="dashboard" element={<DashboardCliente />} />
           <Route path="turnos" element={<TurnosCliente />} />
           <Route path="perfil" element={<PerfilCliente />} />
-          <Route path="historial" element={<HistorialCliente />} />
           <Route path="vehiculo" element={<VehiculoCliente />} />
         </Route>
       </Routes>

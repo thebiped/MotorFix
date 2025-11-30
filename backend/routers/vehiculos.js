@@ -55,4 +55,28 @@ router.post("/guardar", express.json(), (req, res) => {
   );
 });
 
+router.get("/all", (req, res) => {
+  const sql = `
+    SELECT 
+      v.id_vehiculo AS id,
+      v.patente,
+      v.mileage,
+      v.user_id,
+      b.name AS brand,  /* Alias para marca */
+      m.name AS model   /* Alias para modelo */
+    FROM vehiculos v
+    LEFT JOIN brands b ON v.id_brand = b.id_brand
+    LEFT JOIN car_models m ON v.id_model = m.id_model
+  `;
+
+  db.all(sql, [], (err, rows) => {
+    if (err) {
+      console.error("SQL ERROR vehiculos/all:", err.message);
+      return res.status(500).json({ success: false, error: err.message });
+    }
+    res.json(rows);
+  });
+});
+
+module.exports = router;
 module.exports = router;

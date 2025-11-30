@@ -119,7 +119,7 @@ router.get("/all", (req, res) => {
             role: t.mecanico_rol,
             specialty: "", // Añadir campo de especialidad si existe en BD
           }
-        : null,
+        : { id: null, name: 'Sin asignar', role: null },
 
       // CAMPOS DEL DIAGNÓSTICO (de la tabla 'reparaciones')
       diagnostico_observacion_inicial: t.diagnostico_observacion_inicial,

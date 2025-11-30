@@ -1,7 +1,23 @@
 import React, { useState, useEffect, useMemo } from "react";
 import "./GestionesAdmin.css";
 
-const TurnosTable = ({ filters }) => {
+// Función StatusPill reutilizada (para consistencia visual, la dejamos aquí)
+const StatusPill = ({ status }) => {
+  const cls =
+    status === "pendiente"
+      ? "pill pending"
+      : status === "finalizado"
+      ? "pill done"
+      : "pill progress";
+
+  return (
+    <div className="status-pill-wrap">
+      <div className={cls}>{status}</div>
+    </div>
+  );
+};
+
+const TurnosTable = ({ filters, isAddModalOpen, onAddModalClose }) => {
   const {
     search = "",
     statusFilter = "",
@@ -15,7 +31,7 @@ const TurnosTable = ({ filters }) => {
   const [selectedTurno, setSelectedTurno] = useState(null);
   const [mecanicos, setMecanicos] = useState([]);
 
-  // 🔧 Datos de formulario dentro del modal
+  // 🔧 Datos de formulario dentro del modal de EDICIÓN
   const [editData, setEditData] = useState({
     tipo_reparacion: "",
     problema: "",
@@ -23,32 +39,45 @@ const TurnosTable = ({ filters }) => {
     mecanico_id: "",
   });
 
-  useEffect(() => {
-    fetchMecanicos();
-  }, []);
+  // ➕ NUEVOS ESTADOS para el Modal de Creación (Admin)
+  const [clientes, setClientes] = useState([]);
+  const [vehiculosAdmin, setVehiculosAdmin] = useState([]);
 
-  useEffect(() => {
-    const fetchTurnos = async () => {
-      try {
-        const res = await fetch("http://localhost:3001/api/turnos/all");
-        const data = await res.json();
+  const [modalClient, setModalClient] = useState(""); // ID del cliente seleccionado
+  const [problema, setProblema] = useState(""); // Estado del formulario de creación
+  const [tipoReparacion, setTipoReparacion] = useState(""); // Estado del formulario de creación
+  const [vehiculoId, setVehiculoId] = useState(""); // Estado del formulario de creación
 
-        console.log("🔎 /turnos/all devuelve:", data); // ← AÑADIR ESTO
+  // Filtra los vehículos del cliente seleccionado para el modal de creación
+  const vehiculosClienteModal = useMemo(() => {
+    // Asegura que modalClient sea tratado como string o number consistentemente
+    const clientId = modalClient ? String(modalClient) : null;
 
-        if (Array.isArray(data)) setTurnos(data);
-        else setTurnos([]);
-      } catch (err) {
-        console.error("Error fetching turnos:", err);
-        setTurnos([]);
-      } finally {
-        setLoading(false);
-      }
-    };
+    return vehiculosAdmin.filter(
+      (v) =>
+        // Compara el ID del cliente del vehículo con el ID seleccionado
+        String(v.user_id ?? v.id_usuario) === clientId
+    );
+  }, [vehiculosAdmin, modalClient]);
 
-    fetchTurnos();
-  }, []);
+  // 🔄 FUNCIONES DE FETCHING
 
-  // dentro del componente TurnosTable (reemplaza la función fetchMecanicos y añade useEffect)
+  const fetchTurnos = async () => {
+    try {
+      const res = await fetch("http://localhost:3001/api/turnos/all");
+      const data = await res.json();
+      console.log("🔎 /turnos/all devuelve:", data);
+
+      if (Array.isArray(data)) setTurnos(data);
+      else setTurnos([]);
+    } catch (err) {
+      console.error("Error fetching turnos:", err);
+      setTurnos([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const fetchMecanicos = async () => {
     try {
       const res = await fetch("http://localhost:3001/api/users");
@@ -66,26 +95,83 @@ const TurnosTable = ({ filters }) => {
     }
   };
 
-  // cargar mecanicos al montar la tabla
+  // Función para obtener todos los clientes
+  const fetchClientes = async () => {
+    try {
+      const res = await fetch("http://localhost:3001/api/users");
+      const data = await res.json();
+      if (Array.isArray(data)) {
+        // Asumiendo que el campo para filtrar es 'rol'
+        setClientes(data.filter((u) => u.rol === "cliente"));
+      }
+    } catch (err) {
+      console.error("Error al obtener clientes:", err);
+    }
+  };
+
+  // Función para obtener TODOS los vehículos (Admin)
+  const fetchVehiculosAdmin = async () => {
+    try {
+      // **ASUMIMOS ESTE ENDPOINT EXISTE**
+      const res = await fetch("http://localhost:3001/api/vehiculos/all");
+      const data = await res.json();
+      setVehiculosAdmin(Array.isArray(data) ? data : []);
+    } catch (err) {
+      console.error("Error al obtener vehículos del admin:", err);
+    }
+  };
+
+  // 🚀 HOOKS DE VIDA (useEffect)
+
   useEffect(() => {
     fetchMecanicos();
-  }, []);
+    fetchClientes();
+    fetchVehiculosAdmin();
+    fetchTurnos();
+  }, []); // Carga inicial
 
   // Opcional: recargar mecánicos cuando abrís el modal (si querés siempre la lista más fresca)
   useEffect(() => {
     if (modalOpen) fetchMecanicos();
   }, [modalOpen]);
 
+  // Resetea los estados de creación cuando el modal de ADD se cierra o se abre
+  useEffect(() => {
+    if (isAddModalOpen) {
+      setModalClient("");
+      setProblema("");
+      setTipoReparacion("");
+      setVehiculoId("");
+    }
+  }, [isAddModalOpen]);
+
   // 🔥 Formatear vehículo desde múltiples posibles keys
   const renderVehiculo = (t) => {
-    const brand = t.brand || t.marca || t.brand_name || "";
-    const model = t.model || t.modelo || t.model_name || "";
-    const patente = t.patente || "";
+    // 1. Extraer los datos del vehículo. Busca en t.car (lo que devuelve /turnos/all) o en t directamente
+    const vehicleData = t.car || t.vehicle || t;
 
-    if (!brand && !model && !patente) return `Vehículo #${t.vehicle_id}`;
+    // Si no es un objeto válido, no podemos seguir.
+    if (!vehicleData || typeof vehicleData !== "object") {
+      return `Vehículo #${t.vehicle_id || "N/A"}`;
+    }
 
-    return `${brand} ${model}${patente ? " — " + patente : ""}`.trim();
+    // 2. Extraer los campos usando los posibles aliases (patrón Brand/Model)
+    const brand =
+      vehicleData.brand || vehicleData.marca || vehicleData.brand_name || "";
+    const model =
+      vehicleData.model || vehicleData.modelo || vehicleData.model_name || "";
+    const patente = vehicleData.patente || ""; // <--- Aseguramos que se captura la patente
+
+    // 3. Formatear la salida
+    if (brand || model || patente) {
+      return `${brand} ${model}${patente ? " — " + patente : ""}`.trim();
+    }
+
+    // Retorno de fallback
+    return `Vehículo #${vehicleData.id || vehicleData.vehicle_id || "N/A"}`;
   };
+
+  // 🔄 LÓGICA DE FILTRADO Y PAGINACIÓN (existente)
 
   const filtered = useMemo(() => {
     return turnos.filter((t) => {
@@ -112,6 +198,8 @@ const TurnosTable = ({ filters }) => {
   const [page, setPage] = useState(1);
   const maxPage = Math.max(1, Math.ceil(filtered.length / pageSize));
   const paged = filtered.slice((page - 1) * pageSize, page * pageSize);
+
+  // 🔧 FUNCIONES DE ACCIÓN (existentes)
 
   const onAcciones = (turno) => {
     setSelectedTurno(turno);
@@ -150,9 +238,12 @@ const TurnosTable = ({ filters }) => {
         );
 
         setModalOpen(false);
+      } else {
+        alert("Error al guardar cambios: " + (data.error || "desconocido"));
       }
     } catch (err) {
       console.error("Error update:", err);
+      alert("Error al conectar con el servidor.");
     }
   };
 
@@ -182,16 +273,17 @@ const TurnosTable = ({ filters }) => {
 
         //FIX VISUAL
         setSelectedTurno({ ...turno, habilitado: nuevoEstado });
+      } else {
+        alert("Error al cambiar estado: " + (data.error || "desconocido"));
       }
     } catch (err) {
       console.error("Error habilitado:", err);
+      alert("Error al conectar con el servidor.");
     }
   };
 
-  // dentro del componente:
   const asignarMecanico = async () => {
     if (!selectedTurno) return;
-    // editData.mecanico_id viene del select
     const mecanicoId = editData.mecanico_id;
     if (!mecanicoId) {
       alert("Seleccioná un mecánico primero.");
@@ -237,6 +329,75 @@ const TurnosTable = ({ filters }) => {
     }
   };
 
+  // ➕ NUEVA FUNCIÓN: CREAR TURNO (ADMIN)
+  const handleCrearTurnoAdmin = async () => {
+    if (!modalClient || !vehiculoId || !problema || !tipoReparacion) {
+      alert("Completa todos los campos y selecciona un cliente/vehículo.");
+      return;
+    }
+
+    try {
+      const res = await fetch("http://localhost:3001/api/turnos/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          user_id: modalClient,
+          vehicle_id: vehiculoId,
+          problema,
+          tipo_reparacion: tipoReparacion,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        alert("Turno creado exitosamente.");
+        // Refrescar lista de turnos y limpiar estados
+        fetchTurnos();
+        onAddModalClose(); // Cierra el modal
+        setModalClient("");
+        setProblema("");
+        setTipoReparacion("");
+        setVehiculoId("");
+      } else {
+        alert(
+          "Error al crear turno: " +
+            (data.error || data.message || "Error desconocido")
+        );
+      }
+    } catch (err) {
+      console.error("Error al crear turno (Admin):", err);
+      alert("Error al conectar con el servidor.");
+    }
+  };
+
+  // 🚗 FUNCIÓN AUXILIAR PARA VEHÍCULO (adaptada de la versión anterior)
+  const renderMarcaModelo = (v) => {
+    const marca =
+      v.marca ??
+      v.brand ??
+      v.nombre ??
+      v.brand_name ??
+      v.marca_nombre ??
+      v.nombre_marca ??
+      v.nombreBrand;
+    const modelo =
+      v.modelo ??
+      v.model ??
+      v.model_name ??
+      v.nombre_modelo ??
+      v.modelo_nombre ??
+      v.nombreModel;
+    const idModel = v.id_model ?? v.idModel ?? v.id_modelo ?? "";
+    return `${marca ?? idModel ?? ""}${marca || idModel ? " " : ""}${
+      modelo ?? ""
+    }`.trim();
+  };
+
+  // ----------------------------------------------------
+  // 🎨 RENDERIZADO DEL COMPONENTE
+  // ----------------------------------------------------
+
   return (
     <div className="data-table-wrapper">
       {loading ? (
@@ -262,7 +423,7 @@ const TurnosTable = ({ filters }) => {
             <tbody>
               {paged.length === 0 && (
                 <tr>
-                  <td colSpan="7" style={{ textAlign: "center", padding: 24 }}>
+                  <td colSpan="9" style={{ textAlign: "center", padding: 24 }}>
                     No hay resultados
                   </td>
                 </tr>
@@ -328,12 +489,125 @@ const TurnosTable = ({ filters }) => {
           </div>
         </>
       )}
+
+      {/* 💥 MODAL DE CREACIÓN DE TURNO (ADMIN) */}
+      {isAddModalOpen && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <h2>Crear Nuevo Turno (Admin)</h2>
+
+            <div className="field">
+              <label>Seleccionar Cliente</label>
+              <select
+                value={modalClient}
+                onChange={(e) => {
+                  setModalClient(e.target.value);
+                  setVehiculoId(""); // Limpiar el vehículo al cambiar de cliente
+                }}
+              >
+                <option value="">-- Seleccionar cliente --</option>
+                {clientes.map((c) => (
+                  <option key={c.id_usuario} value={c.id_usuario}>
+                    {c.username}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Campos del formulario de Turno */}
+            {modalClient ? (
+              <>
+                <div className="field">
+                  <label>Vehículo</label>
+                  <select
+                    value={vehiculoId}
+                    onChange={(e) => setVehiculoId(e.target.value)}
+                    disabled={vehiculosClienteModal.length === 0}
+                  >
+                    <option value="">Seleccionar vehículo</option>
+                    {vehiculosClienteModal.map((v) => {
+                      const id = v.id_vehiculo ?? v.id;
+                      const label = `${renderMarcaModelo(v)}${
+                        v.patente ? ` - ${v.patente}` : ""
+                      }`.trim();
+                      return (
+                        <option key={id} value={id}>
+                          {label || `vehículo #${id}`}
+                        </option>
+                      );
+                    })}
+                  </select>
+                  {vehiculosClienteModal.length === 0 && (
+                    <p className="error-message small">
+                      ⚠️ El cliente no tiene vehículos registrados.
+                    </p>
+                  )}
+                </div>
+
+                <div className="field">
+                  <label>Problema del vehículo</label>
+                  <input
+                    type="text"
+                    value={problema}
+                    onChange={(e) => setProblema(e.target.value)}
+                  />
+                </div>
+
+                <div className="field">
+                  <label>Tipo de reparación</label>
+                  <select
+                    value={tipoReparacion}
+                    onChange={(e) => setTipoReparacion(e.target.value)}
+                  >
+                    <option value="">Seleccionar</option>
+                    <option value="mecanica">Mecánica</option>
+                    <option value="electrico">Eléctrico</option>
+                    <option value="service">Service</option>
+                    <option value="chapa">Chapa y pintura</option>
+                  </select>
+                </div>
+
+                <div className="modal-actions">
+                  <button className="btn-secondary" onClick={onAddModalClose}>
+                    Cancelar
+                  </button>
+                  <button
+                    className="btn-primary"
+                    onClick={handleCrearTurnoAdmin}
+                    // Deshabilitar si falta algún campo o si no hay vehículos para el cliente
+                    disabled={
+                      !vehiculoId ||
+                      !problema ||
+                      !tipoReparacion ||
+                      vehiculosClienteModal.length === 0
+                    }
+                  >
+                    Crear Turno
+                  </button>
+                </div>
+              </>
+            ) : (
+              <p className="info-message">
+                Selecciona un cliente para continuar con la creación del turno.
+              </p>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* 🔧 MODAL DE EDICIÓN Y GESTIÓN (existente) */}
       {modalOpen && (
         <div className="modal-overlay-admin">
           <div className="modal-content-admin two-columns">
             {/* COLUMNA IZQUIERDA — EDITAR */}
             <div className="col">
               <h3>Editar Turno</h3>
+              {selectedTurno && (
+                <p className="modal-info-turno">
+                  **Turno #{selectedTurno.id_turno}** para{" "}
+                  {selectedTurno.username}
+                </p>
+              )}
 
               <label>Tipo reparación</label>
               <input
@@ -401,6 +675,17 @@ const TurnosTable = ({ filters }) => {
                 onClick={() => toggleHabilitado(selectedTurno)}
               >
                 {selectedTurno?.habilitado === 1 ? "Deshabilitar" : "Habilitar"}
+              </button>
+
+              <button
+                className="btn-secondary"
+                onClick={() => {
+                  setSelectedTurno(null);
+                  setModalOpen(false);
+                }}
+                style={{ marginTop: "10px" }}
+              >
+                Cerrar
               </button>
             </div>
           </div>
