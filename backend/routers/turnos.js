@@ -40,31 +40,41 @@ router.get("/user/:id", (req, res) => {
 router.get("/all", (req, res) => {
   const sql = `
     SELECT 
-      t.id_turno,
-      t.user_id,
-      u.username,
-      
-      t.vehicle_id,
-      v.patente,
-      
-      b.name AS marca,
-      m.name AS modelo,
-
+      t.id_turno AS id,
       t.problema,
       t.tipo_reparacion,
       t.estado,
-      t.fecha_creado,
-      
+      t.fecha_creado AS created_at,
       t.mecanico_id,
-      mec.username AS mecanico_nombre,
-      t.habilitado
-
+      t.user_id,
+      
+      -- Datos del Cliente (User)
+      u.username AS user_name,
+      
+      -- Datos del Vehículo
+      v.patente,
+      v.id_vehiculo AS car_id,
+      b.name AS car_brand,
+      m.name AS car_model,
+      
+      -- Datos del Mecánico Asignado
+      mec.username AS mecanico_name,
+      mec.rol AS mecanico_rol,
+      
+      -- Datos de la Reparación (Diagnóstico)
+      r.id_reparaciones,
+      r.diagnostico_observacion_inicial,
+      r.diagnostico_resultados_scanner,
+      r.diagnostico_acciones_recomendadas
+      
     FROM turnos t
     LEFT JOIN usuarios u ON u.id_usuario = t.user_id
-    LEFT JOIN usuarios mec ON mec.id_usuario = t.mecanico_id
     LEFT JOIN vehiculos v ON v.id_vehiculo = t.vehicle_id
     LEFT JOIN brands b ON b.id_brand = v.id_brand
     LEFT JOIN car_models m ON m.id_model = v.id_model
+    LEFT JOIN usuarios mec ON mec.id_usuario = t.mecanico_id
+    -- JOIN a la tabla 'reparaciones' usando el turno_id
+    LEFT JOIN reparaciones r ON r.turno_id = t.id_turno
 
     ORDER BY t.fecha_creado DESC
   `;
@@ -75,7 +85,51 @@ router.get("/all", (req, res) => {
       return res.status(500).json({ error: err.message });
     }
 
-    res.json(rows);
+    // 🛑 MAPEO CLAVE: Formatear la respuesta para el frontend
+    const formattedData = rows.map((t) => ({
+      id_turno: t.id,
+      estado: t.estado,
+      prioridad: "normal", 
+      tipo_reparacion: t.tipo_reparacion,
+
+      user: {
+        id: t.user_id,
+        name: t.user_name,
+      },
+
+      car: {
+        id: t.car_id,
+        brand: t.car_brand,
+        model: t.car_model,
+        patente: t.patente,
+        // Aquí puedes añadir más campos del vehículo si los necesitas
+      },
+
+      turno: {
+        id: t.id,
+        descripcion: t.problema, // problema = descripcion del turno
+        tipo_reparacion: t.tipo_reparacion,
+        fecha: t.created_at,
+      },
+
+      mecanico: t.mecanico_id
+        ? {
+            id: t.mecanico_id,
+            name: t.mecanico_name,
+            role: t.mecanico_rol,
+            specialty: "", // Añadir campo de especialidad si existe en BD
+          }
+        : null,
+
+      // CAMPOS DEL DIAGNÓSTICO (de la tabla 'reparaciones')
+      diagnostico_observacion_inicial: t.diagnostico_observacion_inicial,
+      diagnostico_resultados_scanner: t.diagnostico_resultados_scanner,
+      diagnostico_acciones_recomendadas: t.diagnostico_acciones_recomendadas,
+
+      created_at: t.created_at,
+    }));
+
+    res.json(formattedData);
   });
 });
 
@@ -407,6 +461,60 @@ router.get("/mecanico/:id", (req, res) => {
 
     res.json(result);
   });
+});
+
+router.put("/completar/:id", (req, res) => {
+  const { id } = req.params;
+  const { estado } = req.body; // Debería ser 'completado'
+
+  if (estado !== "completado") {
+    return res.status(400).json({ error: "Estado no válido" });
+  }
+
+  const sql = `UPDATE turnos SET estado = ? WHERE id_turno = ?`;
+
+  db.run(sql, [estado, id], function (err) {
+    if (err) {
+      console.log("Error al completar el turno:", err);
+      return res.status(500).json({ error: "Error DB" });
+    }
+    res.json({ success: true, message: "Turno completado exitosamente." });
+  });
+});
+
+router.put("/diagnostico/:id", (req, res) => {
+  const id_turno = req.params.id;
+  const { initialObservation, scannerResults, recommendedActions } = req.body;
+
+  // 🛑 Se asume que estos campos están en la tabla `turnos` como en tu ruta `turnos/update`
+  const sql = `
+    UPDATE turnos
+    SET 
+        diagnostico_observacion_inicial = ?,
+        diagnostico_resultados_scanner = ?,
+        diagnostico_acciones_recomendadas = ?
+    WHERE id_turno = ?
+  `;
+
+  db.run(
+    sql,
+    [initialObservation, scannerResults, recommendedActions, id_turno],
+    function (err) {
+      if (err) {
+        console.error("Error al guardar el diagnóstico:", err.message);
+        return res.status(500).json({ error: err.message });
+      }
+
+      if (this.changes === 0) {
+        return res.status(404).json({ message: "Turno no encontrado." });
+      }
+
+      res.json({
+        message: "Diagnóstico guardado exitosamente.",
+        changes: this.changes,
+      });
+    }
+  );
 });
 
 module.exports = router;

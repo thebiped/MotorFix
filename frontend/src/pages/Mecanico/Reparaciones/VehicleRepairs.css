@@ -1,26 +1,27 @@
 /* RESET BÁSICO */
 /* LAYOUT PRINCIPAL */
 .hud-container-reparacion {
-  display: grid;
-  grid-template-columns: 350px 1fr; /* Panel izquierdo fijo, derecho flexible */
-  gap: 20px;
-  height: 100vh;
-  padding: 20px;
-  background: radial-gradient(circle at center, #1a1a1a 0%, #000000 100%);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Fuente segura */
-  color: #e0e0e0;
-  box-sizing: border-box;
-  overflow: hidden;
+ display: grid;
+ grid-template-columns: 350px 1fr; /* Panel izquierdo fijo, derecho flexible */
+ gap: 20px;
+ height: 100vh;
+ padding: 20px;
+ background: radial-gradient(circle at center, #1a1a1a 0%, #000000 100%);
+ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Fuente segura */
+ color: #e0e0e0;
+ box-sizing: border-box;
+ overflow: hidden;
 }
 
 /* --- LOADER --- */
+/* Se mantiene el loader en rojo */
 .hud-loader-overlay {
-  position: fixed; inset: 0; background: rgba(0,0,0,0.95);
-  display: flex; justify-content: center; align-items: center; z-index: 9999;
+ position: fixed; inset: 0; background: rgba(0,0,0,0.95);
+ display: flex; justify-content: center; align-items: center; z-index: 9999;
 }
 .hud-loader-box {
-  width: 400px; text-align: center; border: 1px solid #ff2a2a; padding: 20px;
-  box-shadow: 0 0 20px rgba(255, 42, 42, 0.2);
+ width: 400px; text-align: center; border: 1px solid #ff2a2a; padding: 20px;
+ box-shadow: 0 0 20px rgba(255, 42, 42, 0.2);
 }
 .hud-loader-title { color: #ff2a2a; margin-bottom: 10px; font-weight: bold; letter-spacing: 2px; }
 .hud-progress-bar { height: 4px; background: #333; width: 100%; }
@@ -30,12 +31,12 @@
 
 /* --- PANELES COMUNES --- */
 .hud-panel {
-  background: rgba(15, 15, 15, 0.85);
-  border: 1px solid #333;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
+ background: rgba(15, 15, 15, 0.85);
+ border: 1px solid #333;
+ position: relative;
+ display: flex;
+ flex-direction: column;
+ padding: 20px;
 }
 
 /* Decoraciones de esquinas */
@@ -48,54 +49,62 @@
 
 /* --- PANEL IZQUIERDO (LISTAS) --- */
 .repair-lists-wrapper {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  gap: 20px;
+ display: flex;
+ flex-direction: column;
+ height: 100%;
+ gap: 20px;
 }
 
 .list-section {
-  display: flex;
-  flex-direction: column;
-  flex: 1; /* Ocupa espacio disponible */
-  min-height: 0; /* Permite scroll interno */
+ display: flex;
+ flex-direction: column;
+ flex: 1; /* Ocupa espacio disponible */
+ min-height: 0; /* Permite scroll interno */
 }
 
 .panel-title {
-  color: #888;
-  font-size: 14px;
-  letter-spacing: 1px;
-  border-bottom: 1px solid #333;
-  padding-bottom: 10px;
-  margin: 0 0 10px 0;
+ color: #888;
+ font-size: 14px;
+ letter-spacing: 1px;
+ border-bottom: 1px solid #333;
+ padding-bottom: 10px;
+ margin: 0 0 10px 0;
 }
 .panel-title.dimmed { opacity: 0.6; }
 
 .repair-list-scroll {
-  flex: 1;
-  overflow-y: auto;
-  padding-right: 5px;
+ flex: 1;
+ overflow-y: auto;
+ padding-right: 5px;
 }
 /* Scrollbar custom */
 .repair-list-scroll::-webkit-scrollbar { width: 4px; }
 .repair-list-scroll::-webkit-scrollbar-thumb { background: #ff2a2a; }
+.empty-list-message { 
+ font-size: 12px; color: #555; text-align: center; margin-top: 20px; 
+ letter-spacing: 1px;
+}
 
 /* Bloque de reparación */
 .repair-block {
-  background: rgba(255,255,255,0.03);
-  border: 1px solid #333;
-  margin-bottom: 10px;
-  padding: 12px;
-  cursor: pointer;
-  transition: all 0.2s;
+ background: rgba(255,255,255,0.03);
+ border: 1px solid #333;
+ margin-bottom: 10px;
+ padding: 12px;
+ cursor: pointer;
+ transition: all 0.2s;
 }
 .repair-block:hover { border-color: #ff2a2a; background: rgba(255,42,42,0.05); }
 .repair-block.selected-block { border-color: #ff2a2a; background: rgba(255,42,42,0.1); box-shadow: 0 0 15px rgba(255,42,42,0.1); }
+.repair-block.completed-block { opacity: 0.7; border-color: #222; }
+.repair-block.completed-block:hover { border-color: #333; background: rgba(255,255,255,0.03); }
 
 .block-header { display: flex; justify-content: space-between; margin-bottom: 5px; }
 .client-name { font-size: 11px; color: #666; text-transform: uppercase; }
 .priority-badge { font-size: 10px; padding: 2px 6px; background: #333; color: #fff; font-weight: bold; }
 .priority-badge.alta { background: #ff2a2a; color: #000; box-shadow: 0 0 5px #ff2a2a; }
+.priority-badge.normal { background: #444; color: #fff; }
+.priority-badge.completed { background: #1a5c1a; color: #fff; }
 
 .problem-text { margin: 0; color: #fff; font-weight: bold; font-size: 13px; }
 .car-text { margin: 2px 0 0 0; color: #888; font-size: 12px; }
@@ -103,61 +112,61 @@
 
 /* --- PANEL DERECHO (DETALLE) --- */
 .empty-message { 
-  display: flex; align-items: center; justify-content: center; height: 100%; color: #555; letter-spacing: 2px; 
+ display: flex; align-items: center; justify-content: center; height: 100%; color: #555; letter-spacing: 2px; 
 }
 
 /* Contenedor Flex vertical para Header - Body - Footer */
 .right-panel-content {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
+ display: flex;
+ flex-direction: column;
+ height: 100%;
 }
 
 /* 1. HEADER */
 .rp-header { flex: 0 0 auto; margin-bottom: 10px; }
 .brand-tag { 
-  display: inline-block; border: 1px solid #555; padding: 4px 10px; font-size: 12px; color: #aaa; margin-bottom: 5px; 
+ display: inline-block; border: 1px solid #555; padding: 4px 10px; font-size: 12px; color: #aaa; margin-bottom: 5px; 
 }
 .model-title {
-  margin: 0; font-size: 32px; color: #fff; text-transform: uppercase; letter-spacing: 2px;
+ margin: 0; font-size: 32px; color: #fff; text-transform: uppercase; letter-spacing: 2px;
 }
 
 /* 2. BODY (Imagen + Detalles) */
 .rp-body {
-  flex: 1; /* Ocupa el espacio central */
-  display: flex;
-  position: relative;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden; /* Evita que la imagen rompa el layout */
+ flex: 1; /* Ocupa el espacio central */
+ display: flex;
+ position: relative;
+ align-items: center;
+ justify-content: center;
+ overflow: hidden; /* Evita que la imagen rompa el layout */
 }
 
 .car-display-area {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+ flex: 1;
+ display: flex;
+ justify-content: center;
+ align-items: center;
 }
 
 .main-car-img {
-  max-width: 90%;
-  max-height: 400px; /* Limita altura para que no empuje el footer */
-  object-fit: contain;
-  filter: drop-shadow(0 10px 20px rgba(0,0,0,0.8));
+ max-width: 90%;
+ max-height: 400px; /* Limita altura para que no empuje el footer */
+ object-fit: contain;
+ filter: drop-shadow(0 10px 20px rgba(0,0,0,0.8));
 }
 
 /* Tarjeta flotante a la derecha */
 .details-card {
-  width: 250px;
-  background: rgba(0,0,0,0.6);
-  border: 1px solid #444;
-  padding: 20px;
-  margin-left: 20px; /* Separación de la imagen */
-  border-right: 2px solid #ff2a2a; /* Detalle de diseño */
+ width: 250px;
+ background: rgba(0,0,0,0.6);
+ border: 1px solid #444;
+ padding: 20px;
+ margin-left: 20px; /* Separación de la imagen */
+ border-right: 2px solid #ff2a2a; /* Detalle de diseño */
 }
 
 .details-card h3 {
-  margin: 0 0 15px 0; color: #ff2a2a; font-size: 12px; letter-spacing: 1px; border-bottom: 1px solid #333; padding-bottom: 5px;
+ margin: 0 0 15px 0; color: #ff2a2a; font-size: 12px; letter-spacing: 1px; border-bottom: 1px solid #333; padding-bottom: 5px;
 }
 
 .detail-row { margin-bottom: 10px; font-size: 13px; }
@@ -168,18 +177,18 @@
 
 /* 3. FOOTER (Stats + Botones) */
 .rp-footer {
-  flex: 0 0 auto; /* Altura automática según contenido */
-  border-top: 1px solid #333;
-  padding-top: 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+ flex: 0 0 auto; /* Altura automática según contenido */
+ border-top: 1px solid #333;
+ padding-top: 20px;
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
 }
 
 /* Stats a la izquierda */
 .stats-group {
-  display: flex;
-  gap: 30px;
+ display: flex;
+ gap: 30px;
 }
 .stat-box { display: flex; flex-direction: column; }
 .stat-label { font-size: 11px; color: #555; text-transform: uppercase; margin-bottom: 4px; }
@@ -188,166 +197,243 @@
 
 /* Botones a la derecha */
 .buttons-group {
-  display: flex;
-  gap: 15px;
+ display: flex;
+ gap: 15px;
 }
 
+/* --- ESTILO DE BOTONES TIPO ARKHAM KNIGHT (REVISADO) --- */
 .hud-btn {
-  background: transparent;
-  border: 1px solid #555;
-  color: #fff;
-  padding: 10px 25px;
-  font-size: 12px;
-  letter-spacing: 1px;
-  cursor: pointer;
-  transition: all 0.2s;
-  text-transform: uppercase;
+ background: rgba(0,0,0,0.2); /* Fondo más oscuro y sutil */
+ border: 1px solid #555; /* Borde gris sutil */
+ color: #fff;
+ padding: 10px 25px;
+ font-size: 12px;
+ letter-spacing: 1px;
+ cursor: pointer;
+ transition: all 0.2s;
+ text-transform: uppercase;
 }
 
-.hud-btn.back:hover { border-color: #fff; }
-
-.hud-btn.diag {
-  background: rgba(255, 42, 42, 0.1);
-  border-color: #ff2a2a;
-  color: #ff2a2a;
-}
-.hud-btn.diag:hover {
-  background: #ff2a2a;
-  color: #000;
-  box-shadow: 0 0 15px rgba(255, 42, 42, 0.4);
+.hud-btn.back:hover { 
+ border-color: #aaa; 
+ color: #ff2a2a; /* Rojo al pasar el ratón */
+ background: rgba(0,0,0,0.4);
 }
 
-/* ======================================= */
-/* ESTILOS DEL PANEL DE DIAGNÓSTICO */
-/* ======================================= */
+/* Botón de Rechazar - ROJO DE ADVERTENCIA */
+.hud-btn.reject {
+ border-color: #ff5555;
+ color: #ff5555;
+}
+.hud-btn.reject:hover {
+ background: #990000;
+ color: #fff;
+ border-color: #ff0000;
+ box-shadow: 0 0 15px rgba(255, 0, 0, 0.4);
+}
+
+/* Botón de Aceptar/Confirmar - ROJO MÁS FUERTE (Acción principal) */
+.hud-btn.accept, .hud-btn.diag {
+ background: rgba(255, 42, 42, 0.1); /* Rojo sutil en estado normal */
+ border-color: #ff2a2a;
+ color: #ff2a2a;
+ font-weight: bold;
+}
+.hud-btn.accept:hover, .hud-btn.diag:hover {
+ background: #ff2a2a; /* Rojo sólido en hover */
+ color: #000;
+ box-shadow: 0 0 15px rgba(255, 42, 42, 0.6);
+}
+
+/* Botón de Cerrar Diagnóstico (en el panel slider) */
+.close-diag {
+ background: transparent;
+ color: #ff2a2a;
+ border: 1px solid #ff2a2a;
+ padding: 5px 10px;
+ cursor: pointer;
+ font-size: 0.8em;
+ transition: background-color 0.2s;
+}
+
+.close-diag:hover {
+ background-color: rgba(255, 42, 42, 0.1);
+}
+
+
+/* =================================== */
+/* 🛠️ ESTILOS PARA EL PANEL DE DIAGNÓSTICO (Slider) */
+/* =================================== */
 
 .diagnostics-panel {
-    /* Posicionamiento y tamaño inicial (Oculto) */
-    position: fixed;
-    top: 0;
-    right: 0; /* Oculto fuera de la pantalla */
-    width: 50%; /* Ocupa la mitad de la pantalla */
-    height: 100%;
-    z-index: 100; /* Asegura que esté por encima de otros paneles */
-    transform: translateX(100%); /* Desplazamiento inicial fuera de vista */
-    transition: transform 0.4s ease-out; /* Animación de deslizamiento */
-    
-    /* Estilo HUD */
-    background-color: rgba(0, 10, 20, 0.95);
-    border-left: 2px solid #00ffff;
-    box-shadow: -5px 0 15px rgba(0, 255, 255, 0.3);
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
+ /* Posicionamiento y capa superior (Z-Index) */
+ position: fixed;
+ top: 0;
+ right: 0;
+ bottom: 0; 
+ z-index: 100;
+
+ /* Apariencia - ROJO/NEGRO */
+ width: 400px;
+ background-color: #0a0a0a; /* Fondo muy oscuro */
+ border-left: 2px solid #ff2a2a; /* Borde rojo brillante */
+ box-shadow: -10px 0 20px rgba(255, 42, 42, 0.2);
+ padding: 20px;
+
+ /* Animación de deslizamiento */
+ transform: translateX(100%);
+ transition: transform 0.4s ease-out;
+ overflow-y: auto;
 }
 
-/* Estado abierto */
 .diagnostics-panel.open {
-    transform: translateX(0); /* Se desliza para mostrarse */
+ transform: translateX(0);
 }
 
+/* Encabezado */
 .dp-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    border-bottom: 1px solid #00ffff55;
-    padding-bottom: 10px;
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ margin-bottom: 20px;
+ border-bottom: 1px solid rgba(255, 42, 42, 0.5);
+ padding-bottom: 10px;
 }
 
 .dp-header h2 {
-    color: #00ffff;
-    font-size: 1.5em;
-    text-transform: uppercase;
+ color: #ff2a2a;
+ font-size: 1.2em;
+ margin: 0;
 }
 
-.dp-body {
-    flex-grow: 1;
-    overflow-y: auto;
-    padding-right: 10px; /* Espacio para la barra de scroll */
-}
-
+/* Contenido del cuerpo */
 .dp-body h3 {
-    color: #ffffff;
-    margin-top: 15px;
-    margin-bottom: 10px;
-    border-left: 3px solid #00ff00;
-    padding-left: 10px;
-}
-
-.dp-body h4 {
-    color: #00ff00;
-    margin-top: 15px;
-    margin-bottom: 5px;
-    font-size: 1em;
+ color: #fff;
+ font-size: 1em;
+ margin-top: 25px;
+ margin-bottom: 10px;
+ display: flex;
+ align-items: center;
 }
 
 .detail-info {
-    font-size: 0.9em;
-    margin-bottom: 5px;
+ font-size: 0.9em;
+ color: #a0a0a0;
+ margin: 5px 0;
 }
 
 .dp-divider {
-    border: none;
-    height: 1px;
-    background-color: #00ffff33;
-    margin: 20px 0;
+ border: none;
+ border-top: 1px dashed #ff2a2a; /* Rojo en el divisor */
+ margin: 20px 0;
+ opacity: 0.5;
+}
+
+.diagnostics-section h4 {
+ color: #fff;
+ font-size: 0.9em;
+ margin-top: 15px;
+ margin-bottom: 5px;
+}
+
+
+/* ✨ NUEVOS ESTILOS DE INPUT (Adaptación de la animación del login) */
+.diagnostic-input-box {
+ /* Clase contenedora (nueva estructura) */
+ position: relative; 
+ display: flex; 
+ align-items: flex-start; /* Alinea íconos y texto */
+ gap: 10px;
+ padding: 0.4rem 0.8rem;
+ background: rgba(255, 0, 0, 0.06); /* Fondo rojo muy sutil */
+ border: 1px solid #333; /* Borde más neutro */
+ border-radius: 4px; /* Un poco más cuadrado */
+ transition: box-shadow 0.25s ease, border-color 0.2s ease;
+}
+
+.diagnostic-input-box.focused {
+ border-color: #ff2a2a;
+ box-shadow: 0 0 5px rgba(255, 42, 42, 0.3);
+}
+
+.diagnostic-icon {
+ /* Estilo para los iconos */
+ flex: 0 0 20px;
+ color: #ff2a2a; /* Icono rojo */
+ margin-top: 10px; /* Alineación con el textarea */
 }
 
 .diagnostic-input {
-    width: 100%;
-    background-color: #1a2b3c;
-    border: 1px solid #00ffff55;
-    color: #ffffff;
-    padding: 10px;
-    font-family: 'Consolas', monospace;
-    font-size: 0.9em;
-    resize: vertical;
-    margin-bottom: 10px;
+ /* Este es el <textarea> real */
+ width: 100%;
+ box-sizing: border-box;
+ background: transparent; /* Importante: quitamos el color original */
+ border: none; /* Quitamos el borde original */
+ outline: none; /* Quitamos el outline */
+ color: #fff;
+ padding: 0; /* Quitamos el padding original, lo gestiona el contenedor */
+ font-family: 'Consolas', monospace;
+ font-size: 0.9em;
+ resize: vertical;
+ min-height: 80px;
 }
 
-.hud-btn.close-diag {
-    background-color: transparent;
-    border: 1px solid #ff0000;
-    color: #ff0000;
-    padding: 5px 10px;
-    font-size: 0.8em;
+/* focus underline */
+/* Aplicamos la animación al contenedor .diagnostic-input-box */
+.diagnostic-input-box::before {
+ position: absolute;
+ content: "";
+ left: 0;
+ bottom: -1px; /* Para que quede justo debajo del borde */
+ width: 0;
+ height: 2px;
+ background: #ff2a2a; 
+ transition: width 0.36s cubic-bezier(.2,.9,.2,1);
 }
 
-.hud-btn.close-diag:hover {
-    background-color: #ff000033;
+.diagnostic-input-box.focused::before { 
+  width: 100%; 
 }
 
-.hud-btn.save-diag {
-    width: 100%;
-    margin-top: 20px;
-    background-color: #00ff00;
-    color: #000;
-    border: none;
+/* Estilo del botón Guardar (Rojo Sólido) */
+.save-diag {
+ width: 100%;
+ margin-top: 25px;
+ background-color: #ff2a2a;
+ color: #000;
+ border: none;
+ padding: 12px;
+ font-weight: bold;
+ cursor: pointer;
+ transition: opacity 0.2s, background-color 0.2s, box-shadow 0.2s;
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ border-radius: 0; /* Estilo cuadrado */
 }
 
-.hud-btn.save-diag:hover {
-    background-color: #00cc00;
+.save-diag:hover {
+ background-color: #cc0000;
+ color: #fff;
+ box-shadow: 0 0 15px rgba(255, 42, 42, 0.4);
 }
 
-/* Asegurar que el panel derecho no choque con el de diagnóstico */
-.hud-panel.right-panel {
-    /* Necesitas que el panel derecho pueda ser superpuesto por el de diagnóstico, 
-       pero que no tape el left-panel, usa un z-index menor al de diagnostics-panel (100) */
-    z-index: 50; 
+/* Estilos de estado para el detalle */
+.status-pending {
+ color: #ffd700; /* Dorado para pendiente */
 }
 
-/* Modificación si es necesario para que se vea el deslizamiento parcial, 
-   aunque con z-index ya logramos la superposición. */
-.hud-container-reparacion {
-    position: relative; /* Para que el panel fixed se posicione respecto al contenedor principal si es necesario */
+.status-active {
+ color: #ff2a2a; /* Rojo para activo */
+ text-shadow: 0 0 5px rgba(255,42,42,0.3);
 }
+
 
 /* MEDIA QUERIES PARA PANTALLAS PEQUEÑAS */
 @media (max-width: 1000px) {
-  .hud-container-reparacion { grid-template-columns: 1fr; grid-template-rows: 1fr 1fr; height: auto; overflow: auto; }
-  .rp-body { flex-direction: column; }
-  .details-card { width: 90%; margin: 20px 0 0 0; border-right: 1px solid #444; border-bottom: 2px solid #ff2a2a; }
-  .rp-footer { flex-direction: column; gap: 20px; align-items: flex-start; }
-  .buttons-group { width: 100%; justify-content: space-between; }
+ .hud-container-reparacion { grid-template-columns: 1fr; grid-template-rows: 1fr 1fr; height: auto; overflow: auto; }
+ .rp-body { flex-direction: column; }
+ .details-card { width: 90%; margin: 20px 0 0 0; border-right: 1px solid #444; border-bottom: 2px solid #ff2a2a; }
+ .rp-footer { flex-direction: column; gap: 20px; align-items: flex-start; }
+ .buttons-group { width: 100%; justify-content: space-between; }
 }

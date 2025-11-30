@@ -94,9 +94,14 @@
   width: 100%;
   background: transparent;
   border: none;
-  outline: none;
   color: #e7eaf8;
   font-size: 0.95rem;
+  outline: none;
+}
+
+.login-input-box:hover {
+  box-shadow: 0 4px 12px rgba(255, 0, 0, 0.12);
+  transform: translateY(-2px);
 }
 
 /* focus underline */

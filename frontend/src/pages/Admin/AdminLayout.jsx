@@ -13,23 +13,44 @@ import ScreenVignette from "../../components/ScreenVignette/ScreenVignette";
 import "./AdminLayout.css";
 
 const menuItems = [
-  { path: "/admin/dashboard", icon: <LayoutDashboard size={22} />, label: "Dashboard" },
-  { path: "/admin/gestiones", icon: <ClipboardList size={22} />, label: "Gestiones" },
-  { path: "/admin/reparaciones", icon: <Wrench size={22} />, label: "Reparaciones" },
+  {
+    path: "/admin/dashboard",
+    icon: <LayoutDashboard size={22} />,
+    label: "Dashboard",
+  },
+  {
+    path: "/admin/gestiones",
+    icon: <ClipboardList size={22} />,
+    label: "Gestiones",
+  },
+  {
+    path: "/admin/reparaciones",
+    icon: <Wrench size={22} />,
+    label: "Reparaciones",
+  },
   { path: "/admin/vehiculos", icon: <Car size={22} />, label: "Vehículos" },
-  { path: "/admin/notificaciones", icon: <Bell size={22} />, label: "Notificaciones" },
+  {
+    path: "/admin/notificaciones",
+    icon: <Bell size={22} />,
+    label: "Notificaciones",
+  },
   { path: "/admin/perfil", icon: <User size={22} />, label: "Perfil" },
 ];
 
 const AdminLayout = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [currentUser, setCurrentUser] = useState({});
 
   const [showVignette, setShowVignette] = useState(false);
 
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
-    if (!storedUser || storedUser.rol !== "admin") navigate("/");
+    if (!storedUser || storedUser.rol !== "admin") {
+      navigate("/");
+    } else {
+      setCurrentUser(storedUser);
+    }
   }, [navigate]);
 
   // 🔥 Disparar animación al cambiar de sección
@@ -49,13 +70,12 @@ const AdminLayout = () => {
 
   return (
     <div className="admin-layout">
-
       {/* 🔥 ANIMACIÓN HUD ACTIVA SEGÚN ESTADO */}
       {showVignette && <ScreenVignette />}
 
       <div className="admin-main">
         <main className="admin-content">
-          <Outlet />
+          <Outlet context={{ userId: currentUser?.id }} />
         </main>
       </div>
 

@@ -2,7 +2,6 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import AdminLayout from "./pages/Admin/AdminLayout";
 import DashboardAdmin from "./pages/Admin/DashboardAdmin/DashboardAdmin";
 import GestionesAdmin from "./pages/Admin/GestionesAdmin/GestionesAdmin";
-import ReparacionesAdmin from "./pages/Admin/ReparacionesAdmin/VehicleRepairs";
 import VehiculosAdmin from "./pages/Admin/VehiculosAdmin/VehiculosAdmin";
 import PerfilAdmin from "./pages/Admin/PerfilAdmin/PerfilAdmin";
 import Login from "./components/Authentication/Login/Login";
@@ -24,6 +23,7 @@ import ForgotPasswordVerify from "./components/Authentication/ForgotPassword/For
 import ForgotPasswordReset from "./components/Authentication/ForgotPassword/ForgotPasswordReset";
 import LoadingScreen from "./components/Loading/LoadingScreen";
 import VehicleFinalData from "./components/Authentication/VehicleSelection/VehicleFinalData";
+import AdminRepairsPanel from "./pages/Admin/ReparacionesAdmin/AdminRepairsPanel";
 
 function App() {
   return (
@@ -54,7 +54,7 @@ function App() {
           <Route index element={<DashboardAdmin />} />
           <Route path="dashboard" element={<DashboardAdmin />} />
           <Route path="gestiones" element={<GestionesAdmin />} />
-          <Route path="reparaciones" element={<ReparacionesAdmin />} />
+          <Route path="reparaciones" element={<AdminRepairsPanel />} />
           <Route path="vehiculos" element={<VehiculosAdmin />} />
           <Route path="perfil" element={<PerfilAdmin />} />
         </Route>
