@@ -9,7 +9,6 @@ import Register from "./components/Authentication/Register/Register";
 import VehicleSelection from "./components/Authentication/VehicleSelection/VehicleSelection";
 import MecanicoLayout from "./pages/Mecanico/MecanicoLayout";
 import DashboardMecanico from "./pages/Mecanico/Dashboard/DashboardMecanico";
-import HistorialMecanico from "./pages/Mecanico/Historial/HistorialMecanico";
 import PerfilMecanico from "./pages/Mecanico/Perfil/PerfilMecanico";
 import ReparacionesMecanico from "./pages/Mecanico/Reparaciones/VehicleRepairs";
 import ClienteLayout from "./pages/Cliente/ClienteLayout";
@@ -63,7 +62,6 @@ function App() {
           <Route index element={<DashboardMecanico />} />
           <Route path="dashboard" element={<DashboardMecanico />} />
           <Route path="reparaciones" element={<ReparacionesMecanico />} />
-          <Route path="historial" element={<HistorialMecanico />} />
           <Route path="perfil" element={<PerfilMecanico />} />
         </Route>
 
