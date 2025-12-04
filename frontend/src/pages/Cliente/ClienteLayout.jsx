@@ -15,7 +15,6 @@ const menuItems = [
   { path: "/cliente/dashboard", icon: <LayoutDashboard size={22} />, label: "Dashboard" },
   { path: "/cliente/vehiculo", icon: <Car size={22} />, label: "Vehículo" },
   { path: "/cliente/turnos", icon: <Calendar size={22} />, label: "Turnos" },
-  { path: "/cliente/historial", icon: <Clock size={22} />, label: "Historial" },
   { path: "/cliente/perfil", icon: <User size={22} />, label: "Perfil" },
   { path: "/cliente/notificaciones", icon: <Bell size={22} />, label: "Notificaciones" },
 ];

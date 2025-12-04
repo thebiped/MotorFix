@@ -1,4 +1,12 @@
 import React, { useState, useEffect, useMemo } from "react";
+import {
+  Wrench,
+  Settings,
+  Save,
+  UserCheck,
+  ShieldOff,
+  XCircle,
+} from "lucide-react";
 import "./GestionesAdmin.css";
 
 // Función StatusPill reutilizada (para consistencia visual, la dejamos aquí)
@@ -68,8 +76,60 @@ const TurnosTable = ({ filters, isAddModalOpen, onAddModalClose }) => {
       const data = await res.json();
       console.log("🔎 /turnos/all devuelve:", data);
 
-      if (Array.isArray(data)) setTurnos(data);
-      else setTurnos([]);
+      if (Array.isArray(data)) {
+        const turnosEnriquecidos = data.map((turno) => {
+          // 1. Lógica de Cliente (Igual que antes)
+          const userId = turno.user_id || turno.user?.id;
+          const cliente = clientes.find(
+            (c) => String(c.id_usuario) === String(userId)
+          );
+          const username =
+            cliente?.username ||
+            turno.user?.name ||
+            (userId ? `ID Cliente #${userId}` : "Cliente Desconocido");
+
+          // 2. Lógica de Mecánico (Igual que antes)
+          let nombreMecanico = "Sin asignar";
+          if (
+            turno.mecanico &&
+            turno.mecanico.name &&
+            turno.mecanico.name !== "Sin asignar"
+          ) {
+            nombreMecanico = turno.mecanico.name;
+          } else if (turno.mecanico_id || turno.mecanico?.id) {
+            const idMec = turno.mecanico_id || turno.mecanico.id;
+            const mecLocal = mecanicos.find(
+              (m) => String(m.id_usuario) === String(idMec)
+            );
+            if (mecLocal) nombreMecanico = mecLocal.username;
+          }
+
+          // 3. 🚀 NUEVO: Mapeo de Fecha y Problema
+          // El backend envía 'created_at', el frontend espera 'fecha_creado'
+          const fecha =
+            turno.created_at || turno.fecha_creado || new Date().toISOString();
+
+          // El backend envía el problema dentro de 'turno.descripcion', el frontend espera 'problema'
+          // Si 'turno.problema' ya existe en la raíz, úsalo, sino busca en el objeto anidado
+          const problemaDesc =
+            turno.problema || turno.turno?.descripcion || "Sin descripción";
+
+          return {
+            ...turno,
+            username: username,
+            user_id: userId,
+            mecanico_nombre: nombreMecanico,
+            mecanico_id: turno.mecanico_id || turno.mecanico?.id,
+
+            // ✅ Asignamos las propiedades corregidas para que la tabla las lea
+            fecha_creado: fecha,
+            problema: problemaDesc,
+          };
+        });
+        setTurnos(turnosEnriquecidos);
+      } else {
+        setTurnos([]);
+      }
     } catch (err) {
       console.error("Error fetching turnos:", err);
       setTurnos([]);
@@ -121,13 +181,18 @@ const TurnosTable = ({ filters, isAddModalOpen, onAddModalClose }) => {
     }
   };
 
+  useEffect(() => {
+    if (clientes.length > 0) {
+      fetchTurnos(); // Esta función ahora usa el array 'clientes' ya poblado
+    }
+  }, [clientes]);
+
   // 🚀 HOOKS DE VIDA (useEffect)
 
   useEffect(() => {
     fetchMecanicos();
     fetchClientes();
     fetchVehiculosAdmin();
-    fetchTurnos();
   }, []); // Carga inicial
 
   // Opcional: recargar mecánicos cuando abrís el modal (si querés siempre la lista más fresca)
@@ -489,204 +554,276 @@ const TurnosTable = ({ filters, isAddModalOpen, onAddModalClose }) => {
           </div>
         </>
       )}
-
       {/* 💥 MODAL DE CREACIÓN DE TURNO (ADMIN) */}
       {isAddModalOpen && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <h2>Crear Nuevo Turno (Admin)</h2>
+        <div className="admin-new-turno-modal-overlay">
+          {/* Nuevo Overlay */}
+          <div className="admin-turno-creacion-hud-panel">
+            {/* Nuevo Panel Principal */}
+            {/* DECORACIONES DE ESQUINA (HUD) */}
+            <div className="panel-decoracion-hud-card top-left"></div>
+            <div className="panel-decoracion-hud-card bottom-left"></div>
+            <div className="panel-decoracion-hud-card top-right"></div>
+            <div className="panel-decoracion-hud-card bottom-right"></div>
+            {/* Contenido principal del modal */}
+            <div className="modal-content-wrapper">
+              <h3>Crear Nuevo Turno (Admin)</h3>
 
-            <div className="field">
-              <label>Seleccionar Cliente</label>
-              <select
-                value={modalClient}
-                onChange={(e) => {
-                  setModalClient(e.target.value);
-                  setVehiculoId(""); // Limpiar el vehículo al cambiar de cliente
-                }}
-              >
-                <option value="">-- Seleccionar cliente --</option>
-                {clientes.map((c) => (
-                  <option key={c.id_usuario} value={c.id_usuario}>
-                    {c.username}
-                  </option>
-                ))}
-              </select>
+              <div className="field">
+                <label>Seleccionar Cliente</label>
+                <select
+                  value={modalClient}
+                  onChange={(e) => {
+                    setModalClient(e.target.value);
+                    setVehiculoId(""); // Limpiar el vehículo al cambiar de cliente
+                  }}
+                >
+                  <option value="">-- Seleccionar cliente --</option>
+                  {clientes.map((c) => (
+                    <option key={c.id_usuario} value={c.id_usuario}>
+                      {c.username}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Campos del formulario de Turno */}
+              {modalClient ? (
+                <>
+                  <div className="field">
+                    <label>Vehículo</label>
+                    <select
+                      value={vehiculoId}
+                      onChange={(e) => setVehiculoId(e.target.value)}
+                      disabled={vehiculosClienteModal.length === 0}
+                    >
+                      <option value="">Seleccionar vehículo</option>
+                      {vehiculosClienteModal.map((v) => {
+                        const id = v.id_vehiculo ?? v.id;
+                        const label = `${renderMarcaModelo(v)}${
+                          v.patente ? ` - ${v.patente}` : ""
+                        }`.trim();
+                        return (
+                          <option key={id} value={id}>
+                            {label || `vehículo #${id}`}
+                          </option>
+                        );
+                      })}
+                    </select>
+                    {vehiculosClienteModal.length === 0 && (
+                      <p className="error-message small">
+                        ⚠️ El cliente no tiene vehículos registrados.
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="field">
+                    <label>Problema del vehículo</label>
+                    <input
+                      type="text"
+                      value={problema}
+                      onChange={(e) => setProblema(e.target.value)}
+                    />
+                  </div>
+
+                  <div className="field">
+                    <label>Tipo de reparación</label>
+                    <select
+                      value={tipoReparacion}
+                      onChange={(e) => setTipoReparacion(e.target.value)}
+                    >
+                      <option value="">Seleccionar</option>
+                      <option value="mecanica">Mecánica</option>
+                      <option value="electrico">Eléctrico</option>
+                      <option value="service">Service</option>
+                      <option value="chapa">Chapa y pintura</option>
+                    </select>
+                  </div>
+
+                  <div className="modal-actions">
+                    <button className="btn-secondary" onClick={onAddModalClose}>
+                      Cancelar
+                    </button>
+                    <button
+                      className="btn-primary"
+                      onClick={handleCrearTurnoAdmin}
+                      disabled={
+                        !vehiculoId ||
+                        !problema ||
+                        !tipoReparacion ||
+                        vehiculosClienteModal.length === 0
+                      }
+                    >
+                      Crear Turno
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <p className="info-message">
+                  Selecciona un cliente para continuar con la creación del
+                  turno.
+                </p>
+              )}
             </div>
-
-            {/* Campos del formulario de Turno */}
-            {modalClient ? (
-              <>
-                <div className="field">
-                  <label>Vehículo</label>
-                  <select
-                    value={vehiculoId}
-                    onChange={(e) => setVehiculoId(e.target.value)}
-                    disabled={vehiculosClienteModal.length === 0}
-                  >
-                    <option value="">Seleccionar vehículo</option>
-                    {vehiculosClienteModal.map((v) => {
-                      const id = v.id_vehiculo ?? v.id;
-                      const label = `${renderMarcaModelo(v)}${
-                        v.patente ? ` - ${v.patente}` : ""
-                      }`.trim();
-                      return (
-                        <option key={id} value={id}>
-                          {label || `vehículo #${id}`}
-                        </option>
-                      );
-                    })}
-                  </select>
-                  {vehiculosClienteModal.length === 0 && (
-                    <p className="error-message small">
-                      ⚠️ El cliente no tiene vehículos registrados.
-                    </p>
-                  )}
-                </div>
-
-                <div className="field">
-                  <label>Problema del vehículo</label>
-                  <input
-                    type="text"
-                    value={problema}
-                    onChange={(e) => setProblema(e.target.value)}
-                  />
-                </div>
-
-                <div className="field">
-                  <label>Tipo de reparación</label>
-                  <select
-                    value={tipoReparacion}
-                    onChange={(e) => setTipoReparacion(e.target.value)}
-                  >
-                    <option value="">Seleccionar</option>
-                    <option value="mecanica">Mecánica</option>
-                    <option value="electrico">Eléctrico</option>
-                    <option value="service">Service</option>
-                    <option value="chapa">Chapa y pintura</option>
-                  </select>
-                </div>
-
-                <div className="modal-actions">
-                  <button className="btn-secondary" onClick={onAddModalClose}>
-                    Cancelar
-                  </button>
-                  <button
-                    className="btn-primary"
-                    onClick={handleCrearTurnoAdmin}
-                    // Deshabilitar si falta algún campo o si no hay vehículos para el cliente
-                    disabled={
-                      !vehiculoId ||
-                      !problema ||
-                      !tipoReparacion ||
-                      vehiculosClienteModal.length === 0
-                    }
-                  >
-                    Crear Turno
-                  </button>
-                </div>
-              </>
-            ) : (
-              <p className="info-message">
-                Selecciona un cliente para continuar con la creación del turno.
-              </p>
-            )}
+            {/* Fin de modal-content-wrapper */}
           </div>
         </div>
       )}
-
-      {/* 🔧 MODAL DE EDICIÓN Y GESTIÓN (existente) */}
+      {/*  MODAL DE EDICIÓN Y GESTIÓN (existente) */}     
       {modalOpen && (
-        <div className="modal-overlay-admin">
-          <div className="modal-content-admin two-columns">
-            {/* COLUMNA IZQUIERDA — EDITAR */}
-            <div className="col">
-              <h3>Editar Turno</h3>
+        // 1. OVERLAY PRINCIPAL (Fondo Oscuro)
+        <div className="admin-edit-turno-modal-overlay">
+          <div className="admin-turno-edicion-hud-panel">
+            <div className="hud-corner-deco top-left"></div>
+            <div className="hud-corner-deco bottom-left"></div>
+            <div className="hud-corner-deco top-right"></div>
+            <div className="hud-corner-deco bottom-right"></div>
+
+            {/* COLUMNA IZQUIERDA — EDICIÓN */}
+            <div className="col col-edicion">
+              <h3 className="hud-titulo">
+                <Wrench className="hud-icon" size={20} /> EDICIÓN DE TURNO
+              </h3>
+
               {selectedTurno && (
                 <p className="modal-info-turno">
-                  **Turno #{selectedTurno.id_turno}** para{" "}
-                  {selectedTurno.username}
+                  TURNO #{selectedTurno.id_turno} PARA{" "}
+                  {selectedTurno.username.toUpperCase()}
                 </p>
               )}
 
-              <label>Tipo reparación</label>
-              <input
-                value={editData.tipo_reparacion}
-                onChange={(e) =>
-                  setEditData({ ...editData, tipo_reparacion: e.target.value })
-                }
-              />
+              {/* Contenedor con Scroll */}
+              <div className="col-content-scroll">
+                {/* SECCIÓN VERTICAL 1: INFO BÁSICA Y REPARACIÓN */}
+                <div className="panel-section-vertical">
+                  <label className="hud-label">TIPO DE REPARACIÓN</label>
+                  <input
+                    type="text"
+                    className="hud-input"
+                    value={editData.tipo_reparacion}
+                    onChange={(e) =>
+                      setEditData({
+                        ...editData,
+                        tipo_reparacion: e.target.value,
+                      })
+                    }
+                  />
 
-              <label>Problema</label>
-              <textarea
-                value={editData.problema}
-                onChange={(e) =>
-                  setEditData({ ...editData, problema: e.target.value })
-                }
-              />
+                  <label className="hud-label">DETALLE DEL PROBLEMA</label>
+                  <textarea
+                    className="hud-textarea"
+                    value={editData.problema}
+                    onChange={(e) =>
+                      setEditData({ ...editData, problema: e.target.value })
+                    }
+                    rows="4"
+                  />
+                </div>
+                <hr className="hud-divisor" />
+              </div>
+              {/* Fin col-content-scroll */}
 
-              <label>Estado</label>
-              <select
-                value={editData.estado}
-                onChange={(e) =>
-                  setEditData({ ...editData, estado: e.target.value })
-                }
-              >
-                <option value="pendiente">Pendiente</option>
-                <option value="en proceso">En proceso</option>
-                <option value="finalizado">Finalizado</option>
-                <option value="cancelado">Cancelado</option>
-              </select>
-
-              <button className="btn-primary" onClick={guardarCambios}>
-                Guardar Cambios
-              </button>
+              {/* SECCIÓN HORIZONTAL 2: ESTADO Y GUARDAR (Pegado al fondo) */}
+              <div className="panel-section-horizontal">
+                <div className="form-group-estado">
+                  <label className="hud-label">ESTADO DEL TURNO</label>
+                  <select
+                    className="hud-select"
+                    value={editData.estado}
+                    onChange={(e) =>
+                      setEditData({ ...editData, estado: e.target.value })
+                    }
+                  >
+                    <option value="pendiente">PENDIENTE</option>
+                    <option value="en proceso">EN PROCESO</option>
+                    <option value="finalizado">FINALIZADO</option>
+                    <option value="cancelado">CANCELADO</option>
+                  </select>
+                </div>
+                <div className="btn-primary-guardar-container">
+                  <button
+                    className="hud-button hud-button-primary"
+                    onClick={guardarCambios}
+                  >
+                    <Save className="hud-icon" size={18} /> GUARDAR CAMBIOS
+                  </button>
+                </div>
+              </div>
             </div>
 
-            {/* COLUMNA DERECHA — GESTIÓN */}
-            <div className="col">
-              <h3>Gestión del Turno</h3>
+            {/* COLUMNA DERECHA — GESTIÓN (CONTROL VERTICAL) */}
+            <div className="col col-control">
+              {/* Settings (Engranajes) para Gestión */}
+              <h3 className="hud-titulo-control">
+                <Settings className="hud-icon-control" size={20} /> GESTIÓN Y
+                CONTROL
+              </h3>
 
-              <label>Asignar mecánico</label>
-              <select
-                className="select-mecanico"
-                value={editData.mecanico_id}
-                onChange={(e) =>
-                  setEditData({ ...editData, mecanico_id: e.target.value })
-                }
-              >
-                <option value="">-- Seleccionar mecánico --</option>
+              {/* Contenedor con Scroll */}
+              <div className="col-content-scroll">
+                <div className="panel-section-vertical">
+                  <label className="hud-label">ASIGNAR MECÁNICO</label>
+                  <select
+                    className="hud-select select-mecanico"
+                    value={editData.mecanico_id}
+                    onChange={(e) =>
+                      setEditData({ ...editData, mecanico_id: e.target.value })
+                    }
+                  >
+                    <option value="">-- SELECCIONAR MECÁNICO --</option>
+                    {mecanicos.map((m) => (
+                      <option key={m.id_usuario} value={m.id_usuario}>
+                        {m.username.toUpperCase()}
+                      </option>
+                    ))}
+                  </select>
+                  <button
+                    className="hud-button hud-button-secondary"
+                    onClick={asignarMecanico}
+                  >
+                    <UserCheck className="hud-icon" size={18} /> ASIGNAR
+                    MECÁNICO
+                  </button>
+                </div>
 
-                {mecanicos.map((m) => (
-                  <option key={m.id_usuario} value={m.id_usuario}>
-                    {m.username}
-                  </option>
-                ))}
-              </select>
+                <hr className="hud-divisor" />
 
-              <button className="btn-primary" onClick={asignarMecanico}>
-                Asignar
-              </button>
+                {/* SECCIÓN DE BOTONES DE CONTROL (Pegada al fondo) */}
+                <div className="panel-section-vertical control-buttons">
+                  <h3 className="hud-titulo-control">
+                    <Settings className="hud-icon-control" size={20} /> Acciones irreversibles
+                  </h3>
+                  <button
+                    className={`hud-button ${
+                      selectedTurno?.habilitado === 1
+                        ? "hud-button-danger"
+                        : "hud-button-success"
+                    }`}
+                    onClick={() => toggleHabilitado(selectedTurno)}
+                  >
+                    {selectedTurno?.habilitado === 1 ? (
+                      // ShieldOff para Deshabilitar
+                      <ShieldOff className="hud-icon" size={18} />
+                    ) : (
+                      // UserCheck para Habilitar
+                      <UserCheck className="hud-icon" size={18} />
+                    )}{" "}
+                    {selectedTurno?.habilitado === 1
+                      ? "DESHABILITAR TURNO"
+                      : "HABILITAR TURNO"}
+                  </button>
 
-              <hr />
-
-              <button
-                className="btn-habilitar"
-                onClick={() => toggleHabilitado(selectedTurno)}
-              >
-                {selectedTurno?.habilitado === 1 ? "Deshabilitar" : "Habilitar"}
-              </button>
-
-              <button
-                className="btn-secondary"
-                onClick={() => {
-                  setSelectedTurno(null);
-                  setModalOpen(false);
-                }}
-                style={{ marginTop: "10px" }}
-              >
-                Cerrar
-              </button>
+                  <button
+                    className="hud-button hud-button-close"
+                    onClick={() => {
+                      setSelectedTurno(null);
+                      setModalOpen(false);
+                    }}
+                  >
+                    CERRAR PANEL
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>

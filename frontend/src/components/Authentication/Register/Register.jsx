@@ -10,17 +10,17 @@ import "./Register.css";
 import logo from "../../../assets/img/logo.png";
 import bg_register from "../../../assets/img/bg_register.png";
 
-/* TIMINGS CINEMÁTICOS */
-const TEXT_ROTATE_INTERVAL = 3000;
+/* TIMINGS CINEMÁTICOS (Copiados del Login) */
+const TEXT_ROTATE_INTERVAL = 3600;
 const LOADING_DURATION = 5200;
 const ERROR_HOLD = 3600;
 const SUCCESS_HOLD = 2600;
 
-/* Textos HUD estilo Arkham */
+/* Textos HUD estilo Arkham (Actualizados para Registro) */
 const texts = [
-  "Inicializando sistema…",
-  "Cargando módulos de usuario…",
-  "Preparando selección de vehículos…",
+  "Inicializando protocolos de registro…",
+  "Generando identidad de usuario…",
+  "Sincronizando módulo de entrada…",
 ];
 
 const Register = () => {
@@ -34,21 +34,33 @@ const Register = () => {
     confirmPassword: "",
   });
 
-  /* Loader HUD */
+  /* Loader HUD Estados */
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
-  const progressRef = useRef(null);
-
-  /* Textos rotativos */
   const [rotTextIndex, setRotTextIndex] = useState(0);
-  const rotRef = useRef(null);
 
-  /* Mensajes HUD */
+  /* Resultado API / Mensajes */
+  const [registerResult, setRegisterResult] = useState(null); // 'success' o { error: msg }
   const [loaderMessage, setLoaderMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
-  /* Rotación lenta */
+  /* Referencias para limpieza */
+  const progressRef = useRef(null);
+  const rotRef = useRef(null);
+  const timeoutRef = useRef([]);
+
+  /* Limpieza al desmontar */
+  useEffect(() => {
+    return () => {
+      if (progressRef.current) clearInterval(progressRef.current);
+      if (rotRef.current) clearInterval(rotRef.current);
+      timeoutRef.current.forEach(clearTimeout);
+    };
+  }, []);
+
+
+  /* ROTACIÓN DE TEXTOS */
   const startRotatingTexts = () => {
     if (rotRef.current) clearInterval(rotRef.current);
 
@@ -66,7 +78,7 @@ const Register = () => {
     }
   };
 
-  /* Progress lento */
+  /* BARRA DE PROGRESO LENTA */
   const startProgress = () => {
     const fps = 30;
     const steps = Math.max(1, Math.floor((LOADING_DURATION / 1000) * fps));
@@ -88,28 +100,77 @@ const Register = () => {
     }, Math.floor(LOADING_DURATION / steps));
   };
 
-  /* Reacciones del HUD durante el proceso */
+  /* SINCRONIZACIÓN TOTAL DEL HUD (Reacciones según el progreso y resultado) */
   useEffect(() => {
     if (!loading) {
+      stopRotatingTexts();
       setLoaderMessage("");
       setErrorMessage("");
       setSuccessMessage("");
-      stopRotatingTexts();
       return;
     }
 
+    /* --- TEXTOS SEGÚN PROGRESO --- */
     let dynamicMessage = texts[rotTextIndex];
 
-    if (progress >= 30 && progress < 70)
+    if (progress >= 30 && progress < 70) {
       dynamicMessage = "Verificando integridad de los datos…";
-
-    if (progress >= 70 && progress < 100)
+    } else if (progress >= 70 && progress < 100) {
       dynamicMessage = "Conectando con el servidor…";
+    } else if (progress >= 100 && registerResult == null) {
+      dynamicMessage = "Finalizando proceso…";
+    }
 
-    if (progress >= 100) dynamicMessage = "";
+    /* No mostrar mensaje si la barra ya terminó */
+    if (progress >= 100) {
+      dynamicMessage = "";
+    }
 
     setLoaderMessage(dynamicMessage);
-  }, [loading, progress, rotTextIndex]);
+
+    /* --- ÉXITO: APARECE MENSAJE HUD VERDE --- */
+    if (progress >= 100 && registerResult === "success") {
+      stopRotatingTexts();
+
+      setSuccessMessage("REGISTRO COMPLETADO — Bienvenido al sistema.");
+
+      const timer1 = setTimeout(() => {
+        setSuccessMessage("");
+        setLoading(false);
+        navigate("/vehicle-selection"); // Navegación al siguiente paso
+      }, SUCCESS_HOLD);
+      timeoutRef.current.push(timer1);
+    }
+
+    /* --- ERROR: REPENTINO --- */
+    if (progress >= 100 && typeof registerResult === "object") {
+      stopRotatingTexts();
+
+      const timer2 = setTimeout(() => {
+        setErrorMessage(registerResult.error);
+      }, 150);
+      timeoutRef.current.push(timer2);
+
+      const timer3 = setTimeout(() => {
+        setLoading(false);
+        setRegisterResult(null);
+      }, ERROR_HOLD);
+      timeoutRef.current.push(timer3);
+    }
+  }, [loading, rotTextIndex, progress, registerResult, navigate]);
+
+  /* ERROR INSTANTÁNEO (Usado para validación de formulario) */
+  const showImmediateLoaderError = (msg) => {
+    // Limpiar mensajes antiguos
+    setErrorMessage("");
+    setRegisterResult({ error: msg });
+
+    // Iniciar carga y progreso (la lógica de useEffect lo mostrará como error al 100%)
+    setLoading(true);
+    startProgress();
+    startRotatingTexts(); // Necesario para que el useEffect tenga un índice
+  };
+
 
   /* On Submit */
   const handleSubmit = async (e) => {
@@ -118,63 +179,52 @@ const Register = () => {
     const { username, email, password, confirmPassword } = formData;
 
     if (!username || !email || !password || !confirmPassword) {
-      triggerError("Debes completar todos los campos.");
+      showImmediateLoaderError("Debes completar todos los campos.");
       return;
     }
 
     if (password !== confirmPassword) {
-      triggerError("Las contraseñas no coinciden.");
+      showImmediateLoaderError("Las contraseñas no coinciden.");
       return;
     }
 
-    try {
-      // 1. Realizar el post
-      const response = await api.post("/auth/register", {
-        username,
-        email,
-        password,
-      }); // 2. CAPTURAR EL ID DEVUELTO
-      const newUserId = response.data.user.id; // 3. ALMACENAR EL ID PARA EL SIGUIENTE PASO
-      localStorage.setItem("temp_user_id", newUserId);
-      setLoading(true);
-      setSuccessMessage("");
-      setErrorMessage("");
-
-      startRotatingTexts();
-      startProgress();
-      setLoaderMessage(texts[0]);
-
-      setTimeout(() => {
-        setSuccessMessage("Registro completado — Bienvenido al sistema.");
-
-        setTimeout(() => {
-          setLoading(false); // Navegamos al siguiente paso
-          navigate("/vehicle-selection");
-        }, SUCCESS_HOLD);
-      }, LOADING_DURATION + 120);
-    } catch (err) {
-      triggerError(err.response?.data?.message || "Error en el registro.");
-    }
-  };
-
-  /* ERROR estilo Arkham Knight */
-  const triggerError = (msg) => {
+    // Limpiar estado de carga y resultados previos e iniciar la animación
     setLoading(true);
-    setErrorMessage("");
-    setSuccessMessage("");
-
+    setProgress(0);
+    setRegisterResult(null);
     startRotatingTexts();
     startProgress();
     setLoaderMessage(texts[0]);
 
-    setTimeout(() => {
-      setErrorMessage(msg);
 
-      setTimeout(() => {
-        setLoading(false);
-        setErrorMessage("");
-      }, ERROR_HOLD);
-    }, LOADING_DURATION - 120);
+    try {
+      const response = await api.post("/auth/register", {
+        username,
+        email,
+        password,
+      });
+
+      if (response.data?.success) {
+        // Guardar ID temporal para el siguiente paso
+        const newUserId = response.data.user.id;
+        localStorage.setItem("temp_user_id", newUserId);
+
+        // Indicar ÉXITO al HUD
+        setRegisterResult("success");
+
+      } else {
+        // Indicar ERROR al HUD
+        setRegisterResult({
+          error: response.data?.message || "Error en el registro.",
+        });
+      }
+
+    } catch (err) {
+      // Indicar ERROR de servidor/red al HUD
+      setRegisterResult({
+        error: err.response?.data?.message || "Error de servidor en el registro.",
+      });
+    }
   };
 
   const handleChange = (e) => {
@@ -184,20 +234,23 @@ const Register = () => {
 
   return (
     <>
-      {/* LOADER HUD */}
+      {/* LOADER HUD (Asegúrate de que las clases CSS sean las mismas que en Login.css) */}
       {loading && (
-        <div className="initial-register-overlay">
-          <div className="initial-register-content arkham">
+        <div className="initial-loader-overlay" role="status">
+          <div className="initial-loader-content arkham">
+
             {/* TEXTO PRINCIPAL */}
             {loaderMessage && (
-              <div className="register-glitch-title" data-text={loaderMessage}>
+              <div className="glitch-title" data-text={loaderMessage}>
                 {loaderMessage}
               </div>
             )}
 
             {/* ÉXITO */}
             {successMessage && (
-              <div className="hud-success-message">{successMessage}</div>
+              <div className="hud-success-message glitch-title" data-text={successMessage}>
+                {successMessage}
+              </div>
             )}
 
             {/* ERROR */}
@@ -206,9 +259,9 @@ const Register = () => {
             )}
 
             {/* Barra */}
-            <div className="register-loader-bar">
+            <div className="loader-bar">
               <div
-                className="register-loader-bar-fill"
+                className="loader-bar-fill"
                 style={{ width: `${progress}%` }}
               ></div>
             </div>
@@ -240,6 +293,7 @@ const Register = () => {
                   placeholder="Nombre de usuario..."
                   value={formData.username}
                   onChange={handleChange}
+                  disabled={loading}
                 />
               </div>
             </div>
@@ -254,6 +308,7 @@ const Register = () => {
                   placeholder="Correo electrónico..."
                   value={formData.email}
                   onChange={handleChange}
+                  disabled={loading}
                 />
               </div>
             </div>
@@ -268,6 +323,7 @@ const Register = () => {
                   placeholder="Contraseña..."
                   value={formData.password}
                   onChange={handleChange}
+                  disabled={loading}
                 />
               </div>
             </div>
@@ -282,13 +338,14 @@ const Register = () => {
                   placeholder="Confirmar contraseña..."
                   value={formData.confirmPassword}
                   onChange={handleChange}
+                  disabled={loading}
                 />
               </div>
             </div>
 
             <div className="register-button">
-              <button className="register-btn" type="submit">
-                Continuar
+              <button className="register-btn" type="submit" disabled={loading}>
+                {loading ? "Procesando..." : "Continuar"}
               </button>
             </div>
           </form>

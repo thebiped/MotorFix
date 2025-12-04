@@ -1,4 +1,3 @@
-/* ---------- Container general ---------- */
 .final-container {
   position: relative;
   width: 100vw;
@@ -6,7 +5,6 @@
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  /* 🚀 AJUSTE CLAVE: Centra el contenido para eliminar el vacío inferior */
   justify-content: center;
   gap: 1.8rem;
   padding: 1rem;
@@ -14,7 +12,6 @@
   overflow: hidden;
 }
 
-/* Subtle outer frame, like a HUD panel */
 .final-wrapper-border {
   position: relative;
   display: grid;
@@ -31,7 +28,6 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.02);
 }
 
-/* faint neon frame */
 .final-wrapper-border::before {
   content: "";
   position: absolute;
@@ -42,7 +38,6 @@
     inset 0 0 18px rgba(255, 40, 40, 0.02);
 }
 
-/* ---------- Left panel (form) ---------- */
 .final-left-panel {
   padding: 1.6rem;
   border-radius: 8px;
@@ -58,7 +53,6 @@
   position: relative;
 }
 
-/* Title */
 .final-title {
   margin: 0;
   font-size: 1.4rem;
@@ -70,14 +64,12 @@
   text-shadow: 0 0 10px rgba(255, 40, 40, 0.08);
 }
 
-/* Group */
 .final-group {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
 
-/* Labels */
 .final-group label {
   font-size: 0.78rem;
   color: #bfbfbf;
@@ -85,7 +77,6 @@
   font-weight: 700;
 }
 
-/* Inputs */
 .final-group input[type="text"],
 .final-group input[type="number"] {
   width: 100%;
@@ -100,14 +91,12 @@
   box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.02);
 }
 
-/* ⚙️ Input focus (Estilo HUD/Diagnóstico) */
 .final-group input:focus {
   border-color: #ff2a2a;
   box-shadow: 0 0 14px rgba(255, 40, 40, 0.2), inset 0 1px 4px rgba(0, 0, 0, 0.8);
   transform: none;
 }
 
-/* Color picker row */
 .final-color-picker {
   display: flex;
   gap: 0.8rem;
@@ -115,7 +104,6 @@
   padding-top: 0.6rem;
 }
 
-/* Color dots */
 .final-color-dot {
   width: 32px;
   height: 32px;
@@ -157,7 +145,6 @@
   border-color: #ff2a2a;
 }
 
-/* Error message */
 .final-error {
   margin-top: 0.6rem;
   color: #ff9b9b;
@@ -169,22 +156,17 @@
   letter-spacing: 0.4px;
 }
 
-/* ---------- Right panel (vehicle image) ---------- */
 .final-right-panel {
   position: relative;
   min-height: 420px;
-
-  /* AJUSTE: Flexbox para apilar imagen y botones */
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-
   padding-bottom: 0;
   z-index: 3;
 }
 
-/* Car preview box */
 .final-car-box {
   width: 100%;
   max-width: 480px;
@@ -203,7 +185,6 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.02);
 }
 
-/* Placeholder text when no image */
 .final-car-box:empty::before {
   content: "IMAGEN DEL VEHÍCULO";
   color: rgba(255, 255, 255, 0.65);
@@ -211,7 +192,6 @@
   font-weight: 700;
 }
 
-/* Image inside */
 .final-car-img {
   width: 92%;
   height: auto;
@@ -222,23 +202,19 @@
   transition: transform 0.6s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.5s;
 }
 
-/* small hover parallax */
 .final-car-box:hover .final-car-img {
   transform: scale(1.02) translateY(-6px);
 }
 
-/* ---------- Actions (buttons inside panel) ---------- */
 .final-actions {
   width: 100%;
   display: flex;
   justify-content: flex-end;
-  /* Mantener los botones a la derecha del panel */
   gap: 0.8rem;
   margin-top: 1.2rem;
   padding-top: 0.5rem;
 }
 
-/* ⏹️ Buttons (Cuadrados) */
 .final-btn {
   padding: 0.8rem 1.2rem;
   border-radius: 4px;
@@ -256,7 +232,6 @@
   gap: 0.6rem;
 }
 
-/* Secondary */
 .final-btn.secondary {
   background: rgba(255, 255, 255, 0.03);
   color: #dcdcdc;
@@ -268,7 +243,6 @@
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
 }
 
-/* Primary (red) */
 .final-btn.primary {
   background: linear-gradient(90deg, #ff2a2a, #ff4646);
   border-color: #ff2a2a;
@@ -282,7 +256,6 @@
   box-shadow: 0 12px 46px rgba(255, 40, 40, 0.18);
 }
 
-/* ---------- Loading overlay (HUD) ---------- */
 .final-loader-overlay {
   position: fixed;
   inset: 0;
@@ -294,7 +267,6 @@
   backdrop-filter: blur(5px);
 }
 
-/* Loader box */
 .final-loader-box {
   width: 560px;
   max-width: 90%;
@@ -307,7 +279,6 @@
   animation: popIn 360ms ease forwards;
 }
 
-/* Loader title */
 .final-loader-title {
   color: #ff3b3b;
   font-weight: 900;
@@ -318,7 +289,6 @@
   animation: flicker 2s infinite;
 }
 
-/* Loader bar container */
 .final-loader-bar {
   width: 100%;
   height: 12px;
@@ -328,7 +298,6 @@
   border: 1px solid rgba(255, 40, 40, 0.08);
 }
 
-/* Loader fill (progress) */
 .final-loader-fill {
   width: 0%;
   height: 100%;
@@ -337,7 +306,6 @@
   transition: width 120ms linear;
 }
 
-/* Subtext */
 .final-loader-sub {
   margin-top: 0.85rem;
   color: #ccc;
@@ -345,9 +313,6 @@
   font-weight: 700;
 }
 
-/* ---------- Scanlines, glitch & HUD visuals ---------- */
-
-/* global scanline overlay */
 .final-container::after {
   content: "";
   position: absolute;
@@ -359,7 +324,6 @@
   opacity: 0.06;
 }
 
-/* small noise */
 @supports (filter: blur(0)) {
   .final-container::before {
     content: "";
@@ -372,7 +336,6 @@
   }
 }
 
-/* HUD flicker / subtle */
 @keyframes flicker {
   0% {
     opacity: 1;
@@ -391,7 +354,6 @@
   }
 }
 
-/* popIn */
 @keyframes popIn {
   from {
     opacity: 0;
@@ -404,7 +366,6 @@
   }
 }
 
-/* ---------- Decorative animated borders ---------- */
 .final-wrapper-border .decor-left,
 .final-wrapper-border .decor-right {
   position: absolute;
@@ -415,7 +376,6 @@
   mix-blend-mode: screen;
 }
 
-/* left */
 .final-wrapper-border .decor-left {
   left: 8px;
   background: linear-gradient(180deg, rgba(255, 40, 40, 0.08), transparent 40%);
@@ -423,7 +383,6 @@
   box-shadow: 0 0 30px rgba(255, 40, 40, 0.04);
 }
 
-/* right */
 .final-wrapper-border .decor-right {
   right: 8px;
   background: linear-gradient(180deg, transparent 60%, rgba(255, 40, 40, 0.06));
@@ -431,7 +390,6 @@
   box-shadow: 0 0 30px rgba(255, 40, 40, 0.04);
 }
 
-/* ---------- Entry animations for individual pieces ---------- */
 .final-left-panel,
 .final-right-panel {
   opacity: 0;
@@ -447,7 +405,6 @@
   animation-delay: 0.24s;
 }
 
-/* RE-APLICAR ANIMACIÓN a los botones dentro del panel */
 .final-right-panel .final-actions {
   animation-delay: 0.36s;
 }
@@ -464,12 +421,10 @@
   }
 }
 
-/* ---------- Stats bars animation inside card (if used) ---------- */
 .stat-row .fill {
   transition: width 1s cubic-bezier(0.2, 0.9, 0.3, 1);
 }
 
-/* ---------- Accessibility ---------- */
 button:focus,
 input:focus,
 .final-color-dot:focus {
@@ -477,27 +432,18 @@ input:focus,
   outline-offset: 2px;
 }
 
-/* -------------------------------------------------------------------------------------- */
-/* ---------------------------------- Responsiveness ------------------------------------ */
-/* -------------------------------------------------------------------------------------- */
-
-/* Ajuste para pantallas 4K o grandes (más de 2000px) */
 @media (min-width: 2000px) {
   .final-container {
-    /* Centra el contenido en pantallas ultra grandes */
     justify-content: center;
     padding: 3rem;
   }
 
   .final-wrapper-border {
     max-width: 1800px;
-    /* Limita el ancho máximo del contenedor principal */
     gap: 3.5rem;
-    /* Aumenta la separación entre columnas */
     padding: 2.5rem;
   }
 
-  /* Escalado de fuentes y elementos para no parecer demasiado pequeños */
   .final-title {
     font-size: 1.8rem;
   }
@@ -523,7 +469,6 @@ input:focus,
   }
 }
 
-/* Tablets / Vertical Layout (max-width: 1100px) */
 @media (max-width: 1100px) {
   .final-wrapper-border {
     grid-template-columns: 1fr;
@@ -545,7 +490,6 @@ input:focus,
   }
 }
 
-/* Móviles (max-width: 700px) */
 @media (max-width: 700px) {
   .final-container {
     padding: 0.8rem;
@@ -555,7 +499,6 @@ input:focus,
     font-size: 1.1rem;
   }
 
-  /* Ajuste de botones para móvil: centrar */
   .final-actions {
     justify-content: center;
     gap: 0.6rem;
@@ -567,7 +510,6 @@ input:focus,
   }
 }
 
-/* ---------- Extra polish: micro interactions ---------- */
 .final-group input::placeholder {
   color: rgba(255, 255, 255, 0.28);
   font-weight: 600;
@@ -578,7 +520,6 @@ input:focus,
   transform: translateY(1px);
 }
 
-/* ---------- Utility classes for dev ---------- */
 .hidden {
   display: none !important;
 }
@@ -588,5 +529,3 @@ input:focus,
   align-items: center;
   justify-content: center;
 }
-
-/* ---------- End of file - vehicleFinalData.css ---------- */

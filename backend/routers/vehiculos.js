@@ -11,8 +11,15 @@ router.get("/user/:id", (req, res) => {
            v.patente,
            v.mileage,
            v.user_id,
+           v.color,                    
            b.name AS marca,
-           m.name AS modelo
+           b.logo_path,                
+           m.name AS modelo,
+           m.image_path,               
+           m.top_speed,                
+           m.acceleration,             
+           m.power,                   
+           m.transmission              
     FROM vehiculos v
     LEFT JOIN brands b ON v.id_brand = b.id_brand
     LEFT JOIN car_models m ON v.id_model = m.id_model
@@ -23,6 +30,7 @@ router.get("/user/:id", (req, res) => {
       console.error("SQL ERROR vehiculos/user:", err.message);
       return res.status(500).json({ success: false, error: err.message });
     }
+    // Asegúrate de que las rutas de las imágenes sean relativas a tu backend
     res.json(rows);
   });
 });
@@ -78,5 +86,4 @@ router.get("/all", (req, res) => {
   });
 });
 
-module.exports = router;
 module.exports = router;

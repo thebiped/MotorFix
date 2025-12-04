@@ -1,496 +1,1048 @@
-/* Paleta de Colores HUD/Dark Mode para GestionesAdmin: */
 
-:root {
-  --bg: #0a0a0a;
-  /* Fondo Principal: Negro muy oscuro */
-  --panel: #1a1a1a;
-  /* Fondo de Contenedores/Paneles: Gris oscuro */
-  --accent: #ff4444;
-  /* Acento: Rojo brillante */
-  --accent-strong: #c70b0b;
-  /* Acento oscuro para hover/activos */
-  --text: #f0f0f0;
-  /* Texto principal: Blanco brillante */
-  --muted: #777777;
-  /* Texto secundario: Gris medio */
-  --shadow: 0 0 10px rgba(255, 68, 68, 0.1);
-  /* Sombra roja sutil */
-  --radius: 4px;
-  /* Borde: Estilo tecnológico cuadrado */
-  --border-line: #222222;
-  /* Líneas de separación */
-  --font-main: 'Consolas', 'Roboto Mono', monospace;
-  /* Fuente de estilo HUD */
-}
 
-/* ----------------------------------- */
-/* CONTAINER GENERAL Y TIPOGRAFÍA */
-/* ----------------------------------- */
 .gestiones-admin {
-  padding: 32px;
-  background: var(--bg);
+  width: 100%;
   min-height: 100vh;
-  font-family: var(--font-main);
-  color: var(--text);
+  padding: 2vw; 
+  overflow-x: hidden;
 }
 
 /* Header */
 .gestiones-header {
-  margin-bottom: 24px;
+  margin-bottom: 3vh;
 }
 
 .gestiones-header h2 {
-  font-size: 24px;
-  color: var(--accent);
   margin: 0;
+  font-size: calc(1.5rem + 1vw);
   font-weight: 700;
   text-transform: uppercase;
+  letter-spacing: 0.1rem;
+  text-shadow: 0 0 10px rgba(255,42,42,0.3);
+  color: #ff2a2a;
 }
 
-/* ----------------------------------- */
-/* ESTADÍSTICAS (STAT CARDS) */
-/* ----------------------------------- */
+/* --------------------------------------------------------------------------
+   3. ESTADÍSTICAS (STAT CARDS)
+   -------------------------------------------------------------------------- */
 .stats-grid {
-  /* Se mantiene flex para los 4 cards horizontales */
   display: flex;
-  gap: 16px;
-  margin-bottom: 24px;
+  flex-wrap: wrap; 
+  gap: 1.5vw;
+  margin-bottom: 3vh;
 }
 
 .stat-card {
-  width: 100%;
-  background: var(--panel);
-  padding: 16px;
-  border: 1px solid var(--border-line);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  transition: all 0.3s;
+  min-width: 200px;
+  flex: 1; 
+  background: #1a1a1a;
+  padding: 1.5vh 1.5vw;
+  border: 1px solid #222;
+  border-left: 4px solid #ff2a2a; /* Detalle HUD */
+  border-radius: 4px ;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
 }
 
 .stat-card:hover {
   background: #222222;
-  transform: translateY(-2px);
+  transform: translateY(-0.3rem);
+  box-shadow: 0 0 10px rgba(255,42,42,0.3);
 }
 
 .stat-title {
-  color: var(--muted);
+  color: #777;
   margin: 0;
-  font-size: 13px;
+  font-size: clamp(0.8rem, 0.9vw, 1rem);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.05rem;
 }
 
 .stat-value {
-  margin: 6px 0 0;
-  font-size: 20px;
+  margin: 0.5rem 0 0;
+  font-size: clamp(1.5rem, 2.5vw, 3rem);
   font-weight: 700;
-  color: var(--accent);
+  color: #f0f0f0;
 }
 
-/* ----------------------------------- */
-/* LAYOUT PRINCIPAL (TABLAS ANCHO COMPLETO) */
-/* ----------------------------------- */
-
-/* NOTA: Eliminado .gestiones-main ya que no hay dos columnas */
-
-/* Left: tables section (Ahora es de ancho completo) */
+/* --------------------------------------------------------------------------
+   4. LAYOUT PRINCIPAL (TABLAS)
+   -------------------------------------------------------------------------- */
 .tables-section {
-  /* Aseguramos que ocupe todo el ancho disponible */
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  padding: 24px;
-  background: var(--panel);
-  border-radius: var(--radius);
+  gap: 2vh;
+  padding: 2vw;
+  background: #1a1a1a;
+  border-radius: 4px ;
+  border: 1px solid #222;
 }
 
-/* ----------------------------------- */
-/* TABS Y ACCIONES */
-/* ----------------------------------- */
+/* --------------------------------------------------------------------------
+   5. TABS Y ACCIONES SUPERIORES
+   -------------------------------------------------------------------------- */
 .tabs {
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  border-bottom: 1px solid var(--border-line);
-  padding-bottom: 10px;
+  gap: 1rem;
+  border-bottom: 1px solid #ff2a2a;
+  padding-bottom: 1vh;
 }
 
 .tab-group {
   display: flex;
-  gap: 8px;
-  margin-bottom: 0;
-  /* Ajustado */
+  gap: 0.8rem;
 }
 
 .tab-btn {
-  padding: 8px 14px;
   display: flex;
-  gap: 8px;
+  gap: 0.5rem;
   align-items: center;
-  color: var(--text);
-  background: #222222;
-  border-radius: var(--radius);
-  border: 1px solid #333333;
-  cursor: pointer;
+  padding: 0.6vh 1.2vw;
   font-family: inherit;
-  font-size: 14px;
+  font-size: calc(0.85rem + 0.1vw);
+  background: transparent;
+  text-transform: uppercase;
+  color: #f0f0f0;
+  border: 1px solid #333333;
+  border-radius: 0;
   transition: all 0.2s;
+  cursor: pointer;
 }
 
 .tab-btn:hover:not(.active) {
-  background: #333333;
-  border-color: var(--accent-strong);
+  background: rgba(255, 42, 42, 0.1);
+  border-color: #ff2a2a;
+  color: #ff2a2a;
 }
 
 .tab-btn.active {
-  background: var(--accent);
-  color: var(--bg);
-  border-color: var(--accent);
   font-weight: 700;
+  color: #ff2a2a;
+  background: rgba(255, 42, 42,0.4);
+  border-color: #ff2a2a;
+  box-shadow: 0 0 10px rgba(255,42,42,0.3);
 }
 
-/* Table actions */
+/* Acciones Derecha (Exportar/Agregar) */
 .right-actions {
   display: flex;
-  gap: 8px;
+  gap: 0.8rem;
 }
 
 .action-btn {
-  padding: 8px 14px;
-  border-radius: var(--radius);
-  cursor: pointer;
   display: flex;
-  gap: 8px;
+  gap: 0.5rem;
   align-items: center;
+  padding: 0.6vh 1.2vw;
   font-family: inherit;
-  font-size: 14px;
+  font-size: calc(0.85rem + 0.1vw);
+  font-weight: 600;
+  text-transform: uppercase;
+  border-radius: 4px ;
   border: none;
-  transition: opacity 0.2s;
+  transition: all 0.2s;
+  cursor: pointer;
 }
 
 .action-btn:hover {
-  opacity: 0.85;
+  transform: scale(1.02);
 }
 
 .action-btn.export-btn {
-  color: var(--text);
-  background: #222222;
+  color: #f0f0f0;
+  background: transparent;
   border: 1px solid #333333;
 }
 
 .action-btn.add-btn {
-  background: var(--accent);
-  color: var(--bg);
-  border: 1px solid var(--accent);
+  font-weight: 700;
+  color: #ff2a2a;
+  background: rgba(255, 42, 42,0.4);
+  border: 1px solid #ff2a2a;
+  box-shadow: 0 0 10px rgba(255,42,42,0.3);
 }
 
-/* ----------------------------------- */
-/* TABLA (Base) */
-/* ----------------------------------- */
+/* --------------------------------------------------------------------------
+   6. TABLA DE DATOS
+   -------------------------------------------------------------------------- */
 .table-container {
-  max-height: 62vh;
-  min-height: 62vh;
+  height: 65vh; /* Altura fija relativa al viewport */
   overflow: auto;
-  border: 1px solid var(--border-line);
-  border-radius: var(--radius);
+  border: 1px solid #222;
+  border-radius: 4px ;
+  background: #0f0f0f;
 }
 
 .admin-table {
   width: 100%;
-  min-width: 720px;
   border-collapse: collapse;
+  min-width: 800px; /* Evita que se rompa en muy pequeño */
 }
 
 .admin-table thead {
-  background: #111111;
+  background: #151515;
   position: sticky;
   top: 0;
   z-index: 10;
 }
 
 .admin-table thead th {
-  padding: 12px;
+  padding: 1.2rem;
   font-weight: 700;
-  font-size: 14px;
+  font-size: clamp(0.9rem, 1vw, 1.1rem);
   text-align: left;
-  color: var(--accent);
-  border-bottom: 1px solid var(--border-line);
+  color: #ff2a2a;
+  border-bottom: 2px solid #222;
+  text-transform: uppercase;
+  letter-spacing: 0.05rem;
 }
 
 .admin-table tbody tr {
   transition: background 0.2s;
+  border-bottom: 1px solid #222;
 }
 
 .admin-table tbody td {
-  padding: 10px 12px;
-  font-size: 13px;
-  color: var(--text);
-  border-bottom: 1px solid #333333;
+  padding: 1rem 1.2rem;
+  font-size: clamp(0.85rem, 0.9vw, 1rem);
+  color: #cccccc;
 }
 
 .admin-table tbody tr:hover {
-  background: #222222;
+  background: rgba(255, 42, 42, 0.05); /* Hover rojo sutil */
 }
 
-/* ESTATUS */
+/* ESTATUS PILLS */
 .status {
   display: inline-block;
-  padding: 4px 10px;
-  font-weight: 600;
-  font-size: 11px;
+  padding: 0.4rem 0.8rem;
+  font-weight: 700;
+  font-size: 0.8rem;
   border-radius: 2px;
   text-transform: uppercase;
+  letter-spacing: 0.05rem;
 }
 
-.status.activo {
-  color: #a3ffaf;
-  background: rgba(45, 138, 63, 0.1);
-  border: 1px solid #2d8a3f;
+.status.activo,
+.status.finalizado {
+  color: #00ff88;
+  background: rgba(0, 255, 136, 0.1);
+  border: 1px solid #00ff88;
 }
 
 .status.pendiente {
-  color: var(--accent);
-  background: rgba(255, 68, 68, 0.1);
-  border: 1px solid var(--accent-strong);
+  color: #ffcc00;
+  background: rgba(255, 204, 0, 0.1);
+  border: 1px solid #ffcc00;
 }
 
-.status.confirmado {
-  color: #6ed3ff;
-  background: rgba(11, 139, 214, 0.1);
-  border: 1px solid #0b8bd6;
+.status.confirmado,
+.status.en-proceso {
+  color: #00ccff;
+  background: rgba(0, 204, 255, 0.1);
+  border: 1px solid #00ccff;
 }
 
-.status.completado {
-  color: #ff9900;
-  background: rgba(255, 153, 0, 0.1);
-  border: 1px solid #cc7a00;
+.status.cancelado {
+  color: #ff2a2a;
+  background: rgba(255, 42, 42, 0.1);
+  border: 1px solid #ff2a2a;
 }
 
-/* Botones de acción de fila */
+/* Botones de Fila */
 .btn-ver,
-.btn-editar {
+.btn-editar,
+.btn-borrar {
   border: none;
-  padding: 6px 10px;
-  border-radius: var(--radius);
-  font-size: 12px;
+  padding: 0.5rem 0.8rem;
+  border-radius: 4px ;
+  font-size: 0.85rem;
   cursor: pointer;
   font-family: inherit;
   font-weight: 600;
-  transition: opacity 0.2s;
+  text-transform: uppercase;
+  transition: all 0.2s;
+  margin-right: 0.5rem;
 }
 
 .btn-ver {
-  background: var(--accent-strong);
-  color: var(--text);
-  margin-right: 6px;
+  background: #333;
+  color: #fff;
+  border: 1px solid #555;
 }
-
 .btn-editar {
-  background: #333333;
-  color: var(--text);
+  background: #ff2a2a;
+  color: #000;
+}
+.btn-borrar {
+  background: transparent;
+  color: #ff2a2a;
+  border: 1px solid #ff2a2a;
 }
 
 .btn-ver:hover,
-.btn-editar:hover {
-  opacity: 0.8;
+.btn-editar:hover,
+.btn-borrar:hover {
+  filter: brightness(1.2);
+  transform: scale(1.05);
 }
 
-/* Pie de tabla / Paginación */
+/* Pie de Tabla */
 .table-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 12px;
-  padding: 10px 0 0 0;
-  border-top: 1px solid var(--border-line);
-  margin-top: 10px;
+  padding: 1rem 0;
+  border-top: 1px solid #222;
 }
 
 .rows-info {
-  color: var(--muted);
-  font-size: 12px;
+  color: #777;
+  font-size: 0.9rem;
 }
 
 .pagination {
   display: flex;
-  align-items: center;
-  gap: 8px;
+  gap: 0.5rem;
 }
 
 .pagination button {
-  padding: 6px 10px;
-  color: var(--text);
-  background: #222222;
-  border: 1px solid #333333;
-  border-radius: var(--radius);
+  padding: 0.5rem 1rem;
+  color: #f0f0f0;
+  background: #222;
+  border: 1px solid #333;
   cursor: pointer;
-  font-size: 12px;
   transition: all 0.2s;
 }
 
 .pagination button:hover {
-  background: #333333;
+  border-color: #ff2a2a;
+  color: #ff2a2a;
 }
 
 .pagination button.active {
-  background: var(--accent);
-  color: var(--bg);
-  border-color: var(--accent);
+  background: #ff2a2a;
+  color: #000;
+  border-color: #ff2a2a;
+  font-weight: bold;
 }
 
-.pagination .dots {
-  color: var(--muted);
-  padding: 0 6px;
-}
+/* ==========================================================================
+   7. MODALES HUD - ESTILO ARKHAM KNIGHT
+   ========================================================================== */
 
-/* === MODAL BASE === */
-/* Se mantienen los estilos del modal ya que son globales y no dependen del layout principal */
-.modal-overlay-admin {
+/* 7.1. OVERLAY Y PANEL EDICIÓN TURNO (LATERAL) */
+.admin-edit-turno-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.55);
+  background: rgba(0, 0, 0, 0.95);
+  backdrop-filter: blur(5px);
+  z-index: 1000;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9000;
+  justify-content: flex-end; /* Alineado a la derecha */
+  align-items: stretch;
 }
 
-.modal-content-admin {
-  background: #380000;
-  width: 850px;
-  max-width: 90%;
-  border-radius: 10px;
-  padding: 20px;
-  display: grid;
-  gap: 20px;
+.admin-turno-edicion-hud-panel {
+  position: relative;
+  height: 100%;
+  width: 65vw; /* Ancho relativo al viewport */
+  min-width: 600px;
+  max-width: 95vw;
+
+  display: flex; /* Flex container para columnas */
+  gap: 0; /* Gap manejado por padding interno si necesario */
+
+  background: #000000;
+  color: #e0e0e0;
+  box-shadow: -5px 0 30px rgba(255, 42, 42, 0.2);
+  border-left: 2px solid #ff2a2a;
+
+  /* Animación Slide In */
+  transform: translateX(100%);
+  animation: slide-in-right 0.4s forwards cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  opacity: 0;
 }
 
-/* === DOS COLUMNAS (del modal) === */
-
-.two-columns {
-  grid-template-columns: 1fr 1fr;
+@keyframes slide-in-right {
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
-.two-columns .col {
+/* --- Columnas del Modal Lateral --- */
+
+/* Columna Izquierda (Edición) */
+.admin-turno-edicion-hud-panel .col-edicion {
+  flex: 2; /* Ocupa 2/3 */
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  padding: 2rem 2.5rem;
+  border-right: 1px dashed #222;
+  height: 100%;
 }
 
-.two-columns h3 {
-  margin-bottom: 10px;
-  font-size: 1.2rem;
-  border-bottom: 1px solid #ddd;
-  padding-bottom: 5px;
+/* Columna Derecha (Control) */
+.admin-turno-edicion-hud-panel .col-control {
+  flex: 1; /* Ocupa 1/3 */
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  background-color: #050505;
+  background-image: repeating-linear-gradient(
+    -45deg,
+    #0a0a0a 0,
+    #0a0a0a 2px,
+    transparent 2px,
+    transparent 10px
+  );
+  height: 100%;
 }
 
-/* === FORM FIELDS === */
-
-.two-columns label {
-  font-weight: 600;
-  font-size: 0.9rem;
+/* Contenedores con Scroll Interno */
+.col-content-scroll,
+.col-content-scroll-cliente {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+  margin-bottom: 1rem;
 }
 
-.two-columns input,
-.two-columns select,
-.two-columns textarea {
+/* Custom Scrollbar */
+.col-content-scroll::-webkit-scrollbar,
+.col-content-scroll-cliente::-webkit-scrollbar {
+  width: 6px;
+}
+.col-content-scroll::-webkit-scrollbar-thumb,
+.col-content-scroll-cliente::-webkit-scrollbar-thumb {
+  background: #ff2a2a;
+  border-radius: 3px;
+}
+.col-content-scroll::-webkit-scrollbar-track,
+.col-content-scroll-cliente::-webkit-scrollbar-track {
+  background: #111;
+}
+
+/* --------------------------------------------------------------------------
+   7.2. MODAL EDICIÓN CLIENTE (CENTRAL - TABLET STYLE)
+   -------------------------------------------------------------------------- */
+
+.admin-edit-cliente-hud-overlay,
+.admin-edit-cliente-hud-overlay-center {
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
-  padding: 8px;
-  font-size: 0.9rem;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  z-index: 1200;
+  display: flex;
+  justify-content: center;
+  align-items: center; /* Centrado perfecto */
+}
+
+.admin-edit-cliente-hud-panel {
+  position: relative;
+  /* Dimensiones Escalables */
+  width: 500px;
+  max-width: 90vw;
+  height: auto;
+  max-height: 90vh;
+
+  display: flex;
+  flex-direction: column;
+
   background: #000000;
-  /* Ajuste para el estilo oscuro */
-  color: var(--text);
+  border: 2px solid #ff2a2a;
+  box-shadow: 0 0 2rem rgba(255, 42, 42, 0.4);
+
+  /* Animación Subida */
+  transform: translateY(20px);
+  opacity: 0;
+  animation: slide-up-fade 0.4s forwards ease-out;
+  overflow: hidden;
 }
 
-.two-columns textarea {
-  min-height: 80px;
-  resize: vertical;
+@keyframes slide-up-fade {
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
-/* === BUTTONS === */
+/* Estilo Simplificado (Una Columna) */
+.admin-edit-cliente-hud-panel.simplified .col-cliente-edit-hud-simplified {
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
 
-/* Manteniendo los estilos de botones */
-.btn-primary {
-  padding: 10px;
-  background: #1e7be8;
-  color: white;
-  border: none;
-  cursor: pointer;
-  border-radius: 5px;
-  font-weight: 600;
+/* --------------------------------------------------------------------------
+   8. COMPONENTES HUD (TIPOGRAFÍA, INPUTS, BOTONES)
+   -------------------------------------------------------------------------- */
+
+/* Títulos */
+.hud-titulo,
+.hud-titulo-cliente,
+.hud-titulo-control {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 2vh;
+  padding-bottom: 0.8vh;
+  color: #ffffff;
+  text-transform: uppercase;
+  font-weight: 900;
+  font-size: calc(1rem + 0.1vw);
+  letter-spacing: 0.15rem;
+  border-bottom: 2px solid #ff2a2a;
+}
+
+.hud-titulo-control {
+  border-bottom-style: dashed;
+  color: #ff2a2a;
+}
+
+.hud-icon-title {
+  color: #ff2a2a;
+}
+
+/* Info Banners */
+.modal-info-turno,
+.modal-info-cliente {
+  background: #ff2a2a;
+  color: #000;
+  padding: 0.8vh 1.5vw;
+  margin-bottom: 2rem;
+  font-weight: 800;
+  font-size: calc(0.9rem + 0.1vw);
   text-align: center;
+  text-transform: uppercase;
+  clip-path: polygon(0 0, 100% 0, 95% 100%, 5% 100%);
 }
 
-.btn-primary:hover {
-  background: #1464c7;
+/* Labels */
+.hud-label,
+.hud-label-cliente {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5vh;
+  color: #ff2a2a;
+  font-size: calc(0.8rem + 0.1vw);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05rem;
 }
 
-.btn-danger {
-  padding: 10px;
-  background: #d93636;
-  color: white;
-  border: none;
+/* Inputs & Selects & Textareas */
+.hud-input,
+.hud-select,
+.hud-textarea,
+.hud-input-cliente,
+.hud-select-cliente {
+  width: 100%;
+  padding: 1.4vh;
+  margin-bottom: 1.5vh;
+  font-size: calc(0.8rem + 0.1vw);
+  font-family: var(--font-main);
+  color: #fff;
+  background: #050505;
+  border: 1px solid #333;
+  border-radius: 0;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.8);
+  transition: all 0.3s;
+}
+
+.hud-input:focus,
+.hud-select:focus,
+.hud-textarea:focus,
+.hud-input-cliente:focus,
+.hud-select-cliente:focus {
+  border-color: #ff2a2a;
+  box-shadow: 0 0 10px rgba(255, 42, 42, 0.2), inset 0 0 10px rgba(0, 0, 0, 0.8);
+  outline: none;
+}
+
+.hud-textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+/* Botones HUD */
+.hud-button,
+.hud-button-cliente {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  margin-top: 0.5rem;
+  padding: 1vh;
+  font-size: calc(0.6rem + 0.1vw);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1rem;
   cursor: pointer;
-  border-radius: 5px;
-  font-weight: 600;
+  transition: all 0.3s;
 }
 
-.btn-danger:hover {
-  background: #b02828;
+/* Variantes de Botones */
+.hud-button-primary,
+.hud-button-primary-cliente {
+  color: rgb(255, 42, 42);
+  background: rgba(255, 42, 42, 0.4);
+  border: 1px solid rgb(255, 42, 42);
+  border-radius: 0;
+  box-shadow: 0 0 15px rgba(255, 42, 42, 0.4);
+}
+.hud-button-primary:hover,
+.hud-button-primary-cliente:hover {
+  background: #ffffff;
+  box-shadow: 0 0 25px rgba(255, 42, 42, 0.6);
+  transform: translateY(-2px);
 }
 
-.btn-success {
-  padding: 10px;
-  background: #3ba93b;
-  color: white;
-  border: none;
-  cursor: pointer;
-  border-radius: 5px;
-  font-weight: 600;
+.hud-button-secondary,
+.hud-button-secondary-cliente {
+  background: transparent;
+  border: 1px solid #ff2a2a;
+  color: #ff2a2a;
+}
+.hud-button-secondary:hover,
+.hud-button-secondary-cliente:hover {
+  background: rgba(255, 42, 42, 0.1);
+  color: #fff;
 }
 
-.btn-success:hover {
-  background: #2a8a2a;
+.hud-button-close,
+.hud-button-close-cliente {
+  color: #e0e0e0;
+  background: #222222;
+  border: 1px solid #e0e0e0;
+  border-radius: 0;
+}
+.hud-button-close:hover,
+.hud-button-close-cliente:hover {
+  background: #333;
+  color: #fff;
+  border-color: #fff;
+}
+
+.hud-button-danger-cliente {
+  background: rgba(139, 0, 0, 0.3);
+  border: 1px solid #8b0000;
+  color: #ff5555;
+}
+.hud-button-danger-cliente:hover {
+  background: #8b0000;
+  color: #fff;
+}
+
+/* Botones en Footer Horizontal */
+.modal-actions-cliente-footer {
+  display: flex;
+  gap: 1rem;
+  margin-top: auto;
+  padding-top: 1.5rem;
+  border-top: 1px dashed #333;
+}
+.modal-actions-cliente-footer button {
+  flex: 1;
+}
+
+/* --------------------------------------------------------------------------
+   9. DECORACIONES DE ESQUINA
+   -------------------------------------------------------------------------- */
+.hud-corner-deco,
+.hud-corner-deco-cliente {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border: 3px solid #ff2a2a;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.top-left {
+  top: -2px;
+  left: -2px;
+  border-right: 0;
+  border-bottom: 0;
+}
+.top-right {
+  top: -2px;
+  right: -2px;
+  border-left: 0;
+  border-bottom: 0;
+}
+.bottom-left {
+  bottom: -2px;
+  left: -2px;
+  border-right: 0;
+  border-top: 0;
+}
+.bottom-right {
+  bottom: -2px;
+  right: -2px;
+  border-left: 0;
+  border-top: 0;
+}
+
+/* --------------------------------------------------------------------------
+   10. HUD DE CARGA Y FEEDBACK
+   -------------------------------------------------------------------------- */
+.hud-saving-status,
+.hud-feedback-panel {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  max-width: 80vw;
+  padding: 2rem;
+  background: #000;
+  border: 2px solid #ff2a2a;
+  box-shadow: 0 0 30px rgba(255, 42, 42, 0.5);
+  text-align: center;
+  z-index: 2000;
+  animation: zoom-in 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes zoom-in {
+  from {
+    transform: translate(-50%, -50%) scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+
+.hud-loading-bar-container {
+  width: 100%;
+  height: 6px;
+  background: #222;
+  margin: 1.5rem 0;
+  position: relative;
+  overflow: hidden;
+}
+.hud-loading-bar-progress {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  background: #ff2a2a;
+  animation: progress-indeterminate 1.5s infinite linear;
+}
+
+@keyframes progress-indeterminate {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.hud-feedback-panel.success {
+  border-color: #00ff88;
+  box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+}
+.hud-feedback-panel.error {
+  border-color: #ff2a2a;
+}
+
+/*==========================================================================
+  6. MODAL AGREGAR CLIENTE (Perfil + Formulario HUD)
+  ========================================================================== 
+*/
+
+/* --- REGLAS BASE PARA EL CONTENEDOR DE CREACIÓN --- */
+.admin-new-cliente-hud-panel {
+  position: relative;
+  width: 50vw;
+  max-width: 95vw;
+  height: 80vh;
+  max-height: 60vh;
+  display: flex;
+  padding: 0;
+  background: #000000;
+  border: 2px solid #ff2a2a;
+  box-shadow: 0 0 2rem rgba(255, 42, 42, 0.5);
+  overflow: hidden;
+}
+
+/* 6.2. COLUMNA DE PERFIL/DECORACIÓN (Simulación de ficha Doom/Perfil) */
+.col-perfil-hud-deco {
+  min-width: 15rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: left;
+  flex: 1;
+  padding: 2vh 1vw;
+  background: #050505;
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(255, 42, 42, 0.05) 0,
+    rgba(255, 42, 42, 0.05) 1px,
+    transparent 1px,
+    transparent 15px
+  );
+  border-right: 2px dashed rgba(255, 255, 255, 0.1);
+}
+
+/* Contenedor central de la decoración del perfil */
+.perfil-deco-content {
+  text-align: center;
+  color: #ff2a2a;
+  padding: 2vh 2vh;
+  border: 1px solid rgba(255, 42, 42, 0.3);
+  box-shadow: 0 0 10px rgba(255, 42, 42, 0.4);
+  background: rgba(0, 0, 0, 0.5);
+}
+
+/* Icono grande simulando imagen de perfil */
+.perfil-deco-content .logo-icon-placeholder {
+  color: #fff;
+  filter: drop-shadow(0 0 4px #ff2a2a);
+  margin-bottom: 0.5vh;
+}
+
+.perfil-deco-content h4 {
+  margin: 0.5vh 0;
+  font-size: calc(1rem + 0.2vw);
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+
+.perfil-deco-content p {
+  color: #777;
+  font-size: calc(0.8rem + 0.1vw);
+  text-transform: uppercase;
+}
+
+/* Línea de escaneo HUD (detalle) */
+.col-perfil-hud-deco::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2vh;
+  background: linear-gradient(
+    to right,
+    transparent,
+    #ff2a2a,
+    transparent
+  );
+  animation: scan-line 4s infinite linear;
+}
+
+/* 6.3. COLUMNA DE FORMULARIO */
+.col-formulario-hud {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  padding: 2vh 2vw;
+  overflow-y: auto; 
+}
+
+.col-formulario-hud .hud-title-agregar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #ffffff;
+  font-size: calc(1rem + 0.2vw);
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  border-bottom: 2px solid #ff2a2a;
+  padding-bottom: 0.5vh;
+  margin-bottom: 1.5vh;
+  text-transform: uppercase;
+}
+
+.col-formulario-hud .form-group-hud {
+  margin-bottom: 1.2vh;
+}
+
+.col-formulario-hud .form-group-hud label {
+  display: block;
+  color: #ff2a2a;
+  font-size: calc(0.8rem + 0.1vw);
+  font-weight: 700;
+  margin-bottom: 0.4vh;
+  text-transform: uppercase;
+}
+
+.col-formulario-hud .input-box-hud {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.col-formulario-hud .input-box-hud svg {
+  position: absolute;
+  left: 10px;
+  color: #ff2a2a;
+  z-index: 2;
+}
+
+.col-formulario-hud .input-box-hud input,
+.col-formulario-hud .input-box-hud select {
+  width: 100%;
+  padding: 0.8vh 1vw 0.8vh 2.5vw;
+  background: #080808;
+  border: 1px solid #333;
+  color: #fff;
+  font-size: calc(0.8rem + 0.1vw);
+  font-family: var(--font-main);
+  border-radius: 0;
+  box-shadow: inset 0 0 0.5rem rgba(0, 0, 0, 0.5);
+  transition: border-color 0.3s;
+}
+
+.col-formulario-hud .input-box-hud select {
+  padding-left: 1rem;
+}
+
+.col-formulario-hud .modal-actions-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: auto;
+  padding-top: 1.5vh;
+  border-top: 1px solid rgba(255, 42, 42, 0.2);
 }
 
 
-/* ----------------------------------- */
-/* RESPONSIVE (Actualizado sin sidebar) */
-/* ----------------------------------- */
-@media (max-width: 1200px) {
-  .stats-grid {
-    /* Pasa a grid de 2 columnas */
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
+
+
+@keyframes scan-line {
+  0% {
+    transform: translateY(0);
+    opacity: 0.2;
+  }
+  50% {
+    transform: translateY(calc(80vh - 2px));
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 0.2;
+  }
+}
+
+/* --- Media Query: Pantallas Pequeñas (Móviles) --- */
+@media (max-width: 900px) {
+  .admin-new-cliente-hud-panel {
+    flex-direction: column; /* Apilar columnas */
+    height: 95vh;
+    width: 95vw;
+    max-height: none;
   }
 
-  /* Eliminado .gestiones-main y .right-sidebar ya que no existen en el HTML */
-  .tabs {
-    flex-direction: column;
-    align-items: flex-start;
+  .col-perfil-hud-deco {
+    height: 15rem; /* Altura más corta para la decoración */
+    min-width: 100%;
+    border-right: none;
+    border-bottom: 2px dashed rgba(255, 255, 255, 0.1);
   }
 
-  .right-actions {
-    width: auto;
-    justify-content: flex-start;
-    margin-top: 10px;
+  .col-perfil-hud-deco::before {
+    /* Desactivamos o ajustamos la animación de la línea de escaneo en vertical */
+    animation: none;
+    height: 0;
+  }
+
+  .col-formulario-hud {
+    padding: 1.5rem;
+    flex: 1;
   }
 }
 
+/* Pantallas 4K / Ultra Wide */
+@media (min-width: 2560px) {
+  :root {
+    --scale-factor: 1.5;
+  } /* Aumenta el tamaño base */
+  body {
+    font-size: 24px;
+  } /* Texto base más grande */
+  .admin-turno-edicion-hud-panel {
+    width: 50vw;
+    max-width: 1400px;
+  }
+}
+
+/* Pantallas Tablets / Laptops Pequeñas */
+@media (max-width: 1024px) {
+  .admin-turno-edicion-hud-panel {
+    width: 85vw;
+  }
+  .col-edicion {
+    padding: 1.5rem;
+  }
+}
+
+/* Pantallas Móviles */
 @media (max-width: 768px) {
-  .stats-grid {
-    /* Pasa a grid de 1 columna en móviles */
-    grid-template-columns: 1fr;
+  .gestiones-admin {
+    padding: 1rem;
   }
 
-  .gestiones-admin {
-    padding: 16px;
+  /* Tabla con scroll horizontal */
+  .table-container {
+    overflow-x: auto;
+  }
+
+  /* Modal Lateral -> Pantalla Completa Stackeada */
+  .admin-turno-edicion-hud-panel {
+    width: 100vw;
+    min-width: auto;
+    flex-direction: column;
+    overflow-y: auto;
+  }
+
+  .admin-turno-edicion-hud-panel .col-edicion,
+  .admin-turno-edicion-hud-panel .col-control {
+    border-right: none;
+    border-bottom: 1px dashed #333;
+    padding: 1.5rem;
+    flex: none; /* Altura automática */
+  }
+
+  /* Modal Central -> Pantalla Completa */
+  .admin-edit-cliente-hud-panel {
+    width: 95vw;
+    max-height: 95vh;
+  }
+
+  .col-cliente-edit-hud-simplified {
+    padding: 1.5rem;
+  }
+
+  .panel-section-horizontal,
+  .modal-actions-cliente-footer {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .hud-button {
+    width: 100%;
   }
 }

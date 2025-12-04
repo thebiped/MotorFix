@@ -149,6 +149,7 @@ body {
 .nfs-arrow.prev {
   left: 12px;
   border-radius: 0 14px 14px 0;
+  z-index: 100;
 }
 .nfs-arrow.next {
   right: 12px;

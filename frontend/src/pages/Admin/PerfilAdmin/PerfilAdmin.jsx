@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useOutletContext, useNavigate } from "react-router-dom"; // Importar useNavigate
+import { useOutletContext, useNavigate, Link } from "react-router-dom"; // Importar useNavigate
 import {
   Shield,
   Car,
@@ -105,7 +105,9 @@ const SecurityPanel = ({ openDeactivateModal, openDeleteModal }) => (
         <h4>Contraseña y autenticación</h4>
         <p>Último cambio de contraseña: hace 45 días.</p>
       </div>
-      <button className="change-password-btn">Cambiar Contraseña</button>
+      <Link to="/forgot-password" className="change-password-btn">
+        Cambiar Contraseña
+      </Link>
     </div>
 
     <div className="security-item danger-zone">

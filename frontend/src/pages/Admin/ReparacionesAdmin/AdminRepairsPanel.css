@@ -13,9 +13,6 @@ h4 {
 
 /* LAYOUT PRINCIPAL */
 .hud-container-reparacion {
-  display: grid;
-  /* El diseño de la imagen muestra tres columnas: Mecánicos, Tareas, Detalle */
-  grid-template-columns: 350px 1fr 400px;
   gap: 20px;
   height: 100vh;
   padding: 20px;
@@ -130,9 +127,10 @@ h4 {
 
 /* --- Scrollbar custom (Para listas) --- */
 .repair-list-scroll {
-  flex: 1;
-  overflow-y: auto;
   height: calc(100% - 100px);
+  display: flex;
+  flex-direction: column;
+  flex: 1;
   overflow-y: auto;
   padding: 10px;
 }

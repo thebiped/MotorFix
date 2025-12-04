@@ -112,7 +112,7 @@ const VehicleFinalData = () => {
         setTimeout(() => {
           if (res.success) {
             console.log("Vehículo guardado correctamente", res);
-            navigate("/loading-final");
+            navigate("/");
           } else {
             alert("Error guardando vehículo: " + res.error);
             setLoading(false);

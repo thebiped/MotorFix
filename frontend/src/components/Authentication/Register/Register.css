@@ -51,10 +51,10 @@
 }
 
 .register-group label {
-  margin-bottom: 5px;
-  font-size: 1rem;
-  color: #ff6767;
   display: block;
+  margin-bottom: calc(4px + 0.1vh );
+  font-size: calc(12px + 0.1vw);
+  color: #ff6767;
 }
 
 .register-input-box {
@@ -62,7 +62,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 0.4rem 0.8rem;
+  padding: 0.8vh 1vw;
   background: rgba(255, 0, 0, 0.06);
   border: 1px solid rgba(255, 0, 0, 0.12);
   border-radius: 8px;
@@ -70,7 +70,7 @@
 }
 
 .register-input-box .icon {
-  flex: 0 0 28px;
+  flex: 0 0 calc(12px + 0.1vw);
   color: #ff5555;
 }
 
@@ -80,7 +80,7 @@
   border: none;
   outline: none;
   color: #e7eaf8;
-  font-size: 0.95rem;
+  font-size: calc(12px + 0.1vw);
 }
 
 /* focus underline */
@@ -105,19 +105,19 @@
 
 .register-btn {
   margin-top: 8px;
-  padding: 0.6rem 2rem;
+  padding: 0.8vh 2vw;
   font-weight: 700;
-  color: white;
+  color: #fff;
   background: linear-gradient(180deg, #7a0c0c 0%, #6b0101 100%);
   border: 1px solid #620002;
-  border-radius: 10px;
+  border-radius: calc(4px + 0.1vh );
   box-shadow: 0 6px 18px rgba(107, 1, 1, 0.14);
   cursor: pointer;
 }
 
 .login-text{
-  margin-top: 12px;
-  font-size: 0. nine five rem ;
+  margin-top: 12vh;
+  font-size: calc(10px + 0.1vw);
   color: #ff6666;
 }
 
@@ -184,12 +184,12 @@
 .initial-register-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,1);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 999999;
+  background: rgba(0,0,0,1);
   pointer-events: none;
+  z-index: 999999;
 }
 
 .initial-register-content {

@@ -12,16 +12,21 @@
    FIX GLOBAL — EVITAR SCROLL HORIZONTAL SIEMPRE
 ========================================================== */
 
-* {
-  box-sizing: border-box;
-}
+:root {
+  --neon: #ff0000;
+  --neon-2: #ff0037;
+  --dark-bg: #0d121c;
+  --dark-card: #151e2b;
+  --text-color: #e0f7fa;
+  /* Texto principal brillante */
+  --sub-color: #64748b;
+  /* Gris tenue para subtítulos */
+  --border-color: rgba(0, 255, 204, 0.1);
+  --shadow-color: rgba(0, 255, 204, 0.4);
 
-html, body {
-  width: 100%;
-  overflow-x: hidden !important;
-  margin: 0;
-  padding: 0;
-  background: #000;
+  /* Propiedades de animación */
+  --anim-speed: 0.6s;
+  --anim-timing: cubic-bezier(0.2, 0.8, 0.5, 1);
 }
 
 /* ==========================================================
@@ -30,7 +35,7 @@ html, body {
 
 .hud-dashboard {
   display: grid;
-  grid-template-columns: 20rem 1fr 20rem; 
+  grid-template-columns: 20rem 1fr 20rem;
   gap: 1.125rem;
   padding: 1.125rem;
   min-height: 100vh;
@@ -113,10 +118,10 @@ html, body {
 
 .hud-quicklist {
   margin-top: 0.375rem;
-  background: linear-gradient(180deg, rgba(255,255,255,0.01), transparent);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.01), transparent);
   padding: 0.5rem;
   border-radius: 0.5rem;
-  border: 0.0625rem solid rgba(255,40,40,0.04);
+  border: 0.0625rem solid rgba(255, 40, 40, 0.04);
 }
 
 .ql-header {
@@ -136,9 +141,9 @@ html, body {
   align-items: center;
   gap: 0.625rem;
   padding: 0.5rem;
-  background: rgba(255,255,255,0.01);
+  background: rgba(255, 255, 255, 0.01);
   border-radius: 0.375rem;
-  border: 0.0625rem solid rgba(255,255,255,0.02);
+  border: 0.0625rem solid rgba(255, 255, 255, 0.02);
 }
 
 .ql-pos {
@@ -160,13 +165,13 @@ html, body {
 
 .ql-tag {
   margin-left: auto;
-  background: rgba(255,255,255,0.02);
+  background: rgba(255, 255, 255, 0.02);
   padding: 0.375rem 0.5rem;
   border-radius: 0.375rem;
   font-weight: 700;
   color: #fff;
   font-size: 0.8125rem;
-  border: 0.0625rem solid rgba(255,40,40,0.06);
+  border: 0.0625rem solid rgba(255, 40, 40, 0.06);
 }
 
 /* ==========================================================
@@ -207,7 +212,7 @@ html, body {
 .hud-btn {
   padding: 0.625rem 0.75rem;
   border-radius: 0.5rem;
-  border: 0.0625rem solid rgba(255,255,255,0.04);
+  border: 0.0625rem solid rgba(255, 255, 255, 0.04);
   background: transparent;
   color: #fff;
   display: inline-flex;
@@ -220,7 +225,7 @@ html, body {
   background: #ff2a2a;
   color: #070707;
   border-color: #ff4b4b;
-  box-shadow: 0 0.5rem 1.875rem rgba(255,40,40,0.12);
+  box-shadow: 0 0.5rem 1.875rem rgba(255, 40, 40, 0.12);
   transform: skewX(-6deg);
 }
 
@@ -230,13 +235,13 @@ html, body {
 
 .hud-panel {
   position: relative;
-  background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0));
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.01), rgba(255, 255, 255, 0));
   border-radius: 0.75rem;
   padding: 1.125rem;
   display: grid;
   grid-template-columns: 1fr 22.5rem;
   gap: 1.125rem;
-  border: 0.0625rem solid rgba(255,40,40,0.04);
+  border: 0.0625rem solid rgba(255, 40, 40, 0.04);
   overflow: hidden;
   min-height: 23.75rem;
   width: 100%;
@@ -246,8 +251,8 @@ html, body {
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(rgba(255,255,255,0.01) 0.0625rem, transparent 0.0625rem),
-    linear-gradient(90deg, rgba(255,255,255,0.01) 0.0625rem, transparent 0.0625rem);
+    linear-gradient(rgba(255, 255, 255, 0.01) 0.0625rem, transparent 0.0625rem),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.01) 0.0625rem, transparent 0.0625rem);
   background-size: 3rem 3rem;
   opacity: 0.25;
   pointer-events: none;
@@ -285,8 +290,8 @@ html, body {
   gap: 0.75rem;
   padding: 0.625rem;
   border-radius: 0.5rem;
-  background: rgba(0,0,0,0.25);
-  border: 0.0625rem solid rgba(255,255,255,0.02);
+  background: rgba(0, 0, 0, 0.25);
+  border: 0.0625rem solid rgba(255, 255, 255, 0.02);
 }
 
 .indicator-left {
@@ -316,17 +321,17 @@ html, body {
 .gauge-bar {
   width: 8.75rem;
   height: 0.5625rem;
-  background: rgba(255,255,255,0.03);
+  background: rgba(255, 255, 255, 0.03);
   border-radius: 0.375rem;
   overflow: hidden;
-  border: 0.0625rem solid rgba(255,255,255,0.02);
+  border: 0.0625rem solid rgba(255, 255, 255, 0.02);
 }
 
 .gauge-fill {
   height: 100%;
   background: linear-gradient(90deg, #ff4b4b, #ff2a2a);
-  box-shadow: 0 0.375rem 1.125rem rgba(255,40,40,0.12);
-  transition: width 0.6s cubic-bezier(.2,.9,.3,1);
+  box-shadow: 0 0.375rem 1.125rem rgba(255, 40, 40, 0.12);
+  transition: width 0.6s cubic-bezier(.2, .9, .3, 1);
 }
 
 .gauge-value {
@@ -422,7 +427,7 @@ html, body {
   background: linear-gradient(180deg, #0c0c0c, #070707);
   border-radius: 0.625rem;
   padding: 0.875rem;
-  border: 0.0625rem solid rgba(255,40,40,0.06);
+  border: 0.0625rem solid rgba(255, 40, 40, 0.06);
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
@@ -451,8 +456,8 @@ html, body {
   align-items: center;
   padding: 0.625rem;
   border-radius: 0.5rem;
-  background: rgba(255,255,255,0.01);
-  border: 0.0625rem solid rgba(255,255,255,0.02);
+  background: rgba(255, 255, 255, 0.01);
+  border: 0.0625rem solid rgba(255, 255, 255, 0.02);
 }
 
 .recent-icon {
@@ -461,7 +466,7 @@ html, body {
   display: grid;
   place-items: center;
   border-radius: 0.5rem;
-  background: linear-gradient(180deg, rgba(255,40,40,0.06), rgba(255,40,40,0.02));
+  background: linear-gradient(180deg, rgba(255, 40, 40, 0.06), rgba(255, 40, 40, 0.02));
   color: #ff4b4b;
 }
 
@@ -499,13 +504,16 @@ html, body {
   .hud-dashboard {
     grid-template-columns: 1fr;
   }
+
   .hud-right,
   .hud-left {
     order: 2;
   }
+
   .hud-center {
     order: 1;
   }
+
   .hud-panel {
     grid-template-columns: 1fr;
   }
@@ -515,6 +523,7 @@ html, body {
   .hud-stats {
     grid-template-columns: 1fr;
   }
+
   .circular-hud {
     width: 6.25rem;
     height: 6.25rem;
@@ -530,11 +539,12 @@ html, body {
 .right-title {
   animation: neonPulse 2.8s ease-in-out infinite;
 }
+
 .hud-left,
 .hud-right,
 .hud-center,
 .hud-panel {
-  animation: panelAppear 0.8s cubic-bezier(.22,.61,.36,1) forwards;
+  animation: panelAppear 0.8s cubic-bezier(.22, .61, .36, 1) forwards;
   opacity: 0;
 }
 
@@ -543,16 +553,15 @@ html, body {
 .hud-block-title {
   animation: textGlow 3.2s ease-in-out infinite;
 }
+
 .hud-dashboard::before {
   content: "";
   position: fixed;
   inset: 0;
   pointer-events: none;
-  background: linear-gradient(
-    to bottom,
-    rgba(255,255,255,0.02) 1px,
-    transparent 1px
-  );
+  background: linear-gradient(to bottom,
+      rgba(255, 255, 255, 0.02) 1px,
+      transparent 1px);
   background-size: 100% 0.25rem;
   opacity: 0.15;
   animation: scanlinesMove 14s linear infinite;
@@ -577,49 +586,83 @@ html, body {
 .indicator-sub::after,
 .circular-text::after,
 .ql-sub::after {
-  content:"";
-  position:absolute;
-  inset:0;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255,40,40,0.15),
-    transparent
-  );
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg,
+      transparent,
+      rgba(255, 40, 40, 0.15),
+      transparent);
   transform: translateX(-100%);
   animation: textScan 5.5s ease-in-out infinite;
 }
-.hud-stats .hud-stat-card:nth-child(1) { animation-delay: 0.15s; }
-.hud-stats .hud-stat-card:nth-child(2) { animation-delay: 0.30s; }
-.hud-stats .hud-stat-card:nth-child(3) { animation-delay: 0.45s; }
-.hud-stats .hud-stat-card:nth-child(4) { animation-delay: 0.60s; }
 
-.hud-indicators .indicator-row:nth-child(1) { animation-delay: 0.20s; }
-.hud-indicators .indicator-row:nth-child(2) { animation-delay: 0.35s; }
-.hud-indicators .indicator-row:nth-child(3) { animation-delay: 0.50s; }
+.hud-stats .hud-stat-card:nth-child(1) {
+  animation-delay: 0.15s;
+}
 
-.hud-circles .circular-hud:nth-child(1) { animation-delay: 0.25s; }
-.hud-circles .circular-hud:nth-child(2) { animation-delay: 0.45s; }
-.hud-circles .circular-hud:nth-child(3) { animation-delay: 0.60s; }
-.hud-circles .circular-hud:nth-child(4) { animation-delay: 0.75s; }
+.hud-stats .hud-stat-card:nth-child(2) {
+  animation-delay: 0.30s;
+}
+
+.hud-stats .hud-stat-card:nth-child(3) {
+  animation-delay: 0.45s;
+}
+
+.hud-stats .hud-stat-card:nth-child(4) {
+  animation-delay: 0.60s;
+}
+
+.hud-indicators .indicator-row:nth-child(1) {
+  animation-delay: 0.20s;
+}
+
+.hud-indicators .indicator-row:nth-child(2) {
+  animation-delay: 0.35s;
+}
+
+.hud-indicators .indicator-row:nth-child(3) {
+  animation-delay: 0.50s;
+}
+
+.hud-circles .circular-hud:nth-child(1) {
+  animation-delay: 0.25s;
+}
+
+.hud-circles .circular-hud:nth-child(2) {
+  animation-delay: 0.45s;
+}
+
+.hud-circles .circular-hud:nth-child(3) {
+  animation-delay: 0.60s;
+}
+
+.hud-circles .circular-hud:nth-child(4) {
+  animation-delay: 0.75s;
+}
 
 .circular-fill {
   position: absolute;
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background: conic-gradient(
-    rgba(255, 40, 40, 0.8) 0deg,
-    rgba(255, 40, 40, 0.2) 360deg
-  );
-  mask: radial-gradient(circle, rgba(0,0,0,1) 70%, rgba(0,0,0,0) 100%);
+  background: conic-gradient(rgba(255, 40, 40, 0.8) 0deg,
+      rgba(255, 40, 40, 0.2) 360deg);
+  mask: radial-gradient(circle, rgba(0, 0, 0, 1) 70%, rgba(0, 0, 0, 0) 100%);
   transform: rotate(-90deg);
   animation: circularLoad 1.6s ease-out forwards;
 }
 
 @keyframes circularLoad {
-  0% { transform: rotate(-90deg) scale(0.95); opacity: 0; }
-  100% { transform: rotate(270deg) scale(1); opacity: 1; }
+  0% {
+    transform: rotate(-90deg) scale(0.95);
+    opacity: 0;
+  }
+
+  100% {
+    transform: rotate(270deg) scale(1);
+    opacity: 1;
+  }
 }
 
 @keyframes fadeInHUD {
@@ -627,6 +670,7 @@ html, body {
     opacity: 0;
     transform: translateY(0.625rem) scale(0.97);
   }
+
   100% {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -635,96 +679,686 @@ html, body {
 
 @keyframes neonPulse {
   0% {
-    filter: drop-shadow(0 0 0.25rem rgba(255,40,40,1));
+    filter: drop-shadow(0 0 0.25rem rgba(255, 40, 40, 1));
   }
+
   50% {
-    filter: drop-shadow(0 0 0.75rem rgba(255,40,40,1));
+    filter: drop-shadow(0 0 0.75rem rgba(255, 40, 40, 1));
   }
+
   100% {
-    filter: drop-shadow(0 0 0.25rem rgba(255,40,40,1));
+    filter: drop-shadow(0 0 0.25rem rgba(255, 40, 40, 1));
   }
 }
 
 @keyframes panelAppear {
-  0% { opacity: 0; transform: translateY(1rem) scale(0.96); }
-  100% { opacity: 1; transform: translateY(0) scale(1); }
+  0% {
+    opacity: 0;
+    transform: translateY(1rem) scale(0.96);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 
 @keyframes textGlow {
-  0% { text-shadow: 0 0 0.15rem rgba(255,40,40,0.4); }
-  50% { text-shadow: 0 0 0.55rem rgba(255,40,40,0.9); }
-  100% { text-shadow: 0 0 0.15rem rgba(255,40,40,0.4); }
+  0% {
+    text-shadow: 0 0 0.15rem rgba(255, 40, 40, 0.4);
+  }
+
+  50% {
+    text-shadow: 0 0 0.55rem rgba(255, 40, 40, 0.9);
+  }
+
+  100% {
+    text-shadow: 0 0 0.15rem rgba(255, 40, 40, 0.4);
+  }
 }
 
 @keyframes scanlinesMove {
-  from { transform: translateY(-100%); }
-  to   { transform: translateY(100%); }
+  from {
+    transform: translateY(-100%);
+  }
+
+  to {
+    transform: translateY(100%);
+  }
 }
 
 @keyframes panelFlicker {
-  0%, 92%, 100% { opacity: 1; }
-  93% { opacity: 0.94; }
-  94% { opacity: 1; }
-  95% { opacity: 0.92; }
+
+  0%,
+  92%,
+  100% {
+    opacity: 1;
+  }
+
+  93% {
+    opacity: 0.94;
+  }
+
+  94% {
+    opacity: 1;
+  }
+
+  95% {
+    opacity: 0.92;
+  }
 }
 
 .hud-grid-bg {
   animation: gridDrift 35s linear infinite;
 }
 
-@keyframes gridDrift {
-  from { background-position: 0 0, 0 0; }
-  to { background-position: 10rem 10rem, 10rem 10rem; }
+.gauge-fill {
+  animation: gaugeLoad 1.4s cubic-bezier(.2, .9, .3, 1) forwards;
 }
 
-/* ----------------------------------------------------------
-   6) Animación del gauge: carga progresiva
----------------------------------------------------------- */
-.gauge-fill {
-  animation: gaugeLoad 1.4s cubic-bezier(.2,.9,.3,1) forwards;
+
+.hud-dashboard {
+  display: flex;
+  gap: 24px;
+  padding: 24px;
+  height: 100vh;
+  background-color: var(--dark-bg);
+  font-family: 'Consolas', monospace;
+  /* Usar fuente tecnológica */
+  color: var(--text-color);
+  overflow: hidden;
 }
+
+/* Base para los paneles */
+.hud-left,
+.hud-right,
+.hud-center {
+  /* Iniciar fuera de la pantalla o invisible */
+  opacity: 0;
+  transition: opacity 0s;
+}
+
+/* ================================================= */
+/* 1. KEYFRAMES (Las animaciones base) */
+/* ================================================= */
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUpSmall {
+  from {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* ================================================= */
+/* 2. CLASES DE ANIMACIÓN (Aplicación de Keyframes) */
+/* ================================================= */
+
+.slideInLeft {
+  animation: slideInLeft var(--anim-speed) var(--anim-timing) forwards;
+}
+
+.slideInRight {
+  animation: slideInRight var(--anim-speed) var(--anim-timing) forwards;
+}
+
+.fadeIn {
+  animation: fadeIn var(--anim-speed) var(--anim-timing) forwards;
+}
+
+.popIn {
+  animation: popIn var(--anim-speed) var(--anim-timing) forwards;
+}
+
+.slideInUp {
+  animation: slideInUp var(--anim-speed) var(--anim-timing) forwards;
+}
+
+.fadeInUpSmall {
+  animation: fadeInUpSmall var(--anim-speed) var(--anim-timing) forwards;
+}
+
+
+/* Clases de Fade con distintas velocidades/duraciones */
+.fadeInFast {
+  animation: fadeIn 0.4s var(--anim-timing) forwards;
+}
+
+.fadeInSlow {
+  animation: fadeIn 1.2s var(--anim-timing) forwards;
+}
+
+.fadeInDelayed {
+  animation: fadeIn 0.8s var(--anim-timing) forwards;
+}
+
+/* Usado en el HUD circular */
+
+
+/* ================================================= */
+/* 3. SISTEMA DE RETRASO (Delay por componente) */
+/* ================================================= */
+
+/*
+  Las animaciones solo se ejecutan cuando la clase 'hud-loaded' está presente.
+  Usaremos 'animation-delay' para secuenciar la aparición de los elementos.
+*/
+
+.hud-dashboard:not(.hud-loaded) * {
+  opacity: 0 !important;
+  transform: none !important;
+  animation: none !important;
+}
+
+.hud-loaded .hud-left {
+  animation-delay: 0.1s;
+  /* Aparece primero */
+}
+
+.hud-loaded .hud-center {
+  animation-delay: 0.3s;
+  /* Aparece segundo */
+}
+
+.hud-loaded .hud-right {
+  animation-delay: 0.5s;
+  /* Aparece último */
+}
+
+/* --- LEFT ASIDE (Retraso Interno) --- */
+.hud-loaded .hud-left-header {
+  animation-delay: 0.6s;
+}
+
+.hud-loaded .hud-stats {
+  animation-delay: 0.7s;
+}
+
+.hud-loaded .hud-stat-card:nth-child(1) {
+  animation-delay: 0.8s;
+}
+
+.hud-loaded .hud-stat-card:nth-child(2) {
+  animation-delay: 0.9s;
+}
+
+.hud-loaded .hud-stat-card:nth-child(3) {
+  animation-delay: 1.0s;
+}
+
+.hud-loaded .hud-stat-card:nth-child(4) {
+  animation-delay: 1.1s;
+}
+
+.hud-loaded .hud-quicklist {
+  animation-delay: 1.2s;
+}
+
+/* --- CENTER MAIN (Retraso Interno) --- */
+.hud-loaded .center-title {
+  animation-delay: 0.7s;
+}
+
+.hud-loaded .hud-panel {
+  animation-delay: 0.9s;
+}
+
+/* Indicadores de barra (Grid) */
+.hud-loaded .indicator-row:nth-child(1) {
+  animation-delay: 1.2s;
+}
+
+.hud-loaded .indicator-row:nth-child(2) {
+  animation-delay: 1.4s;
+}
+
+.hud-loaded .indicator-row:nth-child(3) {
+  animation-delay: 1.6s;
+}
+
+/* Círculos HUD (El CircularHUD tiene su propia animación interna, solo retrasamos la aparición del contenedor) */
+.hud-loaded .circular-hud:nth-child(1) {
+  animation-delay: 1.0s;
+}
+
+.hud-loaded .circular-hud:nth-child(2) {
+  animation-delay: 1.2s;
+}
+
+.hud-loaded .circular-hud:nth-child(3) {
+  animation-delay: 1.4s;
+}
+
+/* --- RIGHT ASIDE (Retraso Interno) --- */
+.hud-loaded .right-title {
+  animation-delay: 0.8s;
+}
+
+.hud-loaded .right-sub {
+  animation-delay: 0.9s;
+}
+
+/* Lista de actividad reciente */
+.hud-loaded .recent-row:nth-child(1) {
+  animation-delay: 1.0s;
+}
+
+.hud-loaded .recent-row:nth-child(2) {
+  animation-delay: 1.1s;
+}
+
+.hud-loaded .recent-row:nth-child(3) {
+  animation-delay: 1.2s;
+}
+
+
+/* ================================================= */
+/* 4. ESTILOS BASE DE LOS COMPONENTES (Mínimo necesario para la visualización) */
+/* ================================================= */
+
+.hud-left,
+.hud-right {
+  flex: 0 0 250px;
+  padding: 16px;
+  background: var(--dark-card);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 0 10px rgba(0, 255, 204, 0.05);
+  display: flex;
+  flex-direction: column;
+}
+
+.hud-center {
+  flex-grow: 1;
+  max-width: 900px;
+}
+
+/* Títulos y subtítulos */
+.hud-title {
+  font-size: 1.5rem;
+  color: var(--neon);
+  text-shadow: 0 0 5px var(--shadow-color);
+  margin-bottom: 4px;
+}
+
+.hud-subtitle,
+.center-sub,
+.right-sub {
+  font-size: 0.85rem;
+  color: var(--sub-color);
+}
+
+.center-title h1 {
+  font-size: 2.5rem;
+  margin: 0;
+  color: var(--text-color);
+}
+
+/* --- HUD STATS --- */
+.hud-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.hud-stat-card {
+  background: rgba(255, 255, 255, 0.02);
+  padding: 10px;
+  border-left: 3px solid var(--neon);
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  color: var(--sub-color);
+}
+
+.stat-value {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: var(--neon);
+}
+
+/* --- HUD QUICKLIST --- */
+.ql-header {
+  font-size: 1rem;
+  margin-bottom: 10px;
+  color: var(--neon-2);
+}
+
+.ql-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ql-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+
+.ql-item:hover {
+  background: rgba(0, 255, 204, 0.05);
+}
+
+.ql-pos {
+  font-size: 0.9rem;
+  color: var(--neon);
+}
+
+.ql-title {
+  font-size: 1rem;
+}
+
+.ql-sub {
+  font-size: 0.75rem;
+  color: var(--sub-color);
+}
+
+.ql-tag {
+  margin-left: auto;
+  padding: 2px 6px;
+  font-size: 0.7rem;
+  border: 1px solid var(--neon-2);
+  color: var(--neon-2);
+}
+
+.ql-tag.done {
+  border-color: #00ff66;
+  color: #00ff66;
+}
+
+/* --- HUD PANEL (Center) --- */
+.hud-panel {
+  background: var(--dark-card);
+  border: 1px solid var(--border-color);
+  padding: 20px;
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+}
+
+.hud-block-title {
+  font-size: 1.1rem;
+  color: var(--neon-2);
+  margin-bottom: 15px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+/* --- INDICADORES (Barras) --- */
+.indicator-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.05);
+}
+
+.indicator-label {
+  font-size: 0.9rem;
+}
+
+.indicator-sub {
+  font-size: 0.7rem;
+  color: var(--sub-color);
+}
+
+.indicator-gauge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 50%;
+}
+
+.gauge-bar {
+  flex-grow: 1;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+
+.gauge-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ff0000, var(--neon));
+  transition: width 0.8s ease-out;
+  /* Animación para el cambio de valor */
+}
+
+.hud-loaded .gauge-fill {
+  /* Esto forzará la animación de la barra al cargar */
+  transition: width 1.5s var(--anim-timing) 1.2s;
+}
+
+.gauge-value {
+  font-size: 0.85rem;
+  color: var(--neon);
+}
+
+
+/* --- CIRCULAR HUD --- */
+.hud-circles {
+  display: flex;
+  justify-content: space-around;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.circular-hud {
+  position: relative;
+  animation: popIn 0.8s var(--anim-timing) forwards;
+}
+
+.circular-hud svg {
+  transform: rotate(180deg);
+}
+
+.circular-hud circle {
+  transition: stroke-dashoffset 0.8s linear;
+}
+
+.circular-label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+}
+
+.circular-value {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--neon);
+}
+
+.circular-text {
+  font-size: 0.75rem;
+  color: var(--sub-color);
+  text-transform: uppercase;
+}
+
+.recent-list {
+  margin-top: 15px;
+}
+
+.recent-row {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 12px 0;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.05);
+}
+
+.recent-icon {
+  color: var(--neon);
+  font-size: 1.2rem;
+}
+
+.recent-title {
+  font-size: 1rem;
+}
+
+.recent-sub {
+  font-size: 0.75rem;
+  color: var(--sub-color);
+}
+
+@keyframes gridDrift {
+  from {
+    background-position: 0 0, 0 0;
+  }
+
+  to {
+    background-position: 10rem 10rem, 10rem 10rem;
+  }
+}
+
 
 @keyframes gaugeLoad {
-  0% { width: 0%; }
-  100% { width: var(--value); }
+  0% {
+    width: 0%;
+  }
+
+  100% {
+    width: var(--value);
+  }
 }
 
-/* (IMPORTANTE)
-   En tu JSX cada indicador debe recibir:
-     style={{ "--value": `${value}%` }}
----------------------------------------------------------- */
-
-/* ----------------------------------------------------------
-   7) Círculos HUD — anillo rotando + pulso central
----------------------------------------------------------- */
-
-
 @keyframes ringSpin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes ringPulse {
-  0% { transform: scale(0.95); opacity: 0.6; }
-  50% { transform: scale(1); opacity: 1; }
-  100% { transform: scale(0.95); opacity: 0.6; }
+  0% {
+    transform: scale(0.95);
+    opacity: 0.6;
+  }
+
+  50% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(0.95);
+    opacity: 0.6;
+  }
 }
 
 
 @keyframes textScan {
-  0% { transform: translateX(-100%); }
-  40% { transform: translateX(120%); }
-  100% { transform: translateX(120%); }
+  0% {
+    transform: translateX(-100%);
+  }
+
+  40% {
+    transform: translateX(120%);
+  }
+
+  100% {
+    transform: translateX(120%);
+  }
 }
+
 @keyframes ringSpin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes ringPulse {
-  0%   { transform: scale(0.95); opacity: 0.6; }
-  50%  { transform: scale(1); opacity: 1; }
-  100% { transform: scale(0.95); opacity: 0.6; }
-}
+  0% {
+    transform: scale(0.95);
+    opacity: 0.6;
+  }
 
+  50% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(0.95);
+    opacity: 0.6;
+  }
+}

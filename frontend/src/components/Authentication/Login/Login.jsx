@@ -136,7 +136,7 @@ function Login() {
     if (progress >= 100 && loginResult === "success") {
       stopRotatingTexts();
 
-      setSuccessMessage("ACCESO CONCEDIDO — Bienvenido al sistema.");
+      setLoaderMessage("ACCESO CONCEDIDO — Bienvenido al sistema.");
 
       setTimeout(() => {
         setSuccessMessage("");
@@ -243,14 +243,14 @@ function Login() {
 
             {/* MENSAJE DE ÉXITO (VERDE HUD) */}
             {successMessage && (
-              <div className="hud-success-message">
+              <div className="hud-success-message glitch-title" data-text={successMessage}>
                 {successMessage}
               </div>
             )}
 
             {/* MENSAJE DE ERROR (ROJO ALERT) */}
             {errorMessage && (
-              <div className="hud-error-message">
+              <div className="hud-error-message glitch-title" >
                 ERROR: {errorMessage}
               </div>
             )}
