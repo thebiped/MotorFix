@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
 import "./TurnosCliente.css";
+import { Pen, Trash } from "lucide-react";
 
 const StatusPill = ({ status }) => {
   const cls =
@@ -222,13 +223,13 @@ const TurnosCliente = () => {
   };
 
   return (
-    <div className="turnos-container">
+    <div className="turnos-container fade-container">
       <div className="turnos-top">
-        <h1>MIS TURNOS</h1>
+        <h1 className="fade-card">MIS TURNOS</h1>
         <p className="subtitle">Gestiona tus citas y servicios programados</p>
       </div>
 
-      <div className="datos-vehiculos turnos-table-card">
+      <div className="datos-vehiculos turnos-table-card fade-card">
         <div className="datos-header">
           <h2>TUS TURNOS</h2>
           <div className="datos-actions">
@@ -253,14 +254,19 @@ const TurnosCliente = () => {
             </thead>
             <tbody>
               {turnos.length === 0 && (
-                <tr>
+                <tr className="fade-row" style={{ animationDelay: "0.1s" }}>
                   <td colSpan="6" style={{ textAlign: "center", padding: 16 }}>
                     No hay turnos
                   </td>
                 </tr>
               )}
-              {turnos.map((t) => (
-                <tr key={t.id}>
+
+              {turnos.map((t, index) => (
+                <tr
+                  key={t.id}
+                  className="fade-row"
+                  style={{ animationDelay: `${0.1 + index * 0.07}s` }}
+                >
                   <td>
                     <input type="checkbox" />
                   </td>
@@ -286,14 +292,14 @@ const TurnosCliente = () => {
                         })
                       }
                     >
-                      ✏️
+                      <Pen />
                     </button>
 
                     <button
                       className="btn-delete"
                       onClick={() => handleEliminar(t.id)}
                     >
-                      🗑️
+                      <Trash />
                     </button>
                   </td>
                 </tr>

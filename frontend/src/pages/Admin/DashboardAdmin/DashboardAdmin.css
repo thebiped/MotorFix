@@ -1,16 +1,4 @@
-/* ==========================================================
-   DASHBOARD ADMIN — VERSIÓN B COMPLETA Y CORREGIDA
-   - HUD Arkham Knight + NFSU2
-   - Scroll vertical permitido
-   - Scroll horizontal: DESACTIVADO A NIVEL GLOBAL
-   - Grid sin overflow
-   - 100% REM, nada en PX
-   - Código limpio >500 líneas
-========================================================== */
 
-/* ==========================================================
-   FIX GLOBAL — EVITAR SCROLL HORIZONTAL SIEMPRE
-========================================================== */
 
 :root {
   --neon: #ff0000;

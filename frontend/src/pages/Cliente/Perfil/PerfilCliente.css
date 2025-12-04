@@ -443,3 +443,194 @@
     justify-content: space-between;
   }
 }
+
+/* =================================== */
+/* 🔑 CLAVE: KEYFRAMES GLOBALES */
+/* =================================== */
+
+/* Animación de Pulso (similar al anterior, pero con color del perfil: rojo/cian) */
+@keyframes neon-pulse-danger {
+  0% {
+    box-shadow: 0 0 5px rgba(178, 0, 0, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 15px rgba(178, 0, 0, 0.8), 0 0 20px rgba(178, 0, 0, 0.2);
+  }
+  100% {
+    box-shadow: 0 0 5px rgba(178, 0, 0, 0.4);
+  }
+}
+
+/* Animación de Parpadeo de Texto (para el modal de peligro) */
+@keyframes text-flicker-danger {
+    0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+        text-shadow: 0 0 4px #ff0000, 0 0 11px #ff0000, 0 0 19px #ff0000;
+        opacity: 1;
+    }
+    20%, 24%, 55% {
+        text-shadow: none;
+        opacity: 0.8;
+    }
+}
+
+/* Animación para Modal: ya existe fadeIn, pero lo mejoramos */
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+		transform: translateY(-50px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+/* =================================== */
+/* --- Contenedor Principal HUD/NFS --- */
+/* =================================== */
+.perfil-cliente-container {
+  color: #fff;
+  background: linear-gradient(to bottom, #1e0000 0%, #000000 100%);
+  min-height: 100vh;
+  font-family: "Arial", sans-serif;
+  overflow-x: hidden; /* Evita scroll horizontal por animaciones */
+}
+
+/* =================================== */
+/* --- Encabezado de Perfil (Animaciones de entrada) --- */
+/* =================================== */
+
+/* Animación de la foto de perfil */
+.profile-picture-container {
+  /* ... estilos existentes ... */
+  border: 3px solid #b20000;
+  box-shadow: 0 0 15px rgba(178, 0, 0, 0.7); /* Glow */
+  position: relative;
+  top: -20px;
+  
+  /* Animación de pulso continuo en el borde */
+  animation: neon-pulse-danger 3s infinite alternate ease-in-out; 
+}
+
+/* Animación de los elementos de información */
+.profile-header-info {
+  flex-grow: 1;
+  padding-bottom: 20px;
+  
+  /* Animación de entrada sutil */
+  opacity: 0;
+  animation: fadeIn 0.8s ease-out forwards;
+  animation-delay: 0.3s;
+}
+
+/* =================================== */
+/* --- Estadísticas (Efecto Hover) --- */
+/* =================================== */
+.profile-stats {
+  /* ... estilos existentes ... */
+  border-bottom: 2px solid rgba(178, 0, 0, 0.5);
+  border-top: 2px solid rgba(178, 0, 0, 0.5);
+  box-shadow: 0 0 10px rgba(178, 0, 0, 0.3);
+  
+  /* Animación de entrada de estadísticas */
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeIn 0.8s ease-out forwards;
+  animation-delay: 0.6s;
+}
+
+.stat-item {
+  /* ... estilos existentes ... */
+  transition: all 0.2s ease-in-out;
+}
+
+.stat-item:hover {
+  /* Efecto de "conexión" o brillo al pasar el ratón */
+  transform: scale(1.05);
+  text-shadow: 0 0 5px #fff;
+  color: #ff0000;
+}
+
+.stat-item h3 {
+  /* ... estilos existentes ... */
+  transition: color 0.2s;
+}
+
+.stat-item:hover h3 {
+  color: #ff5555; /* Resalta el número */
+}
+
+/* =================================== */
+/* --- Contenedor del Panel de Contenido --- */
+/* =================================== */
+.profile-content-cont {
+  /* ... estilos existentes ... */
+  
+  /* Aplicamos la animación de entrada */
+  opacity: 0;
+  animation: fadeIn 0.8s ease-out forwards;
+  animation-delay: 0.9s;
+}
+
+/* Título de la sección de Panel (para el neón) */
+.content-title h3 {
+  /* ... estilos existentes ... */
+  
+  /* Pulso de neón muy sutil en el título */
+  text-shadow: 0 0 5px rgba(178, 0, 0, 0.5);
+}
+
+/* === Panel de Seguridad (Zona de Peligro) === */
+.profile-security-panel .security-item.danger-zone {
+  background-color: rgba(255, 0, 0, 0.1);
+  border-left-color: #ff0000;
+  
+  /* Pulso sutil en la zona de peligro */
+  animation: neon-pulse-danger 5s infinite alternate;
+}
+
+.profile-security-panel .security-item.danger-zone:hover {
+  background-color: rgba(255, 0, 0, 0.2);
+  transform: translateY(-3px);
+  border-left-color: #ff0000;
+  box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+}
+
+.delete-account-btn {
+  /* ... estilos existentes ... */
+  /* Pequeña animación de hover para el botón de eliminación */
+  transition: all 0.2s;
+}
+
+.delete-account-btn:hover {
+  background-color: #ff0000;
+  transform: scale(1.05);
+  box-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
+}
+
+
+/* =================================== */
+/* --- Estilos del Modal HUD (Pulso de Advertencia) --- */
+/* =================================== */
+
+.confirmation-modal {
+  /* ... estilos existentes ... */
+  box-shadow: 0 0 40px rgba(0, 255, 255, 0.1);
+  
+  /* Animación de entrada más rápida */
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Pulso más intenso para el modal de peligro */
+.confirmation-modal.delete-style {
+  border: 2px solid #ff0000;
+  /* El pulso de neón más agresivo */
+  animation: neon-pulse-danger 1.5s infinite alternate, fadeIn 0.3s ease-out;
+}
+
+.confirmation-modal.delete-style .modal-body strong {
+  color: #ff0000;
+  /* Animación de parpadeo para la advertencia crítica */
+  animation: text-flicker-danger 2s infinite alternate;
+}
+

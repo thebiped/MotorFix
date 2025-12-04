@@ -1,253 +1,376 @@
+/* =================================== */
+/* 🔑 VARIABLES HUD CLIENTE (Azul/Cian) */
+/* =================================== */
+:root {
+    --bg-dark: #0a0a0a;       /* Fondo más profundo */
+    --panel-dark: #111;    /* Fondo de tarjeta (Panel) */
+    --text-light: #e0f7ff;    /* Texto principal (Casi blanco cian) */
+    --text-dim: #90b8cc;      /* Texto secundario/Headers de tabla */
+    
+    --neon-cyan: #ff0000;     /* Cian brillante */
+    --neon-blue: #ff006a;     /* Azul primario */
+    
+    --border-color: rgba(255, 0, 0, 0.15); /* Borde cian sutil */
+    --line-color: rgba(255, 0, 55, 0.1);  /* Línea divisoria azul */
+}
 
-
+/* =================================== */
+/* 🔳 ESTRUCTURA GENERAL */
+/* =================================== */
 .turnos-container {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  padding: 24px;
-  color: #fff;
-  background: #0b0b0b;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 30px;
+    color: var(--text-light);
+    font-family: 'Consolas', monospace;
 }
+
 .turnos-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+    display: flex;
+    flex-direction: column; /* Cambiado para mejor mobile/desktop */
+    align-items: flex-start;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--line-color);
 }
+
 .turnos-top h1 {
-  margin: 0;
-  font-size: 28px;
+    margin: 0;
+    font-size: 2.2rem;
+    color: var(--neon-blue);
+    text-shadow: 0 0 5px rgba(0, 128, 255, 0.4);
+    letter-spacing: 1px;
 }
+
 .subtitle {
-  color: rgba(255, 255, 255, 0.55);
-  margin-top: 6px;
-}
-.top-actions .btn-primary {
-  background: #d40824;
-  color: #fff;
-  padding: 8px 12px;
-  border-radius: 8px;
-  border: none;
+    color: var(--text-dim);
+    margin-top: 4px;
+    font-size: 0.9rem;
 }
 
-.metrics {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-}
-.metric {
-  background: #141414;
-  padding: 16px;
-  border-radius: 10px;
-}
-.metric.big {
-  background: #d40824;
-  color: #fff;
-}
-.metric h4 {
-  margin: 0;
-  color: rgba(255, 255, 255, 0.55);
-  font-size: 13px;
-}
-.metric .value {
-  margin-top: 8px;
-  font-size: 22px;
-  font-weight: 700;
-  color: #fff;
-}
-.metric:not(.big) .value {
-  color: #d40824;
+/* Botón principal */
+.btn-primary {
+    background: var(--neon-blue);
+    color: #000;
+    padding: 10px 18px;
+    border-radius: 4px;
+    border: 1px solid var(--neon-cyan);
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 0 8px rgba(0, 128, 255, 0.4);
 }
 
-.tabs {
-  display: flex;
-  gap: 18px;
-  align-items: center;
-  margin-top: 6px;
+.btn-primary:hover {
+    background: var(--neon-cyan);
+    color: var(--bg-dark);
+    box-shadow: 0 0 12px var(--neon-cyan);
 }
-.tab {
-  background: transparent;
-  border: none;
-  padding: 10px 18px;
-  border-radius: 8px;
-  color: rgba(255, 255, 255, 0.55);
-  cursor: pointer;
-}
-.tab.active {
-  background: #d40824;
-  color: #fff;
-}
+
+/* =================================== */
+/* 📊 TABLA DE TURNOS */
+/* =================================== */
 
 .turnos-table-card {
-  background: #141414;
-  padding: 18px;
-  border-radius: 10px;
+    background: var(--panel-dark);
+    padding: 20px;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.05);
 }
+
 .datos-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed var(--line-color);
 }
+
 .datos-header h2 {
-  margin: 0;
-}
-.datos-actions .link {
-  background: transparent;
-  border: none;
-  color: #d40824;
-  cursor: pointer;
-  margin-left: 8px;
+    margin: 0;
+    font-size: 1.5rem;
+    color: var(--neon-cyan);
 }
 
 .table-wrap {
-  overflow: auto;
-}
-.turnos-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-.turnos-table thead th {
-  text-align: left;
-  padding: 14px;
-  color: rgba(255, 255, 255, 0.55);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-}
-.turnos-table tbody td {
-  padding: 12px;
-  color: #fff;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-}
-.turnos-table tr:hover {
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0.01), transparent);
+    overflow-x: auto;
 }
 
+.turnos-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.turnos-table thead th {
+    text-align: left;
+    padding: 14px 10px;
+    color: var(--text-dim);
+    font-weight: normal;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--line-color);
+    letter-spacing: 1px;
+}
+
+.turnos-table tbody td {
+    padding: 12px 10px;
+    color: var(--text-light);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    vertical-align: middle;
+}
+
+/* Efecto Hover HUD */
+.turnos-table tr:hover {
+    background: rgba(0, 255, 255, 0.03);
+    cursor: default;
+}
+
+/* Estilos específicos de columna */
 .patente {
-  font-weight: 700;
-  color: #d40824;
+    font-weight: 700;
+    color: var(--neon-blue);
 }
-.vehiculo {
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.55);
+
+.btn-edit, .btn-delete {
+    background: transparent;
+    border: 1px solid transparent;
+    padding: 6px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.2s;
 }
-.servicio {
-  color: rgba(255, 255, 255, 0.55);
+
+.btn-edit:hover {
+    background: rgba(0, 255, 255, 0.1);
+    border-color: var(--neon-cyan);
 }
+
+.btn-delete:hover {
+    background: rgba(255, 0, 0, 0.1);
+    border-color: red;
+}
+
+/* =================================== */
+/* 💊 ESTADO (PILLS) */
+/* =================================== */
 
 .pill {
-  display: inline-block;
-  padding: 6px 12px;
-  border-radius: 999px;
-  font-weight: 700;
-  font-size: 13px;
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
+
+/* Estado: Pendiente (Blanco con borde) */
 .pill.pending {
-  background: #fff;
-  color: #000;
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-light);
+    border: 1px solid var(--text-dim);
 }
+
+/* Estado: Completado (Verde) */
 .pill.done {
-  background: #dff0df;
-  color: #083318;
+    background: rgba(0, 255, 0, 0.1);
+    color: #00ff00;
+    border: 1px solid rgba(0, 255, 0, 0.5);
 }
+
+/* Estado: En Progreso (Azul/Cian) */
 .pill.progress {
-  background: #d40824;
-  color: #fff;
+    background: rgba(0, 128, 255, 0.15);
+    color: var(--neon-blue);
+    border: 1px solid var(--neon-blue);
+    animation: pulse-neon 1.5s infinite alternate;
 }
 
-.pagination {
-  display: flex;
-  gap: 8px;
-  justify-content: center;
-  align-items: center;
-  margin-top: 14px;
-}
-.pg {
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.04);
-  color: rgba(255, 255, 255, 0.55);
-  padding: 6px 10px;
-  border-radius: 6px;
-}
-.pg.active {
-  background: transparent;
-  color: #d40824;
-  border-color: rgba(212, 8, 36, 0.2);
+@keyframes pulse-neon {
+    from { box-shadow: 0 0 5px rgba(0, 128, 255, 0.5); }
+    to { box-shadow: 0 0 10px var(--neon-cyan), 0 0 15px rgba(0, 255, 255, 0.2); }
 }
 
-/* Modal simple para testear el backend */
+/* =================================== */
+/* 💬 MODALES (Crear/Editar) */
+/* =================================== */
 
 .modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.65);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 99;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85); /* Oscurecer más el fondo */
+    backdrop-filter: blur(4px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 99;
+    animation: fadeIn 0.3s ease-out;
 }
 
 .modal {
-  background: #141414;
-  padding: 24px;
-  border-radius: 10px;
-  width: 420px;
+    background: var(--panel-dark);
+    padding: 30px;
+    border-radius: 8px;
+    width: 420px;
+    border: 1px solid var(--neon-cyan);
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+    animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.modal h2 {
+    color: var(--neon-cyan);
+    margin-top: 0;
+    border-bottom: 1px dashed var(--line-color);
+    padding-bottom: 10px;
+    margin-bottom: 15px;
 }
 
 .field {
-  margin-bottom: 14px;
-  display: flex;
-  flex-direction: column;
+    margin-bottom: 14px;
+    display: flex;
+    flex-direction: column;
 }
 
 .field label {
-  margin-bottom: 6px;
-  font-size: 14px;
-  color: rgba(255,255,255,0.55);
+    margin-bottom: 6px;
+    font-size: 14px;
+    color: var(--text-dim);
 }
 
 .field input,
 .field select {
-  padding: 10px;
-  border-radius: 6px;
-  background: #0f0f0f;
-  border: 1px solid rgba(255,255,255,0.1);
-  color: #fff;
+    padding: 10px;
+    border-radius: 4px;
+    background: var(--bg-dark);
+    border: 1px solid var(--border-color);
+    color: var(--text-light);
+    font-size: 1rem;
+}
+
+.field select option {
+    background: var(--bg-dark); /* Asegura que las opciones sean oscuras */
 }
 
 .modal-actions {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 16px;
-  gap: 10px;
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+    gap: 10px;
 }
 
 .btn-secondary {
-  background: transparent;
-  border: 1px solid rgba(255,255,255,0.2);
-  padding: 8px 12px;
-  border-radius: 8px;
-  color: #fff;
+    background: transparent;
+    border: 1px solid var(--text-dim);
+    padding: 10px 18px;
+    border-radius: 4px;
+    color: var(--text-dim);
+    transition: all 0.2s;
 }
 
-.btn-primary {
-  background: #d40824;
-  color: #fff;
-  padding: 8px 12px;
-  border-radius: 8px;
-  border: none;
+.btn-secondary:hover {
+    color: var(--text-light);
+    border-color: var(--text-light);
+}
+
+/* Animaciones reusadas */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+@keyframes popIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
 }
 
 
-@media (max-width: 1023px) {
-  .metrics {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  .turnos-top {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-  }
+/* =================================== */
+/* 📱 MEDIA QUERIES */
+/* =================================== */
+@media (max-width: 768px) {
+    .turnos-container {
+        padding: 15px;
+        gap: 15px;
+    }
+    .turnos-top h1 {
+        font-size: 1.8rem;
+    }
+    .datos-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    .datos-header h2 {
+        font-size: 1.2rem;
+    }
+    .turnos-table thead th, .turnos-table tbody td {
+        padding: 8px 5px;
+    }
+    .modal {
+        width: 90%;
+        padding: 20px;
+    }
+    /* Ocultar columnas menos importantes en mobile */
+    .turnos-table thead th:nth-child(2),
+    .turnos-table tbody td:nth-child(2) {
+        /* Fecha */
+        display: none; 
+    }
+}
+
+/* ============================== */
+/* ✨ ANIMACIONES MODERNAS */
+/* ============================== */
+
+.fade-container {
+    animation: fadeIn 0.7s ease forwards;
+}
+
+.fade-card {
+    animation: fadeUp 0.8s ease forwards;
+}
+
+/* Cada fila entra con fade + slide */
+.fade-row {
+    opacity: 0;
+    transform: translateY(12px);
+    animation: fadeRow 0.55s ease forwards;
+}
+
+/* Keyframes */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+        filter: blur(3px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0);
+    }
+}
+
+@keyframes fadeRow {
+    0% {
+        opacity: 0;
+        transform: translateY(18px) scale(0.98);
+        filter: blur(2px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
+    }
 }
